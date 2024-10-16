@@ -3,7 +3,8 @@
  * that contains the map. 
  */
  #map {
-  height: 100%;
+  height: 70%; 
+  width: 100%;
 }
 
 /* 
@@ -17,11 +18,10 @@ body {
 }
 
 #place-autocomplete-card {
+  height: 70%;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  margin: 10px;
-  padding: 5px;
   font-family: Roboto, sans-serif;
   font-size: large;
   font-weight: bold;
@@ -46,7 +46,8 @@ gmp-place-autocomplete {
   padding: 1rem; /* Padding cho thẻ chú thích */
   border-radius: 0.5rem; /* Bo góc */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Bóng đổ mềm mại */
-  width: 220px; /* Chiều rộng thẻ chú thích */
+  width: fit-content; /* Chiều rộng thẻ chú thích */
+  height: fit-content;
   position: relative; /* Để căn chỉnh dễ hơn nếu cần */
   
   /* Hiệu ứng chuyển động khi xuất hiện */
@@ -73,4 +74,52 @@ gmp-place-autocomplete {
     background-color: #495057; /* Màu nền thay đổi khi hover */
     cursor: pointer; /* Thay đổi con trỏ khi hover */
   }
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền đen mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Đảm bảo popup nổi lên trên */
+  justify-content: center;
+  align-items: center;
+}
+.popup-content {
+  display: flex;
+  flex-direction: column; /* Xếp các div con theo chiều dọc */
+  justify-content: space-between; 
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng nổi */
+  width: 90vw;  /* Chiều rộng bằng 90% màn hình */
+  height: 90vh; /* Chiều cao bằng 90% màn hình */
+  z-index: 1001; /* Nổi lên trên nền overlay */
+  overflow: auto; /* Nếu nội dung vượt quá chiều cao, sẽ cuộn */
+}
+.child-0 {
+  position: fixed;
+  width: 50%;
+  height: 50px; /* Chiều cao cố định cho child-0 */
+  border-radius: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1002;
+}
+.child-1 {
+  height: max-content;
+  flex-grow: 1; /* Div 1 chiếm toàn bộ phần không gian còn lại */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.child-2 {
+  height: fit-content; /* Div 2 có chiều cao cố định */
 }

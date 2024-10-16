@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { AppConfig } from '../../../config';
 import { Coordinates } from '../../models/coordinates.model';
@@ -13,7 +13,8 @@ import { Coordinates } from '../../models/coordinates.model';
 })
 export class MapComponent {
 
-  @Output() dataEmitter = new EventEmitter<Coordinates>();
+  @Input() isVisible = false;
+  @Output() dataEmitter = new EventEmitter<Coordinates | boolean>();
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
   @ViewChild('placeAutocompleteInput', { static: false }) placeAutocompleteInput!: ElementRef;
   
@@ -25,6 +26,10 @@ export class MapComponent {
   infoWindow!: google.maps.InfoWindow;
 
   constructor() {
+  }
+
+  close() {
+    this.dataEmitter.emit(false);
   }
 
   sendData() {
@@ -50,6 +55,10 @@ export class MapComponent {
   async initMap(): Promise<void> {
     const { Map } = await google.maps.importLibrary('maps') as google.maps.MapsLibrary;
     const { AdvancedMarkerElement } = await google.maps.importLibrary('marker') as google.maps.MarkerLibrary;
+
+    if (this.mapContainer?.nativeElement === undefined) {
+      return;
+    }
 
     // Tạo map
     this.map = new Map(this.mapContainer.nativeElement, {

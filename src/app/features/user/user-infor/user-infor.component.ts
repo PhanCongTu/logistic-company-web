@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps'
 import { MapComponent } from '../../../shared/components/map/map.component';
-import { Coordinates } from '../../../shared/models/coordinates.model';
+import { Coordinates, isCoordinates } from '../../../shared/models/coordinates.model';
 
 @Component({
   selector: 'app-user-infor',
@@ -15,6 +15,11 @@ import { Coordinates } from '../../../shared/models/coordinates.model';
 export class UserInforComponent {
 
   receivedData: Coordinates | undefined;
+  isMapVisible: boolean | false;
+
+  constructor() {
+    this.isMapVisible = false;
+  }
 
   user = {
     name: 'John Doe',
@@ -27,9 +32,20 @@ export class UserInforComponent {
   currentPassword = '';
   newPassword = '';
 
-  receiveData(data: Coordinates) {
-    this.receivedData = data; // Nhận dữ liệu từ Shared Component
-    console.log(data);
+  receiveData(data: Coordinates | boolean) {
+    if (isCoordinates(data)) {
+      this.receivedData = data; 
+      this.isMapVisible = false;
+      console.log(data)
+    }
+    if (typeof data === 'boolean') {
+      this.isMapVisible = data;
+      console.log(data)
+    } 
+  }
+
+  openMapModal() {
+    this.isMapVisible = true;
   }
 
   openEditModal() {
