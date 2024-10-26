@@ -4,11 +4,12 @@ import { Component } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps'
 import { MapComponent } from '../../../shared/components/map/map.component';
 import { Coordinates, isCoordinates } from '../../../shared/models/coordinates.model';
+import { DirectionMapComponent } from '../../../shared/components/direction-map/direction-map.component';
 
 @Component({
   selector: 'app-user-infor',
   standalone: true,
-  imports: [CommonModule, GoogleMapsModule, MapComponent],
+  imports: [CommonModule, GoogleMapsModule, MapComponent, DirectionMapComponent],
   templateUrl: './user-infor.component.html',
   styleUrl: './user-infor.component.scss'
 })
@@ -16,9 +17,11 @@ export class UserInforComponent {
 
   receivedData: Coordinates | undefined;
   isMapVisible: boolean | false;
+  isDirectionMapVisible: boolean | false;
 
   constructor() {
     this.isMapVisible = false;
+    this.isDirectionMapVisible = false;
   }
 
   user = {
@@ -32,7 +35,7 @@ export class UserInforComponent {
   currentPassword = '';
   newPassword = '';
 
-  receiveData(data: Coordinates | boolean) {
+  receiveMapData(data: Coordinates | boolean) {
     if (isCoordinates(data)) {
       this.receivedData = data; 
       this.isMapVisible = false;
@@ -44,8 +47,18 @@ export class UserInforComponent {
     } 
   }
 
+  receiveDirectionMapData(data: boolean) {
+    if (typeof data === 'boolean') {
+      this.isDirectionMapVisible = data;
+    } 
+  }
+
   openMapModal() {
     this.isMapVisible = true;
+  }
+
+  openDirectionMapModal() {
+    this.isDirectionMapVisible = true;
   }
 
   openEditModal() {
