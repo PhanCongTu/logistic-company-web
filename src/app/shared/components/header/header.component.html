@@ -1,0 +1,16 @@
+<nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      <div class="container mx-auto flex justify-between items-center py-4 px-6 animate-slide-down">
+            <div class="text-3xl font-extrabold text-yellow-600 hover:text-yellow-500 transition-all">
+                  LogisticsPro
+            </div>
+            <ul class="hidden md:flex space-x-10 font-medium text-gray-700">
+                  <li><a href="#" class="hover:text-yellow-500 transition-all duration-200">Home</a></li>
+                  <li><a href="#" class="hover:text-yellow-500 transition-all duration-200">Services</a></li>
+                  <li><a href="#" class="hover:text-yellow-500 transition-all duration-200">About Us</a></li>
+                  <li><a href="#" class="hover:text-yellow-500 transition-all duration-200">Contact</a></li>
+            </ul>
+            <div class="md:hidden">
+                  <p-dropdown [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" placeholder="" />
+            </div>
+      </div>
+</nav>
