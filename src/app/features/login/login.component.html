@@ -19,7 +19,9 @@
                               <input type="text" placeholder="Email or username"
                                     class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
                                     formControlName="username" />
+
                         </div>
+
                         @if (isFieldValid("username"))
                         {
                         <div class="pl-5 text-sm text-red-600">Username or email is required.</div>
@@ -29,11 +31,18 @@
                         <div [ngClass]="{ 'ring-red-400': isFieldValid('password') }"
                               class="flex w-full items-center space-x-2 rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
 
-                              <input type="password" placeholder="Password"
+                              <input [type]="showPassword ? 'text' : 'password'" placeholder="Password"
                                     class="my-3 w-full border-none bg-transparent outline-none"
                                     formControlName="password" />
-
-                              <a href="#" class="font-medium text-gray-400 hover:text-gray-500">FORGOT?</a>
+                              <div class="h-8 cursor-pointer pr-2 flex items-center" (click)="togglePassword()">
+                                    @if (showPassword) {
+                                    <i class="fa-regular fa-eye-slash"></i>
+                                    } @else {
+                                    <i class="fa-regular fa-eye"></i>
+                                    }
+                              </div>
+                              <div routerLink="" class="cursor-pointer font-medium text-gray-400 hover:text-gray-500">
+                                    FORGOT?</div>
                         </div>
                         @if (isFieldValid("password")) {
                         <div class="pl-5 text-sm text-red-600">Password is required.</div>

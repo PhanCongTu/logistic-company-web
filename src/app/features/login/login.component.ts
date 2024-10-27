@@ -17,7 +17,8 @@ import { Router, RouterLink } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   signinForm: FormGroup;
-
+  showPassword = false;
+  
   private formSubmitAttempt: boolean;
   public loginFailed: boolean;
 
@@ -86,5 +87,9 @@ export class LoginComponent implements OnInit {
     this.signinForm.reset();
     this.formSubmitAttempt = false;
     this.loginFailed = false;
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 }
