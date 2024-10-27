@@ -15,10 +15,15 @@
                         </a>
                   </ng-template>
                   <ng-template pTemplate="end">
-                        <div class="flex align-items-center gap-2">
-                              <div class="flex items-center justify-center align-items-center">Phan Công Tú</div>
-                              <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                                    shape="circle" />
+                        <div class="flex align-items-center gap-2 relative">
+                              <div class="flex items-center justify-center align-items-center"
+                                    (click)="toggleMenu($event)">
+                                    <p-avatar class="avatar"
+                                          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                                          shape="circle" />
+                              </div>
+                              <p-menu #avatarMenu [model]="avatarItems" [popup]="true" [style]="{ width: '150px' }"
+                                    [appendTo]="'body'"></p-menu>
                         </div>
                   </ng-template>
             </p-menubar>

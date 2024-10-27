@@ -1,0 +1,7 @@
+.avatar {
+      transition: transform 0.3s; /* Thêm transition để tạo hiệu ứng mượt mà */
+    }
+    
+    .avatar:hover {
+      transform: scale(1.4); /* Tăng kích thước của avatar lên 20% khi hover */
+    }

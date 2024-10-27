@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -7,32 +7,27 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { RippleModule } from 'primeng/ripple';
 import { Router } from '@angular/router';
-
+import { DropdownModule } from 'primeng/dropdown';
+import { Menu } from 'primeng/menu';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MenubarModule, BadgeModule, AvatarModule, InputTextModule, RippleModule, CommonModule],
+  imports: [MenubarModule, BadgeModule, AvatarModule, InputTextModule, RippleModule, CommonModule, DropdownModule, MenuModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+
     items: MenuItem[] | undefined;
-    items2: MenuItem[] | undefined;
+    
     constructor(private router: Router) {}
+
     ngOnInit() {
-        this.items2 = [
-            {
-                label: 'Home',
-                icon: 'pi pi-home',
-                command: () => {
-                    this.router.navigate(['/']);
-                }
-            } 
-        ]
+
         this.items = [
-            {
-                label: 'Home',
+            { label: 'Home',
                 icon: 'pi pi-home',
                 command: () => {
                     this.router.navigate(['/']);
@@ -89,4 +84,28 @@ export class HeaderComponent {
             }
         ];
     }
+
+     @ViewChild('avatarMenu') avatarMenu!: Menu;
+
+  avatarItems = [
+    { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
+    { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
+    { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() }
+  ];
+
+  toggleMenu(event: MouseEvent) {
+    this.avatarMenu.toggle(event); // Hiển thị dropdown
+  }
+
+  goToProfile() {
+    // Logic to navigate to profile
+  }
+
+  goToSettings() {
+    // Logic to navigate to settings
+  }
+
+  logout() {
+    // Logic to log out
+  }
 }
