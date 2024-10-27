@@ -10,12 +10,12 @@
             class="max-w-6xl w-full bg-white rounded-lg shadow-lg mt-20 p-8 transition-transform transform hover:scale-105 duration-300">
             <div class="flex items-center mb-8 border-b pb-4">
                   <img class="w-32 h-32 rounded-full border-4 border-blue-300 shadow-lg mr-6 transition-transform duration-300 hover:scale-110"
-                        src="https://ui-avatars.com/api/?name={{user.name}}&background=0D8ABC&color=fff"
+                        src="https://ui-avatars.com/api/?name={{userInfo?.username}}&background=0D8ABC&color=fff"
                         alt="User Avatar">
                   <div>
-                        <h2 class="text-4xl font-semibold text-gray-800">{{ user.name }}</h2>
-                        <p class="text-gray-600 text-lg">{{ user.email }}</p>
-                        <p class="text-gray-600 text-lg">{{ user.role }}</p>
+                        <h2 class="text-4xl font-semibold text-gray-800">{{ userInfo?.username }}</h2>
+                        <p class="text-gray-600 text-lg">{{ userInfo?.emailAddress }}</p>
+                        <p class="text-gray-600 text-lg">{{ userInfo?.roles }}</p>
                   </div>
             </div>
 
@@ -25,15 +25,22 @@
                         <h3 class="font-semibold text-xl text-gray-800 mb-4">Personal Information</h3>
                         <div class="flex justify-between mb-2">
                               <span class="text-gray-600">Name:</span>
-                              <span class="text-gray-900">{{ user.name }}</span>
+                              <span class="text-gray-900">{{ userInfo?.username }}</span>
                         </div>
                         <div class="flex justify-between mb-2">
                               <span class="text-gray-600">Email:</span>
-                              <span class="text-gray-900">{{ user.email }}</span>
+                              <span class="text-gray-900">{{ userInfo?.emailAddress }}
+                                    @if(userInfo?.isEmailAddressVerified) {
+                                    <i class="fa-regular fa-circle-check text-green-500"></i>
+                                    } @else {
+                                    <i class="fa-regular fa-circle-xmark text-red-500"></i>
+                                    }
+                              </span>
+
                         </div>
                         <div class="flex justify-between mb-2">
                               <span class="text-gray-600">Role:</span>
-                              <span class="text-gray-900">{{ user.role }}</span>
+                              <span class="text-gray-900">{{ userInfo?.roles }}</span>
                         </div>
                         <div class="flex items-center justify-end">
                               <button
@@ -54,12 +61,12 @@
                                     <button
                                           class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                           (click)="openMapModal()">
-                                          <i class="fas fa-edit mr-1"></i> Choose location
+                                          <i class="fa-solid fa-location-dot"></i> Choose location
                                     </button>
                                     <button
                                           class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                           (click)="openDirectionMapModal()">
-                                          <i class="fas fa-edit mr-1"></i> Open Direction
+                                          <i class="fa-regular fa-map"></i> Open Direction
                                     </button>
                               </div>
 

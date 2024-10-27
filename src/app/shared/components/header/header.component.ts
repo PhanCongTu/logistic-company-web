@@ -10,21 +10,47 @@ import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { Menu } from 'primeng/menu';
 import { MenuModule } from 'primeng/menu';
+import { LocalStorageService } from '../../../core/services/local-storage.service';
+import { User } from '../../models/user.model';
+import { ROUTES } from '../../../app.routes';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MenubarModule, BadgeModule, AvatarModule, InputTextModule, RippleModule, CommonModule, DropdownModule, MenuModule],
+  imports: [
+    MenubarModule, 
+    BadgeModule, 
+    AvatarModule, 
+    InputTextModule, 
+    RippleModule, 
+    CommonModule, 
+    DropdownModule, 
+    MenuModule
+],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+    readonly routes = ROUTES;
 
     items: MenuItem[] | undefined;
+    avatarItems: MenuItem[] | undefined;
     
-    constructor(private router: Router) {}
+    userInfo: User | undefined;
+
+    @ViewChild('avatarMenu') avatarMenu!: Menu;
+
+    constructor(
+        private router: Router,
+        private localStorageService: LocalStorageService
+    ) {
+    }
 
     ngOnInit() {
+        // Get the user information from local storage
+        this.localStorageService.userInfo$.subscribe(userInfo => {
+            this.userInfo = userInfo;
+          });
 
         this.items = [
             { label: 'Home',
@@ -83,22 +109,23 @@ export class HeaderComponent {
                 badge: '3'
             }
         ];
+
+        this.avatarItems = [
+            { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
+            { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
+            { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout(), 
+                styleClass: 'logoutItem' 
+            }
+          ];
     }
 
-     @ViewChild('avatarMenu') avatarMenu!: Menu;
-
-  avatarItems = [
-    { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
-    { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
-    { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() }
-  ];
 
   toggleMenu(event: MouseEvent) {
     this.avatarMenu.toggle(event); // Hiển thị dropdown
   }
 
   goToProfile() {
-    // Logic to navigate to profile
+    this.router.navigate([this.routes.userInfo]);
   }
 
   goToSettings() {
@@ -106,6 +133,7 @@ export class HeaderComponent {
   }
 
   logout() {
-    // Logic to log out
+    this.localStorageService.removeUser();
+    this.router.navigate([this.routes.home]);
   }
 }

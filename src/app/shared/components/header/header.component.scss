@@ -5,3 +5,9 @@
     .avatar:hover {
       transform: scale(1.4); /* Tăng kích thước của avatar lên 20% khi hover */
     }
+.logoutItem {
+  color: #2c2c2c ;
+  font-weight: 700;
+  // border-top: #2c2c2c;
+  border-top: 2px solid #2c2c2c;
+}

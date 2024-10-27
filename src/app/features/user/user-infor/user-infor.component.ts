@@ -1,10 +1,12 @@
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps'
 import { MapComponent } from '../../../shared/components/map/map.component';
 import { Coordinates, isCoordinates } from '../../../shared/models/coordinates.model';
 import { DirectionMapComponent } from '../../../shared/components/direction-map/direction-map.component';
+import { User } from '../../../shared/models/user.model';
+import { LocalStorageService } from '../../../core/services/local-storage.service';
 
 @Component({
   selector: 'app-user-infor',
@@ -13,22 +15,24 @@ import { DirectionMapComponent } from '../../../shared/components/direction-map/
   templateUrl: './user-infor.component.html',
   styleUrl: './user-infor.component.scss'
 })
-export class UserInforComponent {
+export class UserInforComponent implements OnInit {
 
   receivedData: Coordinates | undefined;
   isMapVisible: boolean | false;
   isDirectionMapVisible: boolean | false;
+  userInfo: User | undefined;
 
-  constructor() {
+  constructor(private localStorageService: LocalStorageService) {
     this.isMapVisible = false;
     this.isDirectionMapVisible = false;
   }
 
-  user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    role: 'Admin'
-  };
+  ngOnInit() {
+    // Get the user information from local storage
+    this.localStorageService.userInfo$.subscribe(userInfo => {
+      this.userInfo = userInfo;
+    });
+  }
 
   isEditModalOpen = false;
   isChangePasswordModalOpen = false;

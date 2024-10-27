@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CustomValidators } from '../../shared/custom-validators.validator';
-import { saveUser } from '../../shared/utils/local-storage.util';
 import { SignUp } from '../../shared/models/sign-up.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LocalStorageService } from '../../core/services/local-storage.service';
+import { ROUTES } from '../../app.routes';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
+  readonly routes = ROUTES;
 
   signupForm: FormGroup;
   showPassword = false;
@@ -29,7 +31,8 @@ export class SignupComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private localStorageService: LocalStorageService
   ) {
     this.signupForm = this.formBuilder.group({
       username: ['', [Validators.required, CustomValidators.usernameValidator()]],
@@ -71,8 +74,8 @@ export class SignupComponent {
   
       this.authService.signUp(signUpData).subscribe({
         next: (data) => { 
-          saveUser(data);
-          this.router.navigate(['/']);
+          this.localStorageService.saveUser(data);
+          this.router.navigate([this.routes.home]);
         },   
         error: (error) => { 
           this.signUpFailed = true;

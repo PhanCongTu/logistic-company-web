@@ -4,21 +4,28 @@ import { HomeComponent } from './features/home/home.component';
 import { SignupComponent } from './features/signup/signup.component';
 import { UserInforComponent } from './features/user/user-infor/user-infor.component';
 
+export const ROUTES = {
+      home: '',
+      login: 'login',
+      signup: 'signup',
+      userInfo: 'user/infor',
+    };
+
 export const routes: Routes = [
       {
-            path: '',
+            path: ROUTES.home,
             component: HomeComponent
       },
       {
-            path: 'login',
+            path: ROUTES.login,
             component: LoginComponent
       },
       {
-            path: 'signup',
+            path: ROUTES.signup,
             component: SignupComponent
       },
       {
-            path: 'user/infor',
+            path: ROUTES.userInfo,
             component: UserInforComponent
       },
       

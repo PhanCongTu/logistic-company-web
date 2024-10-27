@@ -2,10 +2,10 @@ import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Login } from '../../shared/models/login.model';
-import { CustomValidators } from '../../shared/custom-validators.validator';
-import { saveUser } from '../../shared/utils/local-storage.util';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { LocalStorageService } from '../../core/services/local-storage.service';
+import { ROUTES } from '../../app.routes';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +15,7 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
+  readonly routes = ROUTES;
 
   signinForm: FormGroup;
   showPassword = false;
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private localStorageService: LocalStorageService
   ) {
     this.signinForm = this.formBuilder.group({
       username: ['', [Validators.required]],
@@ -56,8 +58,8 @@ export class LoginComponent implements OnInit {
   
       this.authService.login(loginData).subscribe({
         next: (data) => { 
-          saveUser(data); // Save the user data into LocalStorage
-          this.router.navigate(['/user/infor']); // Navigate to Home page
+          this.localStorageService.saveUser(data); // Save the user data into LocalStorage
+          this.router.navigate([this.routes.userInfo]); 
           this.reset(); // Reset the value
         },   
         error: (error) => { 

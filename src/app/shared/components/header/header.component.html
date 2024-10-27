@@ -1,6 +1,13 @@
 <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+
       <div class="card">
             <p-menubar [model]="items">
+                  <ng-template pTemplate="start">
+                        <div routerLink=""
+                              class="pr-2 cursor-pointer w-fit text-3xl font-extrabold text-yellow-600 hover:text-yellow-500 transition-all">
+                              LogisticsPro
+                        </div>
+                  </ng-template>
                   <ng-template pTemplate="item" let-item let-root="root">
                         <a pRipple class="flex align-items-center p-menuitem-link">
                               <span [class]="item.icon"></span>
@@ -16,14 +23,50 @@
                   </ng-template>
                   <ng-template pTemplate="end">
                         <div class="flex align-items-center gap-2 relative">
+                              @if (userInfo) {
                               <div class="flex items-center justify-center align-items-center"
                                     (click)="toggleMenu($event)">
                                     <p-avatar class="avatar"
                                           image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
                                           shape="circle" />
                               </div>
-                              <p-menu #avatarMenu [model]="avatarItems" [popup]="true" [style]="{ width: '150px' }"
-                                    [appendTo]="'body'"></p-menu>
+                              <p-menu #avatarMenu [model]="avatarItems" [popup]="true"
+                                    [style]="{ minWidth: '200px', width:  'fit-content'}" [appendTo]="'body'">
+                                    <ng-template pTemplate="start">
+                                          <button pRipple
+                                                class="cursor-default relative overflow-hidden w-full p-link flex items-center p-2 pl-3 text-color border-noround">
+                                                <p-avatar
+                                                      image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                                                      class="mr-2" shape="circle" />
+                                                <span class="inline-flex flex-column">
+                                                      <span class="font-bold">{{userInfo.username}}</span>
+                                                      <span class="text-sm text-red-600 pl-1">{{userInfo.roles}}</span>
+                                                </span>
+                                          </button>
+                                    </ng-template>
+                                    <ng-template pTemplate="item" let-item let-root="root">
+                                          <a pRipple class="flex align-items-center p-menuitem-link"
+                                                [ngClass]="item.styleClass">
+                                                <span [class]="item.icon"></span>
+                                                <span class="ml-2">{{ item.label }}</span>
+                                                <p-badge *ngIf="item.badge"
+                                                      [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
+                                                      [value]="item.badge" />
+                                                <span *ngIf="item.shortcut"
+                                                      class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{
+                                                      item.shortcut }}</span>
+                                                <i *ngIf="item.items"
+                                                      [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+                                          </a>
+                                    </ng-template>
+                              </p-menu>
+                              } @else {
+                              <div class="pr-5 text-xl font-extrabold cursor-pointer hover:text-gray-400"
+                                    [routerLink]='routes.login'>
+                                    Sign in
+                              </div>
+                              }
+
                         </div>
                   </ng-template>
             </p-menubar>
