@@ -29,4 +29,8 @@ export class LocalStorageService {
     localStorage.removeItem(this.USER_KEY);
     this.userInfoSubject.next(null);
   }
+
+  getToken(): String | undefined {
+    return this.getUser().accessToken;
+  }
 }

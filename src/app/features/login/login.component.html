@@ -12,7 +12,7 @@
                   <p class="mt-2 text-sm text-gray-600">Please sign in to your account</p>
             </div>
 
-            <form class="mt-8 space-y-6" [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+            <form class="mt-8 space-y-4" [formGroup]="signinForm" (ngSubmit)="onSubmit()">
                   <div class="space-y-2">
                         <div class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400"
                               [ngClass]="{ 'ring-red-400': isFieldValid('username') }">

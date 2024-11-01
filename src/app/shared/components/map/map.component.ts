@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { AppConfig } from '../../../config';
-import { Coordinates } from '../../models/coordinates.model';
+import { Coordinates, CoordinatesWithAddress } from '../../models/coordinates.model';
 
 @Component({
   selector: 'app-map',
@@ -13,8 +13,10 @@ import { Coordinates } from '../../models/coordinates.model';
 })
 export class MapComponent {
 
+  private inputAddress: string | undefined;
+
   @Input() isVisible = false;
-  @Output() dataEmitter = new EventEmitter<Coordinates | boolean>();
+  @Output() dataEmitter = new EventEmitter< CoordinatesWithAddress | boolean>();
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
   @ViewChild('placeAutocompleteInput', { static: false }) placeAutocompleteInput!: ElementRef;
   
@@ -34,7 +36,11 @@ export class MapComponent {
 
   sendData() {
     if (this.coordicate != null) {
-      this.dataEmitter.emit(this.coordicate);
+      const coordinatesWithAddress: CoordinatesWithAddress = {
+        ... this.coordicate,
+        address: this.inputAddress  || ''
+      };
+      this.dataEmitter.emit(coordinatesWithAddress);
     }
   } 
 
@@ -83,6 +89,7 @@ export class MapComponent {
     // Lắng nghe sự kiện chọn địa điểm từ Autocomplete
     placeAutocomplete.addListener('place_changed', async () => {
       const place = placeAutocomplete.getPlace();
+      this.inputAddress = place?.formatted_address;
       await this.handlePlaceSelect(place);
     });
 

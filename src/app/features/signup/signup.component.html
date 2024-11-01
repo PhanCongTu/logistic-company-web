@@ -12,7 +12,7 @@
                   <p class="mt-2 text-sm text-gray-600">Please fill your information</p>
             </div>
 
-            <form class="mt-8 space-y-6" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+            <form class="mt-8 space-y-4" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
                   <div class="space-y-2">
                         <div class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400"
                               [ngClass]="{ 'ring-red-400': isFieldValid('username') }">
@@ -95,29 +95,6 @@
                         </div>
                         @if (isFieldValid("emailAddress")) {
                         <div class="pl-5 text-sm text-red-600">Email address is required.</div>
-                        }
-                  </div>
-
-                  <div class="space-y-2">
-                        <div [ngClass]="{ 'ring-red-400': isFieldValid('address') }"
-                              class="flex w-full items-center space-x-2 rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                              <input placeholder="Address" class="my-3 w-full border-none bg-transparent outline-none"
-                                    formControlName="address" />
-                        </div>
-                        @if (isFieldValid("address")) {
-                        <div class="pl-5 text-sm text-red-600">Address is required.</div>
-                        }
-                  </div>
-
-                  <div class="space-y-2">
-                        <div [ngClass]="{ 'ring-red-400': isFieldValid('companyName') }"
-                              class="flex w-full items-center space-x-2 rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                              <input placeholder="Company name"
-                                    class="my-3 w-full border-none bg-transparent outline-none"
-                                    formControlName="companyName" />
-                        </div>
-                        @if (isFieldValid("companyName")) {
-                        <div class="pl-5 text-sm text-red-600">Company name is required.</div>
                         }
                   </div>
 

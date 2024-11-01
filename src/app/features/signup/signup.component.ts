@@ -13,7 +13,12 @@ import { ROUTES } from '../../app.routes';
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, FontAwesomeModule],
+  imports: [
+    ReactiveFormsModule, 
+    CommonModule, 
+    RouterLink, 
+    FontAwesomeModule
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -38,9 +43,7 @@ export class SignupComponent {
       username: ['', [Validators.required, CustomValidators.usernameValidator()]],
       password: ['', [Validators.required, CustomValidators.passwordValidator()]],
       confirmPassword: ['', [Validators.required]],
-      emailAddress: ['', [Validators.required, CustomValidators.emailValidator()]],
-      address: ['', [Validators.required]],
-      companyName : ['', [Validators.required]]
+      emailAddress: ['', [Validators.required, CustomValidators.emailValidator()]]
     });
 
     this.formSubmitAttempt = false;
@@ -67,8 +70,6 @@ export class SignupComponent {
       const signUpData: SignUp = {
         username: this.signupForm.get('username')?.value,
         password: this.signupForm.get('password')?.value,
-        address: this.signupForm.get('address')?.value,
-        companyName: this.signupForm.get('companyName')?.value,
         emailAddress: this.signupForm.get('emailAddress')?.value,
       }
   
