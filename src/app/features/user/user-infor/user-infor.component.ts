@@ -9,7 +9,7 @@ import { User } from '../../../shared/models/user.model';
 import { LocalStorageService } from '../../../core/services/local-storage.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../shared/custom-validators.validator';
 import { UpdateUser } from '../../../shared/models/update-user.model';
 import { UserService } from '../../../core/services/user.service';
@@ -48,12 +48,20 @@ export class UserInforComponent implements OnInit {
   isDirectionMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isChangeEmailModalOpenSignal: WritableSignal<boolean> = signal(false);
   isChangePasswordModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isChangeAddressModalOpenSignal: WritableSignal<boolean> = signal(false);
+  userCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress| undefined> = signal(undefined);
+
   isShowOldPassword: WritableSignal<boolean> = signal(false);
   isShowNewPassword: WritableSignal<boolean> = signal(false);
+
+  isRequiredChooseLocaltionSignal: WritableSignal<boolean> = signal(false);
 
   // check it's submmitted form.
   isChangedEmailSubmitted: boolean  = false;
   isChangedPasswordSubmitted: boolean  = false;
+
+  // User address
+  additonalAddress = new FormControl('');
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -88,8 +96,9 @@ export class UserInforComponent implements OnInit {
 
   receivedMapData(data: CoordinatesWithAddress | boolean) {
     if (typeof data !== 'boolean') {
-      this.updateUserCoordinatesWithAddress(data);
+      this.userCoordinatesWithAddressSignal.set(data);
     } 
+    this.openChangeAddressModal();
     this.isMapVisibleSignal.set(false);
   }
 
@@ -117,14 +126,7 @@ export class UserInforComponent implements OnInit {
     } 
   }
 
-  openMapModal() {
-    this.isMapVisibleSignal.set(true);
-  }
-
-  openDirectionMapModal() {
-    this.isDirectionMapVisibleSignal.set(true);
-  }
-
+  // ********** Change user email address ****************
   openChangeEmailModal() {
     this.isChangeEmailModalOpenSignal.set(true);
   }
@@ -170,6 +172,7 @@ export class UserInforComponent implements OnInit {
     
   }
 
+  // ********* Change user password ****************
   openChangePasswordModal() {
     this.isChangePasswordModalOpenSignal.set(true);
   }
@@ -202,6 +205,70 @@ export class UserInforComponent implements OnInit {
       });
       this.isChangedPasswordSubmitted = false;
       this.closeChangePasswordModal();
+    }
+  }
+
+  // ************ Change user address  ****************
+  openChangeAddressModal() {
+    this.isChangeAddressModalOpenSignal.set(true);
+  }
+
+  closeChangeAddressModal() {
+    this.isChangeAddressModalOpenSignal.set(false);
+    // reset to initial state
+    this.userCoordinatesWithAddressSignal.set(undefined);
+    this.additonalAddress.setValue('')
+    this.isRequiredChooseLocaltionSignal.set(false);
+  }
+
+  openMapModal() {
+    this.isMapVisibleSignal.set(true);
+    this.isChangeAddressModalOpenSignal.set(false);
+  }
+
+  openDirectionMapModal() {
+    this.isDirectionMapVisibleSignal.set(true);
+  }
+
+  submitChangedAddressModal(even: any) 
+  {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    if (!this.userCoordinatesWithAddressSignal()) {
+      // show error message
+      this.isRequiredChooseLocaltionSignal.set(true);
+      return;
+    }
+    this.isRequiredChooseLocaltionSignal.set(false);
+    const fullAddress = this.additonalAddress?.value?.trim() + ' ' + this.userCoordinatesWithAddressSignal()?.address;
+    this.userCoordinatesWithAddressSignal.update(currentValue => {
+      if (currentValue) {
+        return {
+          ...currentValue,
+          address: fullAddress,
+        };
+      }
+      return undefined;
+    })
+
+    const changedAddressData: UpdateUser = {
+      coordinatesWithAddress: this.userCoordinatesWithAddressSignal()
+    }
+
+    if (this.userCoordinatesWithAddressSignal()) {
+      this.userService.updateUser(changedAddressData).subscribe({
+        next: (data) => { 
+          this.toastSuccess('Change address successfully!');
+          const user: User = this.localStorageService.getUser();
+          const newUser: User = {...user, address: fullAddress};
+          this.localStorageService.saveUser(newUser);
+        },   
+        error: (error) => {
+          this.toastFail('Change address failed!');
+        }
+      });
+      this.closeChangeAddressModal();
     }
   }
 

@@ -80,8 +80,8 @@ gmp-place-autocomplete {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Màu nền đen mờ */
   display: flex;
   justify-content: center;
@@ -96,10 +96,11 @@ gmp-place-autocomplete {
   justify-content: space-between; 
   background: white;
   padding: 20px;
+  // padding-bottom: 0%;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hiệu ứng nổi */
-  width: 90vw;  /* Chiều rộng bằng 90% màn hình */
-  height: 90vh; /* Chiều cao bằng 90% màn hình */
+  width: 98%;  /* Chiều rộng bằng 90% màn hình */
+  height: 98%; /* Chiều cao bằng 90% màn hình */
   z-index: 1001; /* Nổi lên trên nền overlay */
   overflow: auto; /* Nếu nội dung vượt quá chiều cao, sẽ cuộn */
 }

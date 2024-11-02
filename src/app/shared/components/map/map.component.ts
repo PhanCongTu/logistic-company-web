@@ -3,11 +3,12 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { Loader } from '@googlemaps/js-api-loader';
 import { AppConfig } from '../../../config';
 import { Coordinates, CoordinatesWithAddress } from '../../models/coordinates.model';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DialogModule],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
@@ -89,7 +90,6 @@ export class MapComponent {
     // Lắng nghe sự kiện chọn địa điểm từ Autocomplete
     placeAutocomplete.addListener('place_changed', async () => {
       const place = placeAutocomplete.getPlace();
-      this.inputAddress = place?.formatted_address;
       await this.handlePlaceSelect(place);
     });
 
@@ -103,10 +103,11 @@ export class MapComponent {
     });
   }
 
-  placeMarker(location: google.maps.LatLng) {
+  async placeMarker(location: google.maps.LatLng) {
     // Cập nhật vị trí marker và hiển thị infoWindow
     this.marker.position = location;
-
+    const address = await this.getAddressFromLatLng(location.lat(), location.lng());
+    this.inputAddress = address;
     // Tạo nội dung cho infoWindow
     const content = `
       <style>
@@ -161,6 +162,25 @@ export class MapComponent {
   async handlePlaceSelect(place: google.maps.places.PlaceResult): Promise<void> {
     if (!place.geometry || !place.geometry.location) {
       return;
+    }
+
+    if (place && place.address_components) {
+      // console.log(place)
+      // Lọc và chỉ lấy các thành phần địa chỉ từ cấp phường trở đi
+      const filteredComponents = place.address_components.filter(component => 
+        component.types.includes('route') ||               // Tên đường
+        component.types.includes('sublocality') ||         // Phường
+        component.types.includes('locality') ||            // Quận/Huyện
+        component.types.includes('administrative_area_level_2') ||  // Tỉnh/Thành phố trực thuộc
+        component.types.includes('administrative_area_level_1')     // Vùng
+      );
+  
+      // Ghép các thành phần lại thành chuỗi địa chỉ
+      const address = filteredComponents
+        .map(component => component.long_name)
+        .join(', ');
+
+        this.inputAddress = address;
     }
 
     this.coordicate = {
@@ -237,6 +257,33 @@ export class MapComponent {
       map: this.map,
       anchor: this.marker,
       shouldFocus: false,
+    });
+  }
+
+  async getAddressFromLatLng(lat: number, lng: number): Promise<string> {
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat, lng };
+
+    return new Promise((resolve, reject) => {
+      geocoder.geocode({ location: latlng }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
+         // Lọc ra các thành phần địa chỉ từ tên đường và cấp phường trở đi
+         const filteredAddress = results[0].address_components
+         .filter(component => 
+           component.types.includes('route') ||               // Tên đường
+           component.types.includes('sublocality') ||         // Phường
+           component.types.includes('locality') ||            // Quận/Huyện
+           component.types.includes('administrative_area_level_2') ||  // Tỉnh/Thành phố trực thuộc
+           component.types.includes('administrative_area_level_1')     // Vùng
+         )
+         .map(component => component.long_name) // Chỉ lấy tên đầy đủ của từng thành phần
+         .join(', '); // Ghép các thành phần lại thành chuỗi
+
+       resolve(filteredAddress);
+        } else {
+          reject('Không tìm thấy địa chỉ');
+        }
+      });
     });
   }
 }

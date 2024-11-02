@@ -1,5 +1,6 @@
 @if (isMapVisibleSignal()) {
 <app-map [isVisible]="isMapVisibleSignal()" (dataEmitter)="receivedMapData($event)"></app-map>
+
 }
 @if (isDirectionMapVisibleSignal()) {
 <app-direction-map [isVisible]="isDirectionMapVisibleSignal()"
@@ -69,7 +70,7 @@
                               <div class="flex items-center justify-end">
                                     <button
                                           class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
-                                          (click)="openMapModal()">
+                                          (click)="openChangeAddressModal()">
                                           <i class="fa-solid fa-location-dot"></i> Choose location
                                     </button>
                               </div>
@@ -222,5 +223,70 @@
                   </div>
 
             </form>
+      </p-dialog>
+
+      <!-- Modal for Change user address-->
+      <p-dialog header="Change user address" [(visible)]="isChangeAddressModalOpenSignal" [modal]="true"
+            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }"
+            [draggable]="false" [resizable]="false" [style]="{ width: '40rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Change user address
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <div>
+                        <div class="mt-2 space-y-10">
+                              @if (userCoordinatesWithAddressSignal()) {
+                              <div class="space-y-5">
+                                    <div class="flex justify-center mb-2 ">
+                                          <span class="text-gray-600 pr-3 text-xl">Address:</span>
+                                          <span class="text-gray-900 text-xl">{{
+                                                userCoordinatesWithAddressSignal()?.address
+                                                }}</span>
+                                    </div>
+                                    <div
+                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <input type="text" placeholder="House number, street name, ..."
+                                                [formControl]="additonalAddress"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                    </div>
+                              </div>
+                              } @else {
+                              <div class="space-y-2">
+
+                                    <div class="flex items-center justify-center">
+                                          <button type="button"
+                                                class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
+                                                (click)="openMapModal()">
+                                                <i class="fa-solid fa-location-dot"></i> Choose location
+                                          </button>
+                                    </div>
+                                    @if (isRequiredChooseLocaltionSignal())
+                                    {
+                                    <div class="flex items-center justify-center">
+                                          <div class="pl-5 text-sm text-red-600">Please choosse your location.</div>
+                                    </div>
+                                    }
+                              </div>
+
+                              }
+                              <div class="flex justify-around">
+                                    <button type="button" (click)="closeChangeAddressModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                    </button>
+
+                                    <button (click)="submitChangedAddressModal($event)"
+                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Save
+                                    </button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
       </p-dialog>
 </div>
