@@ -47,6 +47,7 @@ export class UserInforComponent implements OnInit {
   isMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isDirectionMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isChangeEmailModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isVerifyEmailModalOpenSignal: WritableSignal<boolean> = signal(false);
   isChangePasswordModalOpenSignal: WritableSignal<boolean> = signal(false);
   isChangeAddressModalOpenSignal: WritableSignal<boolean> = signal(false);
   userCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress| undefined> = signal(undefined);
@@ -55,6 +56,7 @@ export class UserInforComponent implements OnInit {
   isShowNewPassword: WritableSignal<boolean> = signal(false);
 
   isRequiredChooseLocaltionSignal: WritableSignal<boolean> = signal(false);
+  isRequiredVerificationCodeSignal: WritableSignal<boolean> = signal(false);
 
   // check it's submmitted form.
   isChangedEmailSubmitted: boolean  = false;
@@ -62,7 +64,8 @@ export class UserInforComponent implements OnInit {
 
   // User address
   additonalAddress = new FormControl('');
-
+  verificationCode = new FormControl('');
+  
   constructor(
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
@@ -152,15 +155,8 @@ export class UserInforComponent implements OnInit {
         next: (data) => { 
           this.toastSuccess('Change email address successfully!');
           this.toastInfo('Please check your email to verification!');
-          if (!this.localStorageService.getUser().isEmailAddressVerified) {
-            // If the email is not verified
-            // user needs to verify the new email address first
-            const user: User = this.localStorageService.getUser();
-            const newUser: User = {...user, emailAddress: changedEmailData.emailAddress};
-            this.localStorageService.saveUser(newUser);
-          } else {
-            
-          }
+          this.refreshUserInfo();
+          this.openVerifyEmailModal();
         },   
         error: (error) => {
           this.toastFail('Change email address failed!');
@@ -170,6 +166,70 @@ export class UserInforComponent implements OnInit {
       this.closeChangedEmailModal();
     }
     
+  }
+
+  // ********* Verify Email ********************
+  openVerifyEmailModal() {
+    this.isVerifyEmailModalOpenSignal.set(true);
+  }
+
+  closeVerifyEmailModal() {
+    this.isVerifyEmailModalOpenSignal.set(false);
+    this.verificationCode.setValue('');
+    this.isRequiredVerificationCodeSignal.set(false);
+  }
+
+  sendVerificationCode() {
+    this.userService.resendVerificationEmail().subscribe({
+      next: (data) => { 
+        this.toastSuccess('Please check your email address!');
+      },   
+      error: (error) => {
+        this.toastFail('Please try later!');
+      }
+    });
+  }
+
+  submitVerifyEmailModal(event: any) {
+    const verificationCode = this.verificationCode?.value?.trim();
+
+    if (!verificationCode) {
+      this.isRequiredVerificationCodeSignal.set(true);
+      return;
+    }
+    
+    this.userService.verifyEmail(verificationCode).subscribe({
+      next: (data) => { 
+        this.toastSuccess('Successfully verified email address!');
+        this.refreshUserInfo();
+      },   
+      error: (error) => {
+        this.toastFail('Unsuccessfully verified email address!');
+      }
+    });
+
+    // Close the modal
+    this.isRequiredVerificationCodeSignal.set(false);
+    this.closeVerifyEmailModal();
+  }
+
+  refreshUserInfo(): void {
+    this.userService.getMyinfo().subscribe({
+      next: (data) => {
+        const user: User = this.localStorageService.getUser();
+        const newUser: User = {
+          ...user, 
+          emailAddress: data.emailAddress,
+          newEmailAddress: data.newEmailAddress,
+          isEmailAddressVerified: data.isEmailAddressVerified
+        };
+        this.localStorageService.saveUser(newUser);
+      },
+      error: (error) => {
+
+      }
+    });
+
   }
 
   // ********* Change user password ****************

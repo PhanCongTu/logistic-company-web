@@ -19,7 +19,13 @@
                         alt="User Avatar">
                   <div>
                         <h2 class="text-4xl font-semibold text-gray-800">{{ userInfoSignal()?.username }}</h2>
-                        <p class="text-gray-600 text-lg">{{ userInfoSignal()?.emailAddress }}</p>
+                        <p class="text-gray-600 text-lg">{{ userInfoSignal()?.emailAddress }}
+                              @if(userInfoSignal()?.isEmailAddressVerified) {
+                              <i class="fa-regular fa-circle-check text-green-500"></i>
+                              } @else {
+                              <i class="fa-regular fa-circle-xmark text-red-500"></i>
+                              }
+                        </p>
                         <p class="text-gray-600 text-lg">{{ userInfoSignal()?.roles }}</p>
                   </div>
             </div>
@@ -41,18 +47,34 @@
                                     <i class="fa-regular fa-circle-xmark text-red-500"></i>
                                     }
                               </span>
-
                         </div>
+                        @if (userInfoSignal()?.newEmailAddress ) {
+                        <div class="flex justify-between mb-2">
+                              <span class="text-gray-600 pr-3">New email:</span>
+                              <span class="text-gray-900">{{ userInfoSignal()?.newEmailAddress }}
+                                    <i class="fa-regular fa-circle-xmark text-red-500"></i>
+                              </span>
+                        </div>
+                        }
                         <div class="flex justify-between mb-2">
                               <span class="text-gray-600">Role:</span>
                               <span class="text-gray-900">{{ userInfoSignal()?.roles }}</span>
                         </div>
-                        <div class="flex items-center justify-end">
-                              <button
-                                    class="mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
-                                    (click)="openChangeEmailModal()">
-                                    <i class="fas fa-edit mr-1"></i> Change email address
-                              </button>
+                        <div class="flex flex-wrap justify-between md:flex-nowrap mt-10">
+                              <div class="w-full md:w-1/2  p-1 md:mt-0 text-right my-1">
+                                    <button
+                                          class=" rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
+                                          (click)="openVerifyEmailModal()">
+                                          <i class="fas fa-edit mr-1"></i> Verify email
+                                    </button>
+                              </div>
+                              <div class="w-full md:w-1/2  p-1  md:mt-0 text-right my-1">
+                                    <button
+                                          class=" rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
+                                          (click)="openChangeEmailModal()">
+                                          <i class="fas fa-edit mr-1"></i> Change email
+                                    </button>
+                              </div>
                         </div>
 
                   </div>
@@ -103,10 +125,11 @@
       </div>
 
 
-      <!-- Modal for Editing User Info -->
+      <!-- Modal for Change email address -->
       <p-dialog header="Change email address" [(visible)]="isChangeEmailModalOpenSignal" [modal]="true"
-            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }"
-            [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
+            [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
+            [style]="{ width: '25rem' }">
             <ng-template pTemplate="header">
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
@@ -151,8 +174,62 @@
             </div>
       </p-dialog>
 
+      <!-- Modal for Verify email address -->
+      <p-dialog header="Verify email address" [(visible)]="isVerifyEmailModalOpenSignal" [modal]="true"
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
+            [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
+            [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Verify email address
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <div>
+                        <div class="mt-2 space-y-10">
+                              <div class="space-y-2">
+                                    <div
+                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <input type="text" placeholder="Veriication code"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
+                                                [formControl]="verificationCode" />
+                                    </div>
+
+                                    @if (isRequiredVerificationCodeSignal())
+                                    {
+                                    <div class="flex items-center justify-center">
+                                          <div class="pl-5 text-sm text-red-600">Please check your email and enter the
+                                                code.</div>
+                                    </div>
+                                    }
+                                    <div class="flex items-center justify-center cursor-pointer !mt-5">
+                                          <button type="button" (click)="sendVerificationCode()"
+                                                class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                                <i class="fa-regular fa-paper-plane"></i> Send again
+                                          </button>
+                                    </div>
+                              </div>
+                              <div class="flex justify-around ">
+                                    <button type="button" (click)="closeVerifyEmailModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                    </button>
+
+                                    <button type="button" (click)="submitVerifyEmailModal($event)"
+                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Verify
+                                    </button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </p-dialog>
+
       <!-- Modal for Changing Password -->
-      <p-dialog header="Change password" [(visible)]="isChangePasswordModalOpenSignal" [modal]="true"
+      <p-dialog header="Change password" [(visible)]="isChangePasswordModalOpenSignal" [modal]="true" [closable]="false"
             [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }"
             [draggable]="false" [resizable]="false" [style]="{ width: '30rem' }">
             <ng-template pTemplate="header">
@@ -227,8 +304,9 @@
 
       <!-- Modal for Change user address-->
       <p-dialog header="Change user address" [(visible)]="isChangeAddressModalOpenSignal" [modal]="true"
-            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }"
-            [draggable]="false" [resizable]="false" [style]="{ width: '40rem' }">
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
+            [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
+            [style]="{ width: '40rem' }">
             <ng-template pTemplate="header">
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">

@@ -2,6 +2,7 @@ export interface User {
       userId?: string;
       username?: string;
       emailAddress?: string;
+      newEmailAddress?: string;
       isEmailAddressVerified?: boolean;
       address?: string;
       accessToken?: string;
