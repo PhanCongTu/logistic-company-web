@@ -1,3 +1,7 @@
+<div class="card flex justify-content-center">
+      <p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'"
+            [hideTransitionOptions]="'500ms'" [showTransformOptions]="'translateX(100%)'" />
+</div>
 <div class="relative min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 bg-no-repeat bg-cover relative items-center"
       style="
     background-image: url('/2.jpg');
@@ -24,7 +28,11 @@
 
                         @if (isFieldValid("username"))
                         {
+                        @if (signinForm.get('username')?.errors?.['emailRequired']) {
+                        <div class="pl-5 text-sm text-red-600">Verified email address is required.</div>
+                        } @else {
                         <div class="pl-5 text-sm text-red-600">Username or email is required.</div>
+                        }
                         }
                   </div>
                   <div class="space-y-2">
@@ -41,7 +49,8 @@
                                     <i class="fa-regular fa-eye"></i>
                                     }
                               </div>
-                              <div routerLink="" class="cursor-pointer font-medium text-gray-400 hover:text-gray-500">
+                              <div (click)="sendResetPassword()"
+                                    class="cursor-pointer font-medium text-gray-400 hover:text-gray-500">
                                     FORGOT?</div>
                         </div>
                         @if (isFieldValid("password")) {

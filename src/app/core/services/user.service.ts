@@ -5,6 +5,7 @@ import { UpdateUser } from '../../shared/models/update-user.model';
 import { Observable } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { ChangePasword } from '../../shared/models/change-pasword.model';
+import { ResetPassword } from '../../shared/models/reset-password.model';
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +83,24 @@ export class UserService {
       'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
     });
     return this.http.get(`${this.endpoint}/api/user/me`, { headers});
+  }
+
+  sendResetPassword(verifiedEmail: string): Observable<any> {
+    return this.http.post(`${this.endpoint}/api/user/password/reset/request/EMAIL:${verifiedEmail}`, null);
+  }
+  
+  verifyResetPasswordCode(userId: string, code: string): Observable<any> {
+    const params = {
+      'userId': userId,
+      'code': code
+    };
+    return this.http.post(`${this.endpoint}/api/user/password/reset/verify`, null, { params });
+  }
+
+  resetPassword(userId: string, data: ResetPassword): Observable<any> {
+    const params = {
+      'userId': userId
+    };
+    return this.http.post(`${this.endpoint}/api/user/password/reset/complete`, data, { params });
   }
 }

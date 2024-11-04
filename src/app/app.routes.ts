@@ -3,11 +3,13 @@ import { LoginComponent } from './features/login/login.component';
 import { HomeComponent } from './features/home/home.component';
 import { SignupComponent } from './features/signup/signup.component';
 import { UserInforComponent } from './features/user/user-infor/user-infor.component';
+import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 
 export const ROUTES = {
       home: '',
       login: 'login',
       signup: 'signup',
+      resetPassword: 'reset-password',
       userInfo: 'user/infor',
     };
 
@@ -27,6 +29,10 @@ export const routes: Routes = [
       {
             path: ROUTES.userInfo,
             component: UserInforComponent
+      },
+      {
+            path: ROUTES.resetPassword,
+            component: ResetPasswordComponent
       },
       
 ];

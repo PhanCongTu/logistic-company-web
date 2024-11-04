@@ -6,11 +6,21 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../core/services/local-storage.service';
 import { ROUTES } from '../../app.routes';
+import { AppConstants } from '../../shared/constants/app-constants.constant';
+import { UserService } from '../../core/services/user.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [
+    ReactiveFormsModule, 
+    CommonModule, 
+    RouterLink, 
+    ToastModule
+  ],
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -27,8 +37,11 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private router: Router,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private messageService: MessageService
+
   ) {
     this.signinForm = this.formBuilder.group({
       username: ['', [Validators.required]],
@@ -72,6 +85,27 @@ export class LoginComponent implements OnInit {
     
   }
 
+  sendResetPassword() {
+    this.signinForm.get('password')?.setErrors(null);
+    if (!AppConstants.EMAIL_REGEX.test(this.signinForm.get('username')?.value)) {
+      this.signinForm.get('username')?.setErrors({ emailRequired: true });
+      return;
+    }
+    this.signinForm.get('username')?.setErrors(null);
+
+    // Send reset password request
+    this.userService.sendResetPassword(this.signinForm.get('username')?.value).subscribe({
+      next: (data) => { 
+        this.toastSuccess("Please check your verified email address!")
+        this.toastInfo("Only the verified email address can recieve reset password email!");
+        this.signinForm.reset();
+      },   
+      error: (error) => { 
+        this.toastFail("Something went wrong! Please try again!");
+      },
+    });
+  }
+
   /**
    * Check the input field is valid or not
    * @param field : The input field
@@ -93,5 +127,17 @@ export class LoginComponent implements OnInit {
 
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+
+  toastSuccess(message: string) {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail:  message});
+  }
+
+  toastInfo(message: string) {
+    this.messageService.add({ severity: 'info', summary: 'Info', detail:  message});
+  }
+
+  toastFail(message: string) {
+    this.messageService.add({ severity: 'error', summary: 'Error', detail:  message});
   }
 }
