@@ -30,7 +30,15 @@ export class LocalStorageService {
     this.userInfoSubject.next(null);
   }
 
+  // Get the access token
   getToken(): String | undefined {
     return this.getUser().accessToken;
+  }
+
+  // Update the access token
+  updateAccessToken(accessToken: string): void {
+    const user: User = this.getUser();
+    const newUser: User = {...user, accessToken: accessToken};
+    this.saveUser(newUser);
   }
 }

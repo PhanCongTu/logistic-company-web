@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Login } from '../../shared/models/login.model';
 import { AppConfig } from '../../config';
 import { SignUp } from '../../shared/models/sign-up.model';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,10 @@ export class AuthService {
 
   private endpoint = AppConfig.apiUrl;  // URL API
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private localStorageService: LocalStorageService
+  ) { }
 
   /**
    * Service use to user login
@@ -30,5 +34,16 @@ export class AuthService {
    */
   signUp(data: SignUp): Observable<any> {
     return this.http.post(`${this.endpoint}/api/signup`, data);
+  }
+
+  /**
+   * Service use to refresh the user access token
+   * @returns 
+   */
+  refreshToken(): Observable<any> {
+    const data = {
+      refreshToken: this.localStorageService.getUser()?.refreshToken
+    };
+    return this.http.post(`${this.endpoint}/api/refresh_token`, data);
   }
 }
