@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CustomValidators } from '../../shared/custom-validators.validator';
-import { SignUp } from '../../shared/models/sign-up.model';
+import { SignUpRequest } from '../../shared/models/requests/sign-up-request.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LocalStorageService } from '../../core/services/local-storage.service';
 import { ROUTES } from '../../app.routes';
@@ -67,7 +67,7 @@ export class SignupComponent {
     
 
     if (this.signupForm.valid) {
-      const signUpData: SignUp = {
+      const signUpData: SignUpRequest = {
         username: this.signupForm.get('username')?.value,
         password: this.signupForm.get('password')?.value,
         emailAddress: this.signupForm.get('emailAddress')?.value,

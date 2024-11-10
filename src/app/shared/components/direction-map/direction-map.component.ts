@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AppConfig } from '../../../config';
 import { Loader } from '@googlemaps/js-api-loader';
-import { Coordinates } from '../../models/coordinates.model';
+import { Coordinates } from '../../models/common/coordinates.model';
 
 @Component({
   selector: 'app-direction-map',

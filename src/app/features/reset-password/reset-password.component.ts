@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ROUTES } from '../../app.routes';
 import { LocalStorageService } from '../../core/services/local-storage.service';
 import { CustomValidators } from '../../shared/custom-validators.validator';
-import { ResetPassword } from '../../shared/models/reset-password.model';
+import { ResetPasswordRequest } from '../../shared/models/requests/reset-password-request.model';
 import { UserService } from '../../core/services/user.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -68,7 +68,7 @@ export class ResetPasswordComponent {
 
   onSubmit() {
     if (this.resetPasswordForm.valid) {
-      const resetPasswordData: ResetPassword = {
+      const resetPasswordData: ResetPasswordRequest = {
         newPassword: this.resetPasswordForm.get('newPassword')?.value,
         code: this.code
       }

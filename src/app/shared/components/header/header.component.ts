@@ -11,7 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { Menu } from 'primeng/menu';
 import { MenuModule } from 'primeng/menu';
 import { LocalStorageService } from '../../../core/services/local-storage.service';
-import { User } from '../../models/user.model';
+import { User } from '../../models/responses/user.model';
 import { ROUTES } from '../../../app.routes';
 
 @Component({
@@ -112,6 +112,8 @@ export class HeaderComponent {
 
         this.avatarItems = [
             { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
+            { label: 'Warehouse', icon: 'pi pi-user', command: () => this.router.navigate([this.routes.adminWarehouse]) },
+            { label: 'Users', icon: 'pi pi-user', command: () => this.router.navigate([this.routes.adminUser]) },
             { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
             { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout(), 
                 styleClass: 'logoutItem' 

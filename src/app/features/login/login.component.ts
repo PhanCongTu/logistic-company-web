@@ -1,7 +1,7 @@
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
-import { Login } from '../../shared/models/login.model';
+import { LoginRequest } from '../../shared/models/requests/login-request.model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../core/services/local-storage.service';
@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
     this.formSubmitAttempt = true;
     this.loginFailed = false;
     if (this.signinForm.valid) {
-      const loginData: Login = {
+      const loginData: LoginRequest = {
         username: this.signinForm.get('username')?.value,
         password: this.signinForm.get('password')?.value,
       }

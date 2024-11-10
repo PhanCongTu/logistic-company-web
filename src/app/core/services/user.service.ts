@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../config';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { UpdateUser } from '../../shared/models/update-user.model';
+import { UpdateUserRequest } from '../../shared/models/requests/update-user-request.model';
 import { Observable } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
-import { ChangePasword } from '../../shared/models/change-pasword.model';
-import { ResetPassword } from '../../shared/models/reset-password.model';
+import { ChangePaswordRequest } from '../../shared/models/requests/change-pasword-request.model';
+import { ResetPasswordRequest } from '../../shared/models/requests/reset-password-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class UserService {
    * @param data : the UpdateUser interface
    * @returns 
    */
-  updateUser(data: UpdateUser): Observable<any> {
+  updateUser(data: UpdateUserRequest): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json', 
       'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
@@ -34,10 +34,10 @@ export class UserService {
 
   /**
    * Change the user password
-   * @param data  : The ChangePasword interface
+   * @param data  : The ChangePaswordRequest interface
    * @returns 
    */
-  changePassword(data: ChangePasword): Observable<any> {
+  changePassword(data: ChangePaswordRequest): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json', 
       'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
@@ -89,6 +89,12 @@ export class UserService {
     return this.http.post(`${this.endpoint}/api/user/password/reset/request/EMAIL:${verifiedEmail}`, null);
   }
   
+  /**
+   * Verify the reset password code
+   * @param userId : The user's id
+   * @param code : The reset password code
+   * @returns 
+   */
   verifyResetPasswordCode(userId: string, code: string): Observable<any> {
     const params = {
       'userId': userId,
@@ -97,7 +103,13 @@ export class UserService {
     return this.http.post(`${this.endpoint}/api/user/password/reset/verify`, null, { params });
   }
 
-  resetPassword(userId: string, data: ResetPassword): Observable<any> {
+  /**
+   * Reset the user's password
+   * @param userId : The user'id
+   * @param data : The ResetPassword
+   * @returns 
+   */
+  resetPassword(userId: string, data: ResetPasswordRequest): Observable<any> {
     const params = {
       'userId': userId
     };

@@ -1,6 +1,6 @@
-import { CoordinatesWithAddress } from "./coordinates.model";
+import { CoordinatesWithAddress } from "../common/coordinates.model";
 
-export interface UpdateUser {
+export interface UpdateUserRequest {
       emailAddress?: string ; // null allowed
       coordinatesWithAddress?: CoordinatesWithAddress // null allowed
 }

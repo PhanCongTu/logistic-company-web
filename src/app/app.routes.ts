@@ -4,6 +4,8 @@ import { HomeComponent } from './features/home/home.component';
 import { SignupComponent } from './features/signup/signup.component';
 import { UserInforComponent } from './features/user/user-infor/user-infor.component';
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
+import { WarehouseComponent } from './features/admin/warehouse/warehouse.component';
+import { UserComponent } from './features/admin/user/user.component';
 
 export const ROUTES = {
       home: '',
@@ -11,6 +13,8 @@ export const ROUTES = {
       signup: 'signup',
       resetPassword: 'reset-password',
       userInfo: 'user/infor',
+      adminWarehouse: 'admin/warehouse',
+      adminUser: 'admin/user',
     };
 
 export const routes: Routes = [
@@ -34,5 +38,12 @@ export const routes: Routes = [
             path: ROUTES.resetPassword,
             component: ResetPasswordComponent
       },
-      
+      {
+            path: ROUTES.adminWarehouse,
+            component: WarehouseComponent
+      },
+      {
+            path: ROUTES.adminUser,
+            component: UserComponent
+      },
 ];

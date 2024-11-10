@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps'
 import { MapComponent } from '../../../shared/components/map/map.component';
-import { Coordinates, CoordinatesWithAddress, isCoordinates } from '../../../shared/models/coordinates.model';
+import { Coordinates, CoordinatesWithAddress, isCoordinates } from '../../../shared/models/common/coordinates.model';
 import { DirectionMapComponent } from '../../../shared/components/direction-map/direction-map.component';
-import { User } from '../../../shared/models/user.model';
+import { User } from '../../../shared/models/responses/user.model';
 import { LocalStorageService } from '../../../core/services/local-storage.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidators } from '../../../shared/custom-validators.validator';
-import { UpdateUser } from '../../../shared/models/update-user.model';
+import { UpdateUserRequest } from '../../../shared/models/requests/update-user-request.model';
 import { UserService } from '../../../core/services/user.service';
-import { ChangePasword } from '../../../shared/models/change-pasword.model';
+import { ChangePaswordRequest } from '../../../shared/models/requests/change-pasword-request.model';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
@@ -106,7 +106,7 @@ export class UserInforComponent implements OnInit {
   }
 
   updateUserCoordinatesWithAddress(pointData: CoordinatesWithAddress) {
-    const updatePointData: UpdateUser = {
+    const updatePointData: UpdateUserRequest = {
       coordinatesWithAddress: pointData
     }
     this.userService.updateUser(updatePointData).subscribe({
@@ -145,7 +145,7 @@ export class UserInforComponent implements OnInit {
     // Avoid refreshing the page
     even.preventDefault();
 
-    const changedEmailData: UpdateUser = {
+    const changedEmailData: UpdateUserRequest = {
       emailAddress: this.changeEmailForm.value.emailAddress
     }
 
@@ -248,7 +248,7 @@ export class UserInforComponent implements OnInit {
     // Avoid refreshing the page
     even.preventDefault();
 
-    const changedPasswordData: ChangePasword = {
+    const changedPasswordData: ChangePaswordRequest = {
       oldPassword: this.changePasswordForm.value.oldPassword,
       newPassword: this.changePasswordForm.value.newPassword,
     }
@@ -312,7 +312,7 @@ export class UserInforComponent implements OnInit {
       return undefined;
     })
 
-    const changedAddressData: UpdateUser = {
+    const changedAddressData: UpdateUserRequest = {
       coordinatesWithAddress: this.userCoordinatesWithAddressSignal()
     }
 

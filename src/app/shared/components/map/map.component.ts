@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import { AppConfig } from '../../../config';
-import { Coordinates, CoordinatesWithAddress } from '../../models/coordinates.model';
+import { Coordinates, CoordinatesWithAddress } from '../../models/common/coordinates.model';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({

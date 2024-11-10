@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Login } from '../../shared/models/login.model';
+import { LoginRequest } from '../../shared/models/requests/login-request.model';
 import { AppConfig } from '../../config';
-import { SignUp } from '../../shared/models/sign-up.model';
+import { SignUpRequest } from '../../shared/models/requests/sign-up-request.model';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class AuthService {
    * @param data : The Login interface
    * @returns 
    */
-  login(data: Login): Observable<any> {
+  login(data: LoginRequest): Observable<any> {
     return this.http.post(`${this.endpoint}/api/login`, data);
   }
 
@@ -32,7 +32,7 @@ export class AuthService {
    * @param data : The SignUp interface
    * @returns 
    */
-  signUp(data: SignUp): Observable<any> {
+  signUp(data: SignUpRequest): Observable<any> {
     return this.http.post(`${this.endpoint}/api/signup`, data);
   }
 
