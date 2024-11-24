@@ -76,6 +76,7 @@ export class WarehouseComponent {
   ngOnInit() {
     this.items = [
       { icon: 'pi pi-home', route: '/' },
+      { label: 'Manage' },
       { label: 'Warehouse', route: '/admin/warehouse' },
     ];
 

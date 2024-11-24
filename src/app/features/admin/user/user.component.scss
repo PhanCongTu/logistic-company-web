@@ -1,0 +1,36 @@
+:host ::ng-deep {
+      .drop-column {
+          border: 1px solid transparent;
+          transition: border-color .2s;
+      
+          &.p-draggable-enter {
+              border-color: var(--primary-color); 
+          }
+      }
+  
+      [pDraggable] {
+          cursor: move;
+      }
+  }
+
+  .two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 0.1fr 1fr; /* Chia làm hai cột bằng nhau */
+    gap: 1rem; /* Khoảng cách giữa các cột */
+  }
+  
+  @media (max-width: 768px) {
+    .two-column-layout {
+      grid-template-columns: 1fr; /* Trên màn hình nhỏ, các cột sẽ xếp chồng */
+    }
+  }
+  ul {
+    display: flex;
+    flex-direction: column; /* Xếp theo chiều dọc */
+    gap: 0.5rem; /* Khoảng cách giữa các mục */
+  }
+  
+  li {
+    display: block; /* Đảm bảo từng mục là một khối */
+  }
+  

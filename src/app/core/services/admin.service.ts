@@ -20,6 +20,17 @@ export class AdminService {
     private localStorageService: LocalStorageService
   ) { }
 
+  updateRolesToUser(userId: string, newRoles: string[]) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    const data = {
+      "userId": userId || undefined,
+      "roles": newRoles
+    };
+    return this.http.post(`${this.endpoint}/api/admin/update-role`, data, { headers });
+  }
   /**
    * Create a new warehouse
    * @param data : the CreateWarehouseRequest Interface
@@ -98,5 +109,27 @@ export class AdminService {
       'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
     return this.http.get(`${this.endpoint}/api/admin/warehouse`, { headers, params });
+  }
+
+  searchAndPageableUserProfile(pageRequest: PageRequest, role: string): Observable<any> {
+
+    const { page, size, search, sortColumn, sortType } = pageRequest;
+
+    let params = new RequestParamBuilder()
+      .setPage(page)
+      .setSize(size)
+      .setSearch(search)
+      .setSortColumn(sortColumn)
+      .setSortType(sortType)
+      .build();
+
+    params = params.set('role', role ?? '');
+
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/admin/users`, { headers, params });
   }
 }

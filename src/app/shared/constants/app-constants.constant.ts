@@ -7,4 +7,5 @@ export class AppConstants {
 export enum ROLES {
       ROLE_ADMIN = "ROLE_ADMIN",
       ROLE_USER = "ROLE_USER",
+      ROLE_WAREHOUSE_MANAGER = "ROLE_WAREHOUSE_MANAGER"
 }
