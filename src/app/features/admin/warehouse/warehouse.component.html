@@ -6,8 +6,8 @@
 <app-map [isVisible]="isMapVisibleSignal()" (dataEmitter)="receivedMapData($event)"></app-map>
 }
 <app-confirm-popup #confirmDeletePopupComponent header="Confirm delete" title="Do you want to delete this item?"
-      confirmButton="Delete" [isNative]="false" (isConfirm)="handleDelete($event)"></app-confirm-popup>
-<app-confirm-popup #confirmActivePopupComponent (isConfirm)="handleActive($event)" header="Confirm active"
+      confirmButton="Delete" [isNative]="false" (isConfirm)="handleDeactivateWarehouse($event)"></app-confirm-popup>
+<app-confirm-popup #confirmActivePopupComponent (isConfirm)="handleActiveWarehouse($event)" header="Confirm active"
       title="Do you want to active this item?" confirmButton="Confirm" [isNative]="true"></app-confirm-popup>
 <div class="bg-gray-50 dark:bg-neutral-900 pt-20">
 
@@ -288,45 +288,54 @@
                                                                   </div>
                                                             </td>
                                                             <td class="size-px whitespace-nowrap">
-                                                                  <div class="px-6 py-3 ">
+                                                                  <div class="px-3 py-3 ">
                                                                         @if (warehouse?.status) {
-                                                                        <span (click)="openDeletePopup(warehouse?.id)"
+                                                                        <span
                                                                               class=" cursor-pointer py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  relative group">
 
                                                                               <span
-                                                                                    class="status-text transition-opacity duration-300 group-hover:opacity-0 bg-teal-100 px-2 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500"><i
+                                                                                    class="status-text transition-opacity duration-300  bg-teal-100 px-2 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500"><i
                                                                                           class="fa-solid fa-circle-check mr-1"></i>Active</span>
-                                                                              <span
-                                                                                    class="status-text-hover absolute inset-0 flex items-center justify-center opacity-0 px-2 group-hover:opacity-100 transition-opacity duration-100 bg-gray-200 text-gray-600 rounded-full dark:bg-gray-700/20 dark:text-gray-400">
-                                                                                    <i
-                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>Deactive
-                                                                              </span>
                                                                         </span>
                                                                         } @else {
-                                                                        <span (click)="openActivePopup(warehouse?.id)"
-                                                                              class="cursor-pointer py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  relative group">
+                                                                        <span
+                                                                              class=" cursor-pointer py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  relative group">
 
                                                                               <span
-                                                                                    class="status-text transition-opacity duration-300  opacity-0 group-hover:opacity-100 bg-teal-100 px-2 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500"><i
-                                                                                          class="fa-solid fa-circle-check mr-1"></i>Active</span>
-                                                                              <span
-                                                                                    class="status-text-hover absolute inset-0 flex items-center justify-center group-hover:opacity-0
-                                                                                     transition-opacity duration-100 bg-gray-200 px-2 text-gray-600 rounded-full dark:bg-gray-700/20 dark:text-gray-400">
-                                                                                    <i
-                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>Deactive
-                                                                              </span>
+                                                                                    class="status-text transition-opacity duration-300  bg-gray-200 px-2 text-gray-600 rounded-full dark:bg-gray-700/20 dark:text-gray-400"><i
+                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>Deactive</span>
                                                                         </span>
                                                                         }
                                                                   </div>
                                                             </td>
-                                                            <td class="size-px whitespace-nowrap">
-                                                                  <div class="px-6 py-1.5">
-                                                                        <button
-                                                                              (click)="openUpdateWarehouseModal(warehouse?.id)"
-                                                                              class="px-1 inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500">
-                                                                              Edit
-                                                                        </button>
+                                                            <td class="size-px whitespace-nowrap ">
+                                                                  <div
+                                                                        class="flex items-center justify-center px-4 py-1.5 cursor-pointer transform transition-transform duration-100 hover:scale-150">
+                                                                        <i class="fa-solid fa-bars "
+                                                                              (click)="toggleWarehouseMenu($event, warehouse)"></i>
+
                                                                   </div>
+                                                                  <p-menu #warehouseMenu [model]="warehouseMenuItems"
+                                                                        [popup]="true"
+                                                                        [style]="{ minWidth: '200px', width:  'fit-content'}"
+                                                                        [appendTo]="'body'">
+                                                                        <ng-template pTemplate="item" let-item
+                                                                              let-root="root">
+
+                                                                              <a pRipple
+                                                                                    class="flex align-items-center p-menuitem-link"
+                                                                                    [ngClass]="item.styleClass">
+                                                                                    <span [class]="item.icon"></span>
+                                                                                    <span class="ml-2">{{
+                                                                                          item.label }}</span>
+                                                                                    <span *ngIf="item.shortcut"
+                                                                                          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{
+                                                                                          item.shortcut }}</span>
+                                                                                    <i *ngIf="item.items"
+                                                                                          [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+                                                                              </a>
+                                                                        </ng-template>
+                                                                  </p-menu>
                                                             </td>
                                                       </tr>
                                                       }
@@ -564,6 +573,336 @@
                                     </button>
 
                                     <button type="submit"
+                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Save
+                                    </button>
+                              </div>
+                        </div>
+                  </form>
+            </div>
+      </p-dialog>
+
+
+      <!-- Assign manager to warehouse  -->
+      <p-dialog header="Add warehouse" [(visible)]="isAssignManagerToWarehouseModalOpenSignal" [modal]="true"
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+                  '10000px': '90%',
+                  '1200px': '90%',
+                  '1199px': '90%',
+                  '575px': '90%',
+          }" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Assign manager to warehouse
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <div
+                        class="p-4 mb-6 md:p-5 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                        <!-- Header -->
+                        <div class="flex justify-around items-center ">
+                              <div class="px-2">
+                                    <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                          Name
+                                    </h2>
+                                    <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                          {{selectedWarehouse?.name}}
+                                    </p>
+                              </div>
+                              <div class="px-2">
+                                    <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                          Address
+                                    </h2>
+                                    <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                          {{selectedWarehouse?.address}}
+                                    </p>
+                              </div>
+                        </div>
+                        <!-- End Header -->
+                  </div>
+                  <form>
+                        <div class="mt-2 space-y-10">
+
+                              <div class="flex flex-col">
+                                    <!-- Header -->
+                                    <div
+                                          class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+                                          <div>
+                                                <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
+                                                      Warehouse manager
+                                                </h2>
+                                                <p class="text-sm text-gray-600 dark:text-neutral-400">
+                                                      Choose a warehouse manager to manage this warehouse
+                                                </p>
+                                          </div>
+                                          <div>
+                                                <div class="md:inline-flex md:gap-x-10 grid gap-y-3">
+                                                      <form [formGroup]="searchForm" (ngSubmit)="searchUser($event)">
+                                                            <div class="flex items-center justify-content-center">
+
+                                                                  <div
+                                                                        class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
+
+                                                                        <input type="text"
+                                                                              placeholder="Search by username"
+                                                                              [formControl]="searchedUsername"
+                                                                              class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
+                                                                        <i (click)="searchUser($event)"
+                                                                              class="fa-solid fa-magnifying-glass cursor-pointer"></i>
+                                                                  </div>
+                                                            </div>
+
+
+                                                      </form>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <!-- End Header -->
+                                    <div class="-m-1.5 overflow-x-auto">
+                                          <div class="p-1.5 min-w-full inline-block align-middle">
+                                                <div
+                                                      class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-800 dark:border-neutral-700">
+
+
+                                                      <!-- Table -->
+                                                      <table
+                                                            class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                                                            <thead class="bg-gray-50 dark:bg-neutral-800">
+                                                                  <tr>
+                                                                        <th scope="col" class="px-6 py-3 text-end"></th>
+
+                                                                        <th scope="col" class="ps-6 py-3 text-start">
+                                                                              <label for="hs-at-with-checkboxes-main"
+                                                                                    class="flex">
+                                                                                    <div
+                                                                                          class="flex items-center justify-center">
+                                                                                          <span
+                                                                                                class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                                ID
+                                                                                          </span>
+                                                                                    </div>
+                                                                              </label>
+                                                                        </th>
+
+                                                                        <th scope="col"
+                                                                              class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Username
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col" class="px-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Email
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col" class="px-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Verified Status
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col" class="px-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Address
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col" class="px-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Roles
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                  </tr>
+                                                            </thead>
+
+                                                            <tbody
+                                                                  class="divide-y divide-gray-200 dark:divide-neutral-700">
+                                                                  @for (userProfile of
+                                                                  paginatedWarehouseManagerSignal()?.content; track
+                                                                  $index) {
+                                                                  <tr class="hover:bg-gray-200 cursor-pointer"
+                                                                        (click)="selectRow(userProfile.userId)">
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div class="ps-6 py-3">
+                                                                                    <input type="radio" name="options"
+                                                                                          [value]="userProfile.userId"
+                                                                                          [checked]="selectedWarehouseManagerIdSignal() === userProfile.userId"
+                                                                                          [(ngModel)]="selectedWarehouseManagerIdSignal" />
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div class="ps-6 py-3">
+                                                                                    <label for="hs-at-with-checkboxes-1"
+                                                                                          class="flex">
+                                                                                          <span>{{userProfile?.userId}}</span>
+                                                                                    </label>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    <div
+                                                                                          class="flex items-center gap-x-3">
+                                                                                          <div class="grow">
+                                                                                                <span
+                                                                                                      class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{userProfile?.username}}</span>
+                                                                                          </div>
+                                                                                    </div>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    <span
+                                                                                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{userProfile?.emailAddress}}</span>
+                                                                                    <span
+                                                                                          class="block text-sm text-gray-500 dark:text-neutral-500">{{userProfile?.newEmailAddress}}</span>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    @if
+                                                                                    (userProfile?.isEmailAddressVerified)
+                                                                                    {
+                                                                                    <span
+                                                                                          class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                                                          <i
+                                                                                                class="fa-solid fa-circle-check mr-1"></i>
+                                                                                          Verified
+                                                                                    </span>
+                                                                                    } @else {
+                                                                                    <span
+                                                                                          class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
+                                                                                          <i
+                                                                                                class="fa-solid fa-circle-xmark mr-1"></i>Unverified
+                                                                                    </span>
+                                                                                    }
+
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-4 lg:ps-2 xl:ps-0 pe-4 py-3 ">
+                                                                                    <div
+                                                                                          class="flex items-center gap-x-3 ">
+                                                                                          <span
+                                                                                                class="text-sm text-gray-500 dark:text-neutral-500">{{userProfile?.address}}</span>
+                                                                                    </div>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px ">
+                                                                              <div class="px-6 py-3">
+                                                                                    <span
+                                                                                          class="text-sm text-gray-500 dark:text-neutral-500">
+                                                                                          @if
+                                                                                          (userProfile?.roles?.includes("ROLE_ADMIN"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-red-500 rounded-full">
+                                                                                                ROLE_ADMIN
+                                                                                          </span>
+                                                                                          } @if
+                                                                                          (userProfile?.roles?.includes("ROLE_USER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-blue-500 rounded-full">
+                                                                                                ROLE_USER
+                                                                                          </span>
+                                                                                          } @if
+                                                                                          (userProfile?.roles?.includes("ROLE_WAREHOUSE_MANAGER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-yellow-500 rounded-full">
+                                                                                                ROLE_WAREHOUSE_MANAGER
+                                                                                          </span>
+                                                                                          }
+                                                                                    </span>
+                                                                              </div>
+                                                                        </td>
+                                                                  </tr>
+                                                                  }
+
+
+                                                            </tbody>
+                                                      </table>
+                                                      <!-- End Table -->
+
+                                                      <!-- Footer -->
+                                                      <div
+                                                            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
+                                                            <div>
+                                                                  <p
+                                                                        class="text-sm text-gray-600 dark:text-neutral-400">
+                                                                        Showing
+                                                                        <span
+                                                                              class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.number!*paginatedWarehouseManagerSignal()?.size!}}</span>
+                                                                        -
+                                                                        <span
+                                                                              class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.number!*paginatedWarehouseManagerSignal()?.size!
+                                                                              +
+                                                                              paginatedWarehouseManagerSignal()?.numberOfElements!}}</span>
+                                                                        of
+                                                                        <span
+                                                                              class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.totalElements}}</span>
+                                                                        results
+                                                                  </p>
+                                                            </div>
+
+                                                            <div>
+                                                                  <div class="inline-flex gap-x-2">
+                                                                        <button
+                                                                              [disabled]="paginatedWarehouseManagerSignal()?.first"
+                                                                              (click)="previousPage()"
+                                                                              class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                                                              <i class="fa-solid fa-chevron-left"></i>
+                                                                              Prev
+                                                                        </button>
+
+                                                                        <button
+                                                                              [disabled]="paginatedWarehouseManagerSignal()?.last"
+                                                                              (click)="nextPage()"
+                                                                              class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                                                              Next
+                                                                              <i class="fa-solid fa-chevron-right"></i>
+                                                                        </button>
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                      <!-- End Footer -->
+                                                </div>
+                                          </div>
+                                    </div>
+                              </div>
+
+                              <div class="flex justify-around">
+                                    <button type="button" (click)="closeAssignManagerToWarehouseModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                    </button>
+
+                                    <button type="button" (click)="submitAssignManagerToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
                                           <i class="fa-solid fa-check"></i> Save
                                     </button>

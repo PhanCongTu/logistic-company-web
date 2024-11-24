@@ -20,6 +20,18 @@ export class AdminService {
     private localStorageService: LocalStorageService
   ) { }
 
+  assignWarehouseToManager(warehouseId: number, warehouseManagerId: number) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    const params = {
+      'managerId': warehouseManagerId,
+      'warehouseId': warehouseId
+    };
+    return this.http.post(`${this.endpoint}/api/admin/warehouse/assign`, null, { headers, params });
+  }
+
   updateRolesToUser(userId: string, newRoles: string[]) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -60,7 +72,7 @@ export class AdminService {
    * @param warehouseId : the id of the warehouse
    * @returns 
    */
-  deleteWarehouse(warehouseId: number): Observable<any> {
+  deactivateWarehouse(warehouseId: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + this.localStorageService.getToken(),
@@ -68,7 +80,7 @@ export class AdminService {
     const params = {
       'warehouseId': warehouseId
     };
-    return this.http.delete(`${this.endpoint}/api/admin/warehouse/delete`, { headers, params });
+    return this.http.delete(`${this.endpoint}/api/admin/warehouse/deactivate`, { headers, params });
   }
 
   /**

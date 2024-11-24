@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MenuItem, MessageService } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { DialogModule } from 'primeng/dialog';
@@ -14,6 +14,10 @@ import { Warehouse } from '../../../shared/models/responses/warehouse.model';
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component';
 import { ToastModule } from 'primeng/toast';
 import { UpdateWarehouseRequest } from '../../../shared/models/requests/update-warehouse-request.model';
+import { Menu, MenuModule } from 'primeng/menu';
+import { UserProfile } from '../../../shared/models/responses/user-profile.model';
+import { ROLES } from '../../../shared/constants/app-constants.constant';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-warehouse',
@@ -25,7 +29,10 @@ import { UpdateWarehouseRequest } from '../../../shared/models/requests/update-w
     ReactiveFormsModule,
     MapComponent,
     ToastModule,
-    ConfirmPopupComponent
+    ConfirmPopupComponent,
+    MenuModule,
+    RadioButtonModule,
+    FormsModule
   ],
   providers: [MessageService],
   templateUrl: './warehouse.component.html',
@@ -36,25 +43,36 @@ export class WarehouseComponent {
   @ViewChild('confirmActivePopupComponent') confirmActivePopupComponent!: ConfirmPopupComponent;
 
   items: MenuItem[] | undefined;
+  warehouseMenuItems: MenuItem[] | undefined;
 
   // Forms
   addWarehouseForm: FormGroup;
   updateWarehouseForm: FormGroup;
+  searchForm: FormGroup;
+  searchedUsername = new FormControl('');
 
   pageRequest: PageRequest = {
     page: 0,
     search: ''
   };
+  selectedWarehouse: Warehouse | undefined;
+
+  selectedWarehouseManager: UserProfile | undefined;
+  selectedWarehouseManagerIdSignal: WritableSignal<string | undefined> = signal(undefined);
 
   selectedWarehouseId: number | undefined;
   selectedWarehouseSignal: WritableSignal<Warehouse | undefined> = signal(undefined);
 
   isAddWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
   isUpdateWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isAssignManagerToWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
   isMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isRequiredChooseLocaltionSignal: WritableSignal<boolean> = signal(false);
   userCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress | undefined> = signal(undefined);
   paginatedWarehouseSignal: WritableSignal<PaginatedResponse<Warehouse> | undefined> = signal(undefined);
+  paginatedWarehouseManagerSignal: WritableSignal<PaginatedResponse<UserProfile> | undefined> = signal(undefined);
+
+  @ViewChild('warehouseMenu') warehouseMenu!: Menu;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -70,6 +88,9 @@ export class WarehouseComponent {
       name: ['', [Validators.required]],
       additionalAddress: ['']
     });
+    this.searchForm = this.formBuilder.group({
+      searchedUsername: ['']
+    });
     this.searchAndPageableWarehouse();
   }
 
@@ -79,7 +100,100 @@ export class WarehouseComponent {
       { label: 'Manage' },
       { label: 'Warehouse', route: '/admin/warehouse' },
     ];
+    this.warehouseMenuItems = [
+      {
+        label: 'Update warehouse',
+        icon: 'fa-solid fa-pen',
+        command: () => {
+          this.openUpdateWarehouseModal(this.selectedWarehouse?.id);
+        }
+      },
+      {
+        label: 'Active',
+        icon: 'fa-solid fa-check',
+        command: () => {
+          this.openActivePopup(this.selectedWarehouse?.id);
+        }
+      },
+      {
+        label: 'Deactivate',
+        icon: 'fa-regular fa-trash-can',
+        command: () => {
+          this.openDeletePopup(this.selectedWarehouse?.id);
+        }
+      },
+      {
+        label: 'Assign to manager',
+        icon: 'fa-solid fa-user-plus',
+        command: () => {
+          this.openAssignManagerToWarehouseModal();
+        }
+      },
 
+    ];
+  }
+
+
+  //
+
+  toggleWarehouseMenu(event: MouseEvent, warehouse: Warehouse) {
+    this.selectedWarehouse = warehouse;
+    this.warehouseMenu.toggle(event); // Hiển thị dropdown
+  }
+
+  // ********** Assign Manager to Warehouse Warehouses ****************
+  openAssignManagerToWarehouseModal() {
+    this.isAssignManagerToWarehouseModalOpenSignal.set(true);
+    this.searchAndPageableWarehouseManager();
+  }
+
+  closeAssignManagerToWarehouseModal() {
+    this.selectedWarehouse = undefined;
+    this.isAssignManagerToWarehouseModalOpenSignal.set(false);
+  }
+
+  selectRow(userId: string): void {
+
+    this.selectedWarehouseManagerIdSignal.set(userId);
+  }
+
+  submitAssignManagerToWarehouseModal() {
+    if (!this.selectedWarehouseManagerIdSignal()) {
+      this.toastWarning("You must select a warehouse manager first!");
+      return;
+    }
+    if (!this.selectedWarehouse || !this.selectedWarehouseManagerIdSignal()) {
+      return;
+    }
+    this.adminService.assignWarehouseToManager(this.selectedWarehouse.id, Number(this.selectedWarehouseManagerIdSignal())).subscribe({
+      next: (data) => {
+        this.toastSuccess("Assign to the selected warehouse manager successfully!");
+      },
+      error: (error) => {
+        this.toastFail("Can not load data. Please try again!");
+      },
+    });
+    this.closeAssignManagerToWarehouseModal();
+  }
+
+  searchAndPageableWarehouseManager() {
+    this.adminService.searchAndPageableUserProfile(this.pageRequest, ROLES.ROLE_WAREHOUSE_MANAGER).subscribe({
+      next: (data: PaginatedResponse<UserProfile>) => {
+        this.paginatedWarehouseManagerSignal.set(data);
+      },
+      error: (error) => {
+        this.toastFail("Can not load data. Please try again!");
+      },
+    });
+  }
+
+  searchUser(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    const userName = this.searchedUsername?.value?.trim();
+    this.pageRequest.search = userName;
+    this.searchAndPageableWarehouseManager();
   }
 
   // ********** Get Warehouses ****************
@@ -111,9 +225,9 @@ export class WarehouseComponent {
     this.confirmDeletePopupComponent.show();
   }
 
-  handleDelete(confirm: boolean) {
+  handleDeactivateWarehouse(confirm: boolean) {
     if (confirm && this.selectedWarehouseId) {
-      this.adminService.deleteWarehouse(this.selectedWarehouseId).subscribe({
+      this.adminService.deactivateWarehouse(this.selectedWarehouseId).subscribe({
         next: (data) => {
           this.toastSuccess("Delete warehouse successfully!");
           this.searchAndPageableWarehouse();
@@ -131,7 +245,7 @@ export class WarehouseComponent {
     this.confirmActivePopupComponent.show();
   }
 
-  handleActive(confirm: boolean) {
+  handleActiveWarehouse(confirm: boolean) {
     if (confirm && this.selectedWarehouseId) {
       this.adminService.activeWarehouse(this.selectedWarehouseId).subscribe({
         next: (data) => {
@@ -294,5 +408,8 @@ export class WarehouseComponent {
 
   toastFail(message: string) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
+  }
+  toastWarning(message: string) {
+    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: message });
   }
 }

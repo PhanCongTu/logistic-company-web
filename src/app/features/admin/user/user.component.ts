@@ -210,7 +210,4 @@ export class UserComponent {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 
-  toastWarning(message: string) {
-    this.messageService.add({ severity: 'warning', summary: 'Warning', detail: message });
-  }
 }
