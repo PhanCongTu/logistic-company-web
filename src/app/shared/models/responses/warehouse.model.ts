@@ -5,4 +5,6 @@ export interface Warehouse {
       status: boolean;
       latitude: number;
       longitude: number;
+      managerIds: Array<number>;
+      managerUsernames: Array<string>;
 }

@@ -168,6 +168,7 @@ export class WarehouseComponent {
     this.adminService.assignWarehouseToManager(this.selectedWarehouse.id, Number(this.selectedWarehouseManagerIdSignal())).subscribe({
       next: (data) => {
         this.toastSuccess("Assign to the selected warehouse manager successfully!");
+        this.searchAndPageableWarehouseManager();
       },
       error: (error) => {
         this.toastFail("Can not load data. Please try again!");
