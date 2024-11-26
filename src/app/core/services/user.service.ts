@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
 import { LocalStorageService } from './local-storage.service';
 import { ChangePaswordRequest } from '../../shared/models/requests/change-pasword-request.model';
 import { ResetPasswordRequest } from '../../shared/models/requests/reset-password-request.model';
+import { PageRequest } from '../../shared/models/requests/page-request.model';
+import { RequestParamBuilder } from '../../shared/utils/request-param-builder';
+import { UpdateShipmentRequest } from '../../shared/models/requests/update-shipment-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +22,45 @@ export class UserService {
     private localStorageService: LocalStorageService
   ) { }
 
+  updateShipment(data: UpdateShipmentRequest, shipmentId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    const params = {
+      'shipmentId': shipmentId
+    };
+    return this.http.patch(`${this.endpoint}/api/shipment/update`, data, { headers, params });
+  }
+
+  countMyShipments(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/shipment/me/count`, { headers });
+  }
+
+  searchAndPageableShipment(pageRequest: PageRequest, statuses: string): Observable<any> {
+    const { page, size, search, sortColumn, sortType } = pageRequest;
+
+    let params = new RequestParamBuilder()
+      .setPage(page)
+      .setSize(size)
+      .setSearch(search) // The tracking number
+      .setSortColumn(sortColumn)
+      .setSortType(sortType)
+      .build();
+
+    params = params.set('statuses', statuses ?? []); // List of status
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/shipment/me`, { headers, params });
+  }
+
   /**
    * Update user information
    * @param data : the UpdateUser interface
@@ -26,8 +68,8 @@ export class UserService {
    */
   updateUser(data: UpdateUserRequest): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json', 
-      'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
     return this.http.patch(`${this.endpoint}/api/user/update`, data, { headers });
   }
@@ -39,8 +81,8 @@ export class UserService {
    */
   changePassword(data: ChangePaswordRequest): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json', 
-      'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
     return this.http.post(`${this.endpoint}/api/user/change-password`, data, { headers });
   }
@@ -51,8 +93,8 @@ export class UserService {
    */
   resendVerificationEmail(): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json', 
-      'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
     return this.http.post(`${this.endpoint}/api/user/email/resend-verify`, null, { headers });
   }
@@ -64,8 +106,8 @@ export class UserService {
    */
   verifyEmail(code: string): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json', 
-      'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
     const params = {
       'code': code
@@ -79,16 +121,16 @@ export class UserService {
    */
   getMyinfo(): Observable<any> {
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json', 
-      'Authorization': 'Bearer ' + this.localStorageService.getToken(), 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
-    return this.http.get(`${this.endpoint}/api/user/me`, { headers});
+    return this.http.get(`${this.endpoint}/api/user/me`, { headers });
   }
 
   sendResetPassword(verifiedEmail: string): Observable<any> {
     return this.http.post(`${this.endpoint}/api/user/password/reset/request/EMAIL:${verifiedEmail}`, null);
   }
-  
+
   /**
    * Verify the reset password code
    * @param userId : The user's id

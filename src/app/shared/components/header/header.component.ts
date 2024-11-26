@@ -79,12 +79,12 @@ export class HeaderComponent {
                     {
                         label: 'Warehouse',
                         icon: 'fa-solid fa-warehouse',
-                        command: () => this.router.navigate([this.routes.adminWarehouse])
+                        command: () => this.router.navigate([this.routes.admin.adminWarehouse])
                     },
                     {
                         label: 'User',
                         icon: 'fa-solid fa-users',
-                        command: () => this.router.navigate([this.routes.adminUser])
+                        command: () => this.router.navigate([this.routes.admin.adminUser])
                     },
                 ]
             },
@@ -96,7 +96,7 @@ export class HeaderComponent {
                     {
                         label: 'My shipment',
                         icon: 'fa-solid fa-truck',
-                        command: () => this.router.navigate([this.routes.adminWarehouse])
+                        command: () => this.router.navigate([this.routes.user.userShipment])
 
                     },
                 ]
@@ -118,7 +118,7 @@ export class HeaderComponent {
     }
 
     goToProfile() {
-        this.router.navigate([this.routes.userInfo]);
+        this.router.navigate([this.routes.user.userInfo]);
     }
 
     goToSettings() {

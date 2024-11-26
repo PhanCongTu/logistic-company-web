@@ -1,6 +1,5 @@
 @if (isMapVisibleSignal()) {
 <app-map [isVisible]="isMapVisibleSignal()" (dataEmitter)="receivedMapData($event)"></app-map>
-
 }
 @if (isDirectionMapVisibleSignal()) {
 <app-direction-map [isVisible]="isDirectionMapVisibleSignal()"

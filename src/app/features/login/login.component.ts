@@ -1,5 +1,5 @@
 import { Component, inject, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../shared/models/requests/login-request.model';
 import { CommonModule } from '@angular/common';
@@ -15,9 +15,9 @@ import { ToastModule } from 'primeng/toast';
   selector: 'app-login',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    CommonModule, 
-    RouterLink, 
+    ReactiveFormsModule,
+    CommonModule,
+    RouterLink,
     ToastModule
   ],
   providers: [MessageService],
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   signinForm: FormGroup;
   showPassword = false;
-  
+
   private formSubmitAttempt: boolean;
   public loginFailed: boolean;
 
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     this.signinForm?.valueChanges.subscribe(value => {
       this.loginFailed = false;
     });
@@ -68,21 +68,21 @@ export class LoginComponent implements OnInit {
         username: this.signinForm.get('username')?.value,
         password: this.signinForm.get('password')?.value,
       }
-  
+
       this.authService.login(loginData).subscribe({
-        next: (data) => { 
+        next: (data) => {
           this.localStorageService.saveUser(data); // Save the user data into LocalStorage
-          this.router.navigate([this.routes.userInfo]); 
+          this.router.navigate([this.routes.user.userShipment]);
           this.reset(); // Reset the value
-        },   
-        error: (error) => { 
+        },
+        error: (error) => {
           this.loginFailed = true;
         },
       });
 
-      
-    } 
-    
+
+    }
+
   }
 
   sendResetPassword() {
@@ -95,12 +95,12 @@ export class LoginComponent implements OnInit {
 
     // Send reset password request
     this.userService.sendResetPassword(this.signinForm.get('username')?.value).subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.toastSuccess("Please check your verified email address!")
         this.toastInfo("Only the verified email address can recieve reset password email!");
         this.signinForm.reset();
-      },   
-      error: (error) => { 
+      },
+      error: (error) => {
         this.toastFail("Something went wrong! Please try again!");
       },
     });
@@ -130,14 +130,14 @@ export class LoginComponent implements OnInit {
   }
 
   toastSuccess(message: string) {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail:  message});
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
   }
 
   toastInfo(message: string) {
-    this.messageService.add({ severity: 'info', summary: 'Info', detail:  message});
+    this.messageService.add({ severity: 'info', summary: 'Info', detail: message });
   }
 
   toastFail(message: string) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail:  message});
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 }
