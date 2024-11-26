@@ -8,4 +8,5 @@ export interface UpdateShipmentRequest {
       pickUpLongitude?: number;
       recipientPhone?: string;
       recipientName?: string;
+      notes?: string;
 }

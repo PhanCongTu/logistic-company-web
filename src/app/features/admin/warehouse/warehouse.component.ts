@@ -193,6 +193,7 @@ export class WarehouseComponent {
 
     const userName = this.searchedUsername?.value?.trim();
     this.pageRequest.search = userName;
+    this.pageRequest.page = 0;
     this.searchAndPageableWarehouseManager();
   }
 

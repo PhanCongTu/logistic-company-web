@@ -9,6 +9,7 @@ import { ResetPasswordRequest } from '../../shared/models/requests/reset-passwor
 import { PageRequest } from '../../shared/models/requests/page-request.model';
 import { RequestParamBuilder } from '../../shared/utils/request-param-builder';
 import { UpdateShipmentRequest } from '../../shared/models/requests/update-shipment-request.model';
+import { CreateShipmentRequest } from '../../shared/models/requests/create-shipment-request.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,15 @@ export class UserService {
     private http: HttpClient,
     private localStorageService: LocalStorageService
   ) { }
+
+  createShipment(data: CreateShipmentRequest): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+
+    return this.http.post(`${this.endpoint}/api/shipment/create`, data, { headers });
+  }
 
   updateShipment(data: UpdateShipmentRequest, shipmentId: number): Observable<any> {
     const headers = new HttpHeaders({

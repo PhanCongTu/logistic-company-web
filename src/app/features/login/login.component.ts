@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../core/services/local-storage.service';
 import { ROUTES } from '../../app.routes';
-import { AppConstants } from '../../shared/constants/app-constants.constant';
+import { AppConstants, ROLES } from '../../shared/constants/app-constants.constant';
 import { UserService } from '../../core/services/user.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { User } from '../../shared/models/responses/user.model';
 
 @Component({
   selector: 'app-login',
@@ -70,9 +71,13 @@ export class LoginComponent implements OnInit {
       }
 
       this.authService.login(loginData).subscribe({
-        next: (data) => {
+        next: (data: User) => {
           this.localStorageService.saveUser(data); // Save the user data into LocalStorage
-          this.router.navigate([this.routes.user.userShipment]);
+          if (data.roles?.includes(ROLES.ROLE_USER)) {
+            this.router.navigate([this.routes.user.userShipment]);
+          } else if (data.roles?.includes(ROLES.ROLE_ADMIN)) {
+            this.router.navigate([this.routes.admin.adminWarehouse]);
+          }
           this.reset(); // Reset the value
         },
         error: (error) => {

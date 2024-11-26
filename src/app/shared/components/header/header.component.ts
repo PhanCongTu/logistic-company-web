@@ -12,8 +12,9 @@ import { Menu } from 'primeng/menu';
 import { MenuModule } from 'primeng/menu';
 import { LocalStorageService } from '../../../core/services/local-storage.service';
 import { User } from '../../models/responses/user.model';
-import { ROUTES } from '../../../app.routes';
+
 import { ROLES } from '../../constants/app-constants.constant';
+import { ROUTES } from '../../../app.routes';
 
 @Component({
     selector: 'app-header',

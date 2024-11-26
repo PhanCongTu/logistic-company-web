@@ -225,19 +225,34 @@
                               class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                               <div>
                                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                          Warehouse
+                                          Shipment
                                     </h2>
                                     <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                          Add warehouse, edit and more.
+                                          Manage my shipment
                                     </p>
                               </div>
 
                               <div>
                                     <div class="inline-flex gap-x-2">
+                                          <form [formGroup]="searchForm" (ngSubmit)="searchUser($event)">
+                                                <div class="flex items-center justify-content-center">
 
-                                          <button
-                                                class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                                <i class="fa-solid fa-plus"></i> Add
+                                                      <div
+                                                            class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
+
+                                                            <input type="text" placeholder="Search by tracking number"
+                                                                  formControlName="searchedShipment"
+                                                                  class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
+                                                            <i (click)="searchUser($event)"
+                                                                  class="fa-solid fa-magnifying-glass cursor-pointer"></i>
+                                                      </div>
+                                                </div>
+
+
+                                          </form>
+                                          <button type="button" (click)="openCreatShipmentModal()"
+                                                class="w-fit rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                                <i class="fa-solid fa-plus"></i> Create new shipment
                                           </button>
                                     </div>
                               </div>
@@ -473,7 +488,144 @@
                   <!-- End Card -->
             </div>
       </div>
+
       <!-- End Content -->
+      <p-dialog header="Create Shipment" [(visible)]="isCreateShipmentModalOpenSignal" [modal]="true" [closable]="false"
+            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      '10000px': '50vw',
+      '1200px': '60vw',
+      '1199px': '75vw',
+      '575px': '90vw',
+    }" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Tạo đơn hàng mới
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <form [formGroup]="upsertShipmentForm" (ngSubmit)="submitCreateShipmentModal($event)">
+                        <div class="mt-2 space-y-3">
+
+                              <div class="space-y-2">
+                                    <label for="name" class="pl-3">Tên đơn hàng</label>
+                                    <div
+                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <input id="name" type="text" placeholder="Tên đơn hàng" formControlName="name"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                    </div>
+                                    @if (isUpsertShipmentFormFieldValid("name"))
+                                    {
+                                    <div class="pl-5 text-sm text-red-600">Tên đơn hàng không được bỏ trống!</div>
+                                    }
+                              </div>
+
+                              <div class="space-y-2">
+                                    <label for="recipientName" class="pl-3">Tên người nhận</label>
+                                    <div
+                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <input id="recipientName" type="text" placeholder="Tên người nhận"
+                                                formControlName="recipientName"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                    </div>
+                                    @if (isUpsertShipmentFormFieldValid("recipientName"))
+                                    {
+                                    <div class="pl-5 text-sm text-red-600">Tên người nhận không được bỏ trống!</div>
+                                    }
+                              </div>
+
+                              <div class="space-y-2">
+                                    <label for="recipientPhone" class="pl-3">Số điện thoại người nhận</label>
+                                    <div
+                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <input id="recipientPhone" type="number"
+                                                placeholder="Số điện thoại người nhận" formControlName="recipientPhone"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                    </div>
+                                    @if (isUpsertShipmentFormFieldValid("recipientPhone"))
+                                    {
+                                    <div class="pl-5 text-sm text-red-600">Số điện thoại không được bỏ trống!</div>
+                                    }
+                              </div>
+
+                              <div class="space-y-2">
+                                    <label for="pickUpAddress" class="pl-3">Địa chỉ lấy hàng</label>
+                                    <div class="w-full flex rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 ">
+                                          <input [readOnly]="true" id="pickUpAddress" type="text"
+                                                placeholder="Địa chỉ lấy hàng" formControlName="pickUpAddress"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                          <i class="fa-solid fa-pen hover:cursor-pointer m-auto"
+                                                (click)="openChoosePickUpAddressModal()"></i>
+                                    </div>
+                              </div>
+                              @if(pickUpCoordinatesWithAddressSignal()){
+                              <div class="space-y-2 pl-7">
+                                    <label for="pickUpAdditionalAddress" class="pl-3">Số nhà, tên đường, ... (Tùy
+                                          chọn)</label>
+                                    <div class="w-full flex rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 ">
+                                          <input id="pickUpAdditionalAddress" type="text"
+                                                placeholder="Số nhà, tên đường, ..."
+                                                formControlName="pickUpAdditionalAddress"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                    </div>
+                              </div>
+                              }
+
+
+                              <div class="space-y-2">
+                                    <label for="recipientAddress" class="pl-3">Địa chỉ nhận hàng</label>
+                                    <div class="w-full flex rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 ">
+                                          <input [readOnly]="true" id="recipientAddress" type="text"
+                                                placeholder="Địa chỉ lấy hàng" formControlName="recipientAddress"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                          <i class="fa-solid fa-pen hover:cursor-pointer m-auto"
+                                                (click)="openChooseRecipientAddressModal()"></i>
+                                    </div>
+                              </div>
+                              @if(recipientCoordinatesWithAddressSignal()){
+                              <div class="space-y-2 pl-7">
+                                    <label for="recipientAdditionalAddress" class="pl-3">Số nhà, tên đường, ... (Tùy
+                                          chọn)</label>
+                                    <div class="w-full flex rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 ">
+                                          <input id="recipientAdditionalAddress" type="text"
+                                                placeholder="Số nhà, tên đường, ..."
+                                                formControlName="recipientAdditionalAddress"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
+                                    </div>
+                              </div>
+                              }
+
+                              <div class="space-y-2">
+                                    <label for="notes" class="pl-3">Ghi chú cho đơn hàng</label>
+                                    <div
+                                          class="w-full flex rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <textarea id="notes" texta
+                                                placeholder="Loại hàng, cân nặng, kích thước ước tính, ..."
+                                                formControlName="notes"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none ">
+                                                      </textarea>
+                                    </div>
+                              </div>
+
+
+                              <div class="flex justify-around pt-5">
+                                    <button type="button" (click)="closeCreatShipmentModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                    </button>
+
+                                    <button type="submit"
+                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Save
+                                    </button>
+                              </div>
+                        </div>
+                  </form>
+            </div>
+      </p-dialog>
+
       <p-dialog header="Add Shipment" [(visible)]="isUpdateShipmentModalOpenSignal" [modal]="true" [closable]="false"
             [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
       '10000px': '50vw',
@@ -490,7 +642,7 @@
                   </div>
             </ng-template>
             <div>
-                  <form [formGroup]="updateShipmentForm" (ngSubmit)="submitUpdateShipmentModal($event)">
+                  <form [formGroup]="upsertShipmentForm" (ngSubmit)="submitUpdateShipmentModal($event)">
                         <div class="mt-2 space-y-3">
 
                               <div class="space-y-2">
@@ -500,7 +652,7 @@
                                           <input id="name" type="text" placeholder="Tên đơn hàng" formControlName="name"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
-                                    @if (isUpdateShipmentFormFieldValid("name"))
+                                    @if (isUpsertShipmentFormFieldValid("name"))
                                     {
                                     <div class="pl-5 text-sm text-red-600">Tên đơn hàng không được bỏ trống!</div>
                                     }
@@ -514,7 +666,7 @@
                                                 formControlName="recipientName"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
-                                    @if (isUpdateShipmentFormFieldValid("recipientName"))
+                                    @if (isUpsertShipmentFormFieldValid("recipientName"))
                                     {
                                     <div class="pl-5 text-sm text-red-600">Tên người nhận không được bỏ trống!</div>
                                     }
@@ -528,7 +680,7 @@
                                                 placeholder="Số điện thoại người nhận" formControlName="recipientPhone"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
-                                    @if (isUpdateShipmentFormFieldValid("recipientPhone"))
+                                    @if (isUpsertShipmentFormFieldValid("recipientPhone"))
                                     {
                                     <div class="pl-5 text-sm text-red-600">Số điện thoại không được bỏ trống!</div>
                                     }
@@ -581,6 +733,18 @@
                               </div>
                               }
 
+                              <div class="space-y-2">
+                                    <label for="notes" class="pl-3">Ghi chú cho đơn hàng</label>
+                                    <div
+                                          class="w-full flex rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <textarea id="notes" texta
+                                                placeholder="Loại hàng, cân nặng, kích thước ước tính, ..."
+                                                formControlName="notes"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none ">
+                                                      </textarea>
+                                    </div>
+                              </div>
+
 
                               <div class="flex justify-around pt-5">
                                     <button type="button" (click)="closeUpdateShipmentModal()"
@@ -595,6 +759,62 @@
                               </div>
                         </div>
                   </form>
+            </div>
+      </p-dialog>
+
+
+      <p-dialog header="Add Shipment" [(visible)]="isLocationWarningModalOpenSignal" [modal]="true" [closable]="false"
+            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+'10000px': '50vw',
+'1200px': '60vw',
+'1199px': '75vw',
+'575px': '90vw',
+}" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Khu vực của bạn hiện chưa được hỗ trợ
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <div>
+                        <div class="mt-2 space-y-3">
+
+
+                              <div class="flex items-center bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4"
+                                    role="alert">
+                                    <svg class="flex-shrink-0 h-5 w-5 text-yellow-500 mr-2"
+                                          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                          <path fill-rule="evenodd"
+                                                d="M8.257 3.099c.765-1.36 2.681-1.36 3.446 0l6.514 11.581c.746 1.327-.211 2.98-1.724 2.98H3.467c-1.513 0-2.47-1.653-1.724-2.98L8.257 3.1zM10 13a1.002 1.002 0 010-2 1.002 1.002 0 010 2zm-.008-4a1 1 0 01.995-.884h.016c.548 0 .991.446.991 1v.01a.995.995 0 01-.883.993L10 10.116l-.008-.116a1 1 0 01.995-.884z"
+                                                clip-rule="evenodd" />
+                                    </svg>
+                                    @if (locationWarningModalOpenSignal() === 'PICK_UP') {
+                                    <div>
+                                          <p class="font-bold">Thông báo</p>
+                                          <p>Hiện chưa hỗ trợ lấy hàng ở khu vực của bạn.</p>
+                                          <p>Chúng tôi sẽ có kế hoạt mở rộng tại khu vực này trong tương lai.</p>
+                                    </div>
+                                    } @else {
+                                    <div>
+                                          <p class="font-bold">Thông báo</p>
+                                          <p>Hiện chưa hỗ trợ giao hàng ở khu vực của bạn.</p>
+                                          <p>Chúng tôi sẽ có kế hoạt mở rộng tại khu vực này trong tương lai.</p>
+                                    </div>
+                                    }
+
+                              </div>
+
+                              <div class="flex justify-around pt-5">
+                                    <button type="button" (click)="closeLocationWarningModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Close
+                                    </button>
+                              </div>
+                        </div>
+                  </div>
             </div>
       </p-dialog>
 </div>

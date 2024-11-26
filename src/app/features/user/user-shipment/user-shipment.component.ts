@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { BadgeModule } from 'primeng/badge';
@@ -17,6 +17,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CoordinatesWithAddress } from '../../../shared/models/common/coordinates.model';
 import { UpdateShipmentRequest } from '../../../shared/models/requests/update-shipment-request.model';
 import { MapComponent } from '../../../shared/components/map/map.component';
+import { ROUTES } from '../../../app.routes';
+import { CreateShipmentRequest } from '../../../shared/models/requests/create-shipment-request.model';
 
 @Component({
   selector: 'app-user-shipment',
@@ -30,12 +32,14 @@ import { MapComponent } from '../../../shared/components/map/map.component';
     DialogModule,
     ReactiveFormsModule,
     MapComponent,
+    RouterLink
   ],
   providers: [MessageService],
   templateUrl: './user-shipment.component.html',
   styleUrl: './user-shipment.component.scss'
 })
 export class UserShipmentComponent {
+  readonly appRoutes = ROUTES;
 
   items: MenuItem[] | undefined;
   activeTabItem: string | undefined;
@@ -43,11 +47,17 @@ export class UserShipmentComponent {
   countShipment: CountShipment | undefined;
   shipmentItems: MenuItem[] | undefined;
 
-  updateShipmentForm: FormGroup;
+  upsertShipmentForm: FormGroup;
 
   paginatedShipmentSignal: WritableSignal<PaginatedResponse<Shipment> | undefined> = signal(undefined);
   isUpdateShipmentModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isCreateShipmentModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isLocationWarningModalOpenSignal: WritableSignal<boolean> = signal(false);
+  locationWarningModalOpenSignal: WritableSignal<string | undefined> = signal(undefined);
 
+  // Create shipment
+  isChoosingPickUpAddress = false
+  isChoosingRecipientAddress = false
   // Update shipment
   isMapVisibleSignal: WritableSignal<boolean> = signal(false);
   recipientCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress | undefined> = signal(undefined);
@@ -62,6 +72,7 @@ export class UserShipmentComponent {
     page: 0,
     search: ''
   };
+  searchForm: FormGroup;
 
 
   @ViewChild('shipmentMenu') shipmentMenu!: Menu;
@@ -77,14 +88,19 @@ export class UserShipmentComponent {
     this.searchAndPageableShipment();
     this.countUserShipments();
 
-    this.updateShipmentForm = this.formBuilder.group({
+    this.searchForm = this.formBuilder.group({
+      searchedShipment: ['']
+    });
+
+    this.upsertShipmentForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       recipientAddress: ['', [Validators.required]],
       recipientAdditionalAddress: [''],
       pickUpAddress: ['', [Validators.required]],
       pickUpAdditionalAddress: [''],
       recipientPhone: ['', [Validators.required]],
-      recipientName: ['', [Validators.required]]
+      recipientName: ['', [Validators.required]],
+      notes: ['']
     });
   }
   ngOnInit() {
@@ -98,6 +114,101 @@ export class UserShipmentComponent {
     ];
   }
 
+  searchUser(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    const trackingNumber = this.searchForm.get("searchedShipment")?.value?.trim();
+
+    this.pageRequest.search = trackingNumber;
+    this.pageRequest.page = 0;
+    this.searchAndPageableShipment();
+  }
+
+  // *********
+  closeLocationWarningModal() {
+    this.isLocationWarningModalOpenSignal.set(false);
+  }
+
+  // *********** Create new shipment
+  openCreatShipmentModal() {
+    this.upsertShipmentForm.reset();
+    this.isCreateShipmentModalOpenSignal.set(true);
+  }
+
+  closeCreatShipmentModal() {
+    this.upsertShipmentForm.reset();
+    this.isCreateShipmentModalOpenSignal.set(false);
+  }
+
+  openChoosePickUpAddressModal() {
+    this.isChoosingPickUpAddress = true;
+    this.isChoosingRecipientAddress = false;
+    this.isMapVisibleSignal.set(true);
+    this.isCreateShipmentModalOpenSignal.set(false);
+  }
+
+  openChooseRecipientAddressModal() {
+    this.isChoosingPickUpAddress = false;
+    this.isChoosingRecipientAddress = true;
+    this.isMapVisibleSignal.set(true);
+    this.isCreateShipmentModalOpenSignal.set(false);
+  }
+
+  submitCreateShipmentModal(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    if (!this.pickUpCoordinatesWithAddressSignal() || !this.recipientCoordinatesWithAddressSignal()) {
+      this.toastWarning("Hãy chọn 1 đơn hàng!");
+      this.closeUpdateShipmentModal();
+      return;
+    }
+
+    if (this.upsertShipmentForm.valid) {
+      const createShipmentBody: CreateShipmentRequest = {
+        name: this.upsertShipmentForm.get("name")?.value,
+        pickUpAddress: this.pickUpCoordinatesWithAddressSignal()?.address || '',
+        pickUpLatitude: this.pickUpCoordinatesWithAddressSignal()?.lat || 0,
+        pickUpLongitude: this.pickUpCoordinatesWithAddressSignal()?.lng || 0,
+        recipientAddress: this.recipientCoordinatesWithAddressSignal()?.address || '',
+        recipientLatitude: this.recipientCoordinatesWithAddressSignal()?.lat || 0,
+        recipientLongitude: this.recipientCoordinatesWithAddressSignal()?.lng || 0,
+        recipientPhone: this.upsertShipmentForm.get("recipientPhone")?.value,
+        recipientName: this.upsertShipmentForm.get("recipientName")?.value,
+        notes: this.upsertShipmentForm.get("notes")?.value,
+      }
+
+      this.userService.createShipment(createShipmentBody).subscribe({
+        next: (data) => {
+          this.toastSuccess('Tạo đơn hàng thành công!');
+          this.searchAndPageableShipment();
+        },
+        error: (error) => {
+
+          if (error?.error?.errorCode === 'NOT_SUPPORTED') {
+            this.isLocationWarningModalOpenSignal.set(true)
+            if (error?.error?.key === 'PICK_UP') {
+              this.locationWarningModalOpenSignal.set('PICK_UP');
+            }
+            if (error?.error?.key === 'RECIPIENT') {
+              this.locationWarningModalOpenSignal.set('RECIPIENT');
+            }
+          }
+          this.toastFail('Tạo đơn hàng thất bại!');
+
+        }
+      });
+      this.pickUpCoordinatesWithAddressSignal.set(undefined);
+      this.recipientCoordinatesWithAddressSignal.set(undefined);
+
+      this.upsertShipmentForm.reset();
+      this.closeCreatShipmentModal();
+    }
+
+  }
+
+
   // ********** Update shipment
 
   openUpdateShipmentModal() {
@@ -105,14 +216,15 @@ export class UserShipmentComponent {
       this.toastWarning("This shipment cannot be updated anymore!")
       return;
     }
-    this.updateShipmentForm.setValue({
+    this.upsertShipmentForm.setValue({
       name: this.selectedShipment?.name,
       recipientAddress: this.selectedShipment?.recipientAddress,
       recipientAdditionalAddress: '',
       pickUpAddress: this.selectedShipment?.pickUpAddress,
       pickUpAdditionalAddress: '',
       recipientPhone: this.selectedShipment?.recipientPhone,
-      recipientName: this.selectedShipment?.recipientName
+      recipientName: this.selectedShipment?.recipientName,
+      notes: this.selectedShipment?.notes
     })
     this.isUpdateShipmentModalOpenSignal.set(true);
   }
@@ -126,11 +238,12 @@ export class UserShipmentComponent {
       this.closeUpdateShipmentModal();
       return;
     }
-    if (this.updateShipmentForm.valid) {
+    if (this.upsertShipmentForm.valid) {
       const updateShipmentBody: UpdateShipmentRequest = {
-        name: this.updateShipmentForm.get("name")?.value,
-        recipientPhone: this.updateShipmentForm.get("recipientPhone")?.value,
-        recipientName: this.updateShipmentForm.get("recipientName")?.value,
+        name: this.upsertShipmentForm.get("name")?.value,
+        recipientPhone: this.upsertShipmentForm.get("recipientPhone")?.value,
+        recipientName: this.upsertShipmentForm.get("recipientName")?.value,
+        notes: this.upsertShipmentForm.get("notes")?.value,
       }
       if (this.pickUpCoordinatesWithAddressSignal()) {
         updateShipmentBody.pickUpAddress = this.pickUpCoordinatesWithAddressSignal()?.address,
@@ -154,7 +267,7 @@ export class UserShipmentComponent {
       this.pickUpCoordinatesWithAddressSignal.set(undefined);
       this.recipientCoordinatesWithAddressSignal.set(undefined);
       this.selectedShipment = undefined;
-      this.updateShipmentForm.reset();
+      this.upsertShipmentForm.reset();
       this.closeUpdateShipmentModal();
     }
   }
@@ -178,27 +291,34 @@ export class UserShipmentComponent {
 
   receivedMapData(data: CoordinatesWithAddress | boolean) {
     if (typeof data !== 'boolean') {
-      if (this.isUpdatingPickUpAddress) {
+      if (this.isUpdatingPickUpAddress || this.isChoosingPickUpAddress) {
         this.pickUpCoordinatesWithAddressSignal.set(data);
-        this.updateShipmentForm.patchValue({
+        this.upsertShipmentForm.patchValue({
           pickUpAddress: data.address
         });
       } else {
         this.recipientCoordinatesWithAddressSignal.set(data);
-        this.updateShipmentForm.patchValue({
+        this.upsertShipmentForm.patchValue({
           recipientAddress: data.address
         });
       }
     }
 
     this.isMapVisibleSignal.set(false);
-    this.isUpdateShipmentModalOpenSignal.set(true);
-    this.isUpdatingPickUpAddress = false;
-    this.isUpdatingRecipientAddress = false;
+    if (this.isUpdatingPickUpAddress || this.isUpdatingRecipientAddress) {
+      this.isUpdateShipmentModalOpenSignal.set(true);
+      this.isUpdatingPickUpAddress = false;
+      this.isUpdatingRecipientAddress = false;
+    } else {
+      this.isCreateShipmentModalOpenSignal.set(true);
+      this.isChoosingPickUpAddress = false;
+      this.isChoosingRecipientAddress = false;
+    }
+
   }
 
-  isUpdateShipmentFormFieldValid(field: string) {
-    return (!this.updateShipmentForm.get(field)?.valid && this.updateShipmentForm.get(field)?.touched);
+  isUpsertShipmentFormFieldValid(field: string) {
+    return (!this.upsertShipmentForm.get(field)?.valid && this.upsertShipmentForm.get(field)?.touched);
   }
 
   // *********
