@@ -140,7 +140,13 @@ export class UserComponent {
 
   dropAdd() {
     if (this.draggedRole && !this.selectedRoles.includes(this.draggedRole)) {
-      this.selectedRoles = [...(this.selectedRoles as any[]), this.draggedRole];
+      let newRoles = [...(this.selectedRoles as any[]), this.draggedRole];
+      if (newRoles.includes(ROLES.ROLE_WAREHOUSE_MANAGER)
+        && newRoles.includes(ROLES.ROLE_SHIPPER)) {
+        this.toastWarning("Không thể có cả ROLE_WAREHOUSE_MANAGER và ROLE_SHIPPER");
+        return;
+      }
+      this.selectedRoles = newRoles;
       this.availableRoles = this.availableRoles?.filter((val) => val != this.draggedRole);
       this.draggedRole = null;
     }
@@ -210,5 +216,7 @@ export class UserComponent {
   toastFail(message: string) {
     this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
-
+  toastWarning(message: string) {
+    this.messageService.add({ severity: 'warn', summary: 'Warn', detail: message });
+  }
 }
