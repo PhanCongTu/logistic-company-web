@@ -349,7 +349,8 @@
                                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                                       @for (shipment of paginatedShipmentSignal()?.content; track
                                                       $index) {
-                                                      <tr class="hover:bg-gray-200 cursor-pointer">
+                                                      <tr class="hover:bg-gray-200 cursor-pointer"
+                                                            (click)="openShipmentInforModal(shipment)">
                                                             <td class="size-px whitespace-nowrap">
                                                                   <div class="px-4 py-3">
                                                                         <label for="hs-at-with-checkboxes-1"
@@ -401,7 +402,7 @@
                                                                   <div class="px-6 py-3">
                                                                         <span
                                                                               class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">
-                                                                              0989478932
+                                                                              {{shipment.recipientPhone}}
                                                                         </span>
                                                                   </div>
                                                             </td>
@@ -809,6 +810,195 @@
 
                               <div class="flex justify-around pt-5">
                                     <button type="button" (click)="closeLocationWarningModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Close
+                                    </button>
+                              </div>
+                        </div>
+                  </div>
+            </div>
+      </p-dialog>
+
+      <p-dialog header="Shipment information" [(visible)]="isShipmentInforOpenSignal" [modal]="true" [closable]="false"
+            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+'10000px': '50vw',
+'1200px': '60vw',
+'1199px': '75vw',
+'575px': '90vw',
+}" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Thông tin đơn hàng
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <div>
+                        <div class="mt-2 space-y-3">
+
+
+                              <div
+                                    class="p-4 space-y-3 mb-6 md:p-5 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex flex-col sm:flex-row w-full">
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Tên đơn hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.name}}
+                                                      </p>
+                                                </div>
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Mã đơn hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            #{{selectedShipment?.code}}
+                                                      </p>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex flex-col sm:flex-row w-full">
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Số tiền cần thanh toán
+                                                      </h2>
+                                                      @if (!selectedShipment?.needToPay) {
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-red-500 dark:text-neutral-200">
+                                                            Chưa cập nhật
+                                                      </p>
+                                                      } @else {
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.needToPay}} VNĐ
+                                                      </p>
+                                                      }
+
+                                                </div>
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Tình trạng thanh toán
+                                                      </h2>
+                                                      @if (selectedShipment?.isPaid) {
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-green-500 dark:text-neutral-200">
+                                                            Đã thanh toán
+                                                      </p>
+                                                      } @else {
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-red-600 dark:text-neutral-200">
+                                                            Chưa thanh toán
+                                                      </p>
+                                                      }
+
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <!-- Header -->
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex flex-col sm:flex-row w-full">
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Tên người gửi
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.username}}
+                                                      </p>
+                                                </div>
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Số điện thoại người gửi
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            TBD
+                                                      </p>
+                                                </div>
+                                          </div>
+                                          <div class="flex justify-start items-center ">
+                                                <div class="px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Địa chỉ lấy hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.pickUpAddress}}
+                                                      </p>
+                                                </div>
+
+                                          </div>
+                                    </div>
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex flex-col sm:flex-row w-full">
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Tên người nhận
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.recipientName}}
+                                                      </p>
+                                                </div>
+                                                <div class="w-full sm:w-1/2 px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Số điện thoại người nhận
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.recipientPhone}}
+                                                      </p>
+                                                </div>
+                                          </div>
+                                          <div class="flex justify-start items-center ">
+                                                <div class="px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Địa chỉ nhận hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.recipientAddress}}
+                                                      </p>
+                                                </div>
+
+                                          </div>
+                                    </div>
+
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex justify-start items-center ">
+                                                <div class="px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Ghi chú đơn hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.notes}}
+                                                      </p>
+                                                </div>
+
+                                          </div>
+
+                                    </div>
+
+
+                                    <!-- End Header -->
+                              </div>
+
+
+                              <div class="flex justify-around pt-5">
+                                    <button type="button" (click)="closeShipmentInforModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
                                           <i class="fa-solid fa-xmark"></i> Close
                                     </button>

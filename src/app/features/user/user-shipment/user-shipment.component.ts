@@ -54,6 +54,7 @@ export class UserShipmentComponent {
   isCreateShipmentModalOpenSignal: WritableSignal<boolean> = signal(false);
   isLocationWarningModalOpenSignal: WritableSignal<boolean> = signal(false);
   locationWarningModalOpenSignal: WritableSignal<string | undefined> = signal(undefined);
+  isShipmentInforOpenSignal: WritableSignal<boolean> = signal(false);
 
   // Create shipment
   isChoosingPickUpAddress = false
@@ -128,6 +129,18 @@ export class UserShipmentComponent {
   // *********
   closeLocationWarningModal() {
     this.isLocationWarningModalOpenSignal.set(false);
+  }
+
+  // ************  Shipment information model ********************************
+
+  openShipmentInforModal(shipment: Shipment) {
+    this.selectedShipment = shipment;
+    this.isShipmentInforOpenSignal.set(true);
+  }
+
+  closeShipmentInforModal() {
+    this.selectedShipment = undefined;
+    this.isShipmentInforOpenSignal.set(false);
   }
 
   // *********** Create new shipment
@@ -448,6 +461,7 @@ export class UserShipmentComponent {
 
   // ************ 
   toggleShipmentMenu(event: MouseEvent, shipment: Shipment) {
+    event.stopPropagation();
     this.selectedShipment = shipment;
     this.shipmentMenu.toggle(event); // Hiển thị dropdown
   }
