@@ -20,6 +20,18 @@ export class AdminService {
     private localStorageService: LocalStorageService
   ) { }
 
+  addShipperToWarehouse(warehouseId: number, shipperId: number) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    const params = {
+      'shipperId': shipperId,
+      'warehouseId': warehouseId
+    };
+    return this.http.post(`${this.endpoint}/api/admin/warehouse/add-shipper`, null, { headers, params });
+  }
+
   assignWarehouseToManager(warehouseId: number, warehouseManagerId: number) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -29,7 +41,7 @@ export class AdminService {
       'managerId': warehouseManagerId,
       'warehouseId': warehouseId
     };
-    return this.http.post(`${this.endpoint}/api/admin/warehouse/assign`, null, { headers, params });
+    return this.http.post(`${this.endpoint}/api/admin/warehouse/assign-manager`, null, { headers, params });
   }
 
   updateRolesToUser(userId: string, newRoles: string[]) {

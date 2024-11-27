@@ -48,10 +48,16 @@ export class WarehouseComponent {
   // Forms
   addWarehouseForm: FormGroup;
   updateWarehouseForm: FormGroup;
-  searchUserForm: FormGroup;
+  searchWarehouseManagerForm: FormGroup;
+  searchShipperForm: FormGroup;
   searchWarehouseForm: FormGroup;
 
-  userPageRequest: PageRequest = {
+  warehouseManagerPageRequest: PageRequest = {
+    page: 0,
+    search: ''
+  };
+
+  shipperPageRequest: PageRequest = {
     page: 0,
     search: ''
   };
@@ -60,10 +66,12 @@ export class WarehouseComponent {
     page: 0,
     search: ''
   };
+
   selectedWarehouse: Warehouse | undefined;
 
   selectedWarehouseManager: UserProfile | undefined;
   selectedWarehouseManagerIdSignal: WritableSignal<string | undefined> = signal(undefined);
+  selectedShipperIdSignal: WritableSignal<string | undefined> = signal(undefined);
 
   selectedWarehouseId: number | undefined;
   selectedWarehouseSignal: WritableSignal<Warehouse | undefined> = signal(undefined);
@@ -71,11 +79,13 @@ export class WarehouseComponent {
   isAddWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
   isUpdateWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
   isAssignManagerToWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isAddShipperToWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
   isMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isRequiredChooseLocaltionSignal: WritableSignal<boolean> = signal(false);
   userCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress | undefined> = signal(undefined);
   paginatedWarehouseSignal: WritableSignal<PaginatedResponse<Warehouse> | undefined> = signal(undefined);
   paginatedWarehouseManagerSignal: WritableSignal<PaginatedResponse<UserProfile> | undefined> = signal(undefined);
+  paginatedShipperSignal: WritableSignal<PaginatedResponse<UserProfile> | undefined> = signal(undefined);
 
   @ViewChild('warehouseMenu') warehouseMenu!: Menu;
 
@@ -93,7 +103,10 @@ export class WarehouseComponent {
       name: ['', [Validators.required]],
       additionalAddress: ['']
     });
-    this.searchUserForm = this.formBuilder.group({
+    this.searchWarehouseManagerForm = this.formBuilder.group({
+      searchedUsername: ['']
+    });
+    this.searchShipperForm = this.formBuilder.group({
       searchedUsername: ['']
     });
     this.searchWarehouseForm = this.formBuilder.group({
@@ -137,6 +150,13 @@ export class WarehouseComponent {
           this.openAssignManagerToWarehouseModal();
         }
       },
+      {
+        label: 'Add a shipper',
+        icon: 'fa-solid fa-user-plus',
+        command: () => {
+          this.openAddShipperToWarehouseModal();
+        }
+      },
 
     ];
   }
@@ -149,6 +169,71 @@ export class WarehouseComponent {
     this.warehouseMenu.toggle(event); // Hiển thị dropdown
   }
 
+  // ********** Add a Shipper to Warehouse ****************
+
+  searchAndPageableShipper() {
+    this.adminService.searchAndPageableUserProfile(this.shipperPageRequest, ROLES.ROLE_SHIPPER).subscribe({
+      next: (data: PaginatedResponse<UserProfile>) => {
+        this.paginatedShipperSignal.set(data);
+      },
+      error: (error) => {
+        this.toastFail("Can not load data. Please try again!");
+      },
+    });
+  }
+
+  openAddShipperToWarehouseModal() {
+    this.isAddShipperToWarehouseModalOpenSignal.set(true);
+    this.searchAndPageableShipper();
+  }
+
+  closeAddShipperToWarehouseModal() {
+    this.selectedShipperIdSignal.set(undefined)
+    this.isAddShipperToWarehouseModalOpenSignal.set(false);
+  }
+
+  selectShipperRow(userId: string): void {
+    this.selectedShipperIdSignal.set(userId);
+  }
+  searchShipper(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    const userName = this.searchShipperForm.get("searchedUsername")?.value?.trim();
+    this.shipperPageRequest.search = userName;
+    this.shipperPageRequest.page = 0;
+    this.searchAndPageableShipper();
+  }
+
+  previousShipperPage() {
+    this.shipperPageRequest.page = this.shipperPageRequest.page! - 1;
+  }
+
+  nextShipperPage() {
+    this.shipperPageRequest.page = this.shipperPageRequest.page! + 1;
+  }
+
+  submitAddShipperToWarehouseModal() {
+    if (!this.selectedShipperIdSignal()) {
+      this.toastWarning("Bạn cần phải chọn 1 shipper trước!");
+      return;
+    }
+    if (!this.selectedWarehouse || !this.selectedShipperIdSignal()) {
+      return;
+    }
+    this.adminService.addShipperToWarehouse(this.selectedWarehouse.id, Number(this.selectedShipperIdSignal())).subscribe({
+      next: (data) => {
+        this.toastSuccess("Thêm Shipper thành công!");
+        this.searchAndPageableShipper();
+      },
+      error: (error) => {
+        this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+      },
+    });
+    this.closeAssignManagerToWarehouseModal();
+  }
+
+
   // ********** Assign Manager to Warehouse Warehouses ****************
   openAssignManagerToWarehouseModal() {
     this.isAssignManagerToWarehouseModalOpenSignal.set(true);
@@ -160,7 +245,7 @@ export class WarehouseComponent {
     this.isAssignManagerToWarehouseModalOpenSignal.set(false);
   }
 
-  selectRow(userId: string): void {
+  selectWarehouseManagerRow(userId: string): void {
 
     this.selectedWarehouseManagerIdSignal.set(userId);
   }
@@ -186,7 +271,7 @@ export class WarehouseComponent {
   }
 
   searchAndPageableWarehouseManager() {
-    this.adminService.searchAndPageableUserProfile(this.userPageRequest, ROLES.ROLE_WAREHOUSE_MANAGER).subscribe({
+    this.adminService.searchAndPageableUserProfile(this.warehouseManagerPageRequest, ROLES.ROLE_WAREHOUSE_MANAGER).subscribe({
       next: (data: PaginatedResponse<UserProfile>) => {
         this.paginatedWarehouseManagerSignal.set(data);
       },
@@ -203,24 +288,24 @@ export class WarehouseComponent {
     this.wareHousePageRequest.page = 0;
     this.searchAndPageableWarehouse();
   }
-  searchUser(even: any) {
+  searchWarehouseManager(even: any) {
     // Avoid refreshing the page
     even.preventDefault();
 
-    const userName = this.searchUserForm.get("searchedUsername")?.value?.trim();
-    this.userPageRequest.search = userName;
-    this.userPageRequest.page = 0;
+    const userName = this.searchWarehouseManagerForm.get("searchedUsername")?.value?.trim();
+    this.wareHousePageRequest.search = userName;
+    this.wareHousePageRequest.page = 0;
     this.searchAndPageableWarehouseManager();
   }
 
   previousUserPage() {
-    this.userPageRequest.page = this.userPageRequest.page! - 1;
-    this.searchAndPageableWarehouse();
+    this.wareHousePageRequest.page = this.wareHousePageRequest.page! - 1;
+    this.searchAndPageableWarehouseManager();
   }
 
   nextUserPage() {
-    this.userPageRequest.page = this.userPageRequest.page! + 1;
-    this.searchAndPageableWarehouse();
+    this.wareHousePageRequest.page = this.wareHousePageRequest.page! + 1;
+    this.searchAndPageableWarehouseManager();
   }
 
   // ********** Get Warehouses ****************
