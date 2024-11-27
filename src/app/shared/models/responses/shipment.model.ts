@@ -14,8 +14,11 @@ export interface Shipment {
       actualDelivery: string;
       notes: string;
       needToPay: string;
+      isPaid: boolean;
       status: string;
-      userId: number;
-      pickerId: number;
-      deliveryPersonId: number;
+      username: string;
+      pickerUsername: string;
+      deliveryPersonUsername: string;
+      returnedPickerUsername: string;
+      returnedDeliveryPersonUsername: string;
 }

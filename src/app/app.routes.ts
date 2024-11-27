@@ -7,6 +7,7 @@ import { ResetPasswordComponent } from './features/reset-password/reset-password
 import { WarehouseComponent } from './features/admin/warehouse/warehouse.component';
 import { UserComponent } from './features/admin/user/user.component';
 import { UserShipmentComponent } from './features/user/user-shipment/user-shipment.component';
+import { ManageShipmentComponent } from './features/warehouse-manager/manage-shipment/manage-shipment.component';
 
 export const ROUTES = {
       home: '',
@@ -20,6 +21,9 @@ export const ROUTES = {
       admin: {
             adminWarehouse: 'admin/warehouse',
             adminUser: 'adminuser',
+      },
+      warehouseManager: {
+            manageShipment: 'manage-shipment',
       }
 };
 
@@ -53,8 +57,7 @@ export const routes: Routes = [
                         component: UserShipmentComponent
                   },
             ]
-      }
-      ,
+      },
       {
             title: 'ADMIN',
             path: '',
@@ -67,6 +70,16 @@ export const routes: Routes = [
                         path: ROUTES.admin.adminUser,
                         component: UserComponent
                   },
+            ]
+      },
+      {
+            title: 'WAREHOUSE_MANAGER',
+            path: '',
+            children: [
+                  {
+                        path: ROUTES.warehouseManager.manageShipment,
+                        component: ManageShipmentComponent
+                  }
             ]
       }
 

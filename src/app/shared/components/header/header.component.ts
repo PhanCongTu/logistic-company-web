@@ -55,6 +55,10 @@ export class HeaderComponent {
         });
     }
 
+    get isWarehouseManager(): boolean {
+        return this.userInfoSignal()?.roles?.includes(ROLES.ROLE_WAREHOUSE_MANAGER) || false;
+    }
+
     get isAdmin(): boolean {
         return this.userInfoSignal()?.roles?.includes(ROLES.ROLE_ADMIN) || false;
     }
@@ -73,7 +77,7 @@ export class HeaderComponent {
                 }
             },
             {
-                label: 'Manage',
+                label: 'Admin',
                 visible: this.isAdmin,
                 icon: 'fa-solid fa-list-check',
                 items: [
@@ -101,7 +105,19 @@ export class HeaderComponent {
 
                     },
                 ]
-            }
+            },
+            {
+                label: 'Warehouse Manager',
+                visible: this.isWarehouseManager,
+                icon: 'fa-solid fa-list-check',
+                items: [
+                    {
+                        label: 'Shipment Management',
+                        icon: 'fa-solid fa-truck',
+                        command: () => this.router.navigate([this.routes.warehouseManager.manageShipment])
+                    }
+                ]
+            },
         ];
 
         this.avatarItems = [

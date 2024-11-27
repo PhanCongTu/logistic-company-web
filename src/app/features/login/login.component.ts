@@ -77,6 +77,8 @@ export class LoginComponent implements OnInit {
             this.router.navigate([this.routes.user.userShipment]);
           } else if (data.roles?.includes(ROLES.ROLE_ADMIN)) {
             this.router.navigate([this.routes.admin.adminWarehouse]);
+          } else if (data.roles?.includes(ROLES.ROLE_WAREHOUSE_MANAGER)) {
+            this.router.navigate([this.routes.warehouseManager.manageShipment]);
           }
           this.reset(); // Reset the value
         },
