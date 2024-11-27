@@ -48,10 +48,15 @@ export class WarehouseComponent {
   // Forms
   addWarehouseForm: FormGroup;
   updateWarehouseForm: FormGroup;
-  searchForm: FormGroup;
-  searchedUsername = new FormControl('');
+  searchUserForm: FormGroup;
+  searchWarehouseForm: FormGroup;
 
-  pageRequest: PageRequest = {
+  userPageRequest: PageRequest = {
+    page: 0,
+    search: ''
+  };
+
+  wareHousePageRequest: PageRequest = {
     page: 0,
     search: ''
   };
@@ -88,8 +93,11 @@ export class WarehouseComponent {
       name: ['', [Validators.required]],
       additionalAddress: ['']
     });
-    this.searchForm = this.formBuilder.group({
+    this.searchUserForm = this.formBuilder.group({
       searchedUsername: ['']
+    });
+    this.searchWarehouseForm = this.formBuilder.group({
+      searchedWarehouseNameOrAddress: ['']
     });
     this.searchAndPageableWarehouse();
   }
@@ -178,7 +186,7 @@ export class WarehouseComponent {
   }
 
   searchAndPageableWarehouseManager() {
-    this.adminService.searchAndPageableUserProfile(this.pageRequest, ROLES.ROLE_WAREHOUSE_MANAGER).subscribe({
+    this.adminService.searchAndPageableUserProfile(this.userPageRequest, ROLES.ROLE_WAREHOUSE_MANAGER).subscribe({
       next: (data: PaginatedResponse<UserProfile>) => {
         this.paginatedWarehouseManagerSignal.set(data);
       },
@@ -187,31 +195,38 @@ export class WarehouseComponent {
       },
     });
   }
-
+  searchWarehouse(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+    const nameOrAddress = this.searchWarehouseForm.get("searchedWarehouseNameOrAddress")?.value?.trim();
+    this.wareHousePageRequest.search = nameOrAddress;
+    this.wareHousePageRequest.page = 0;
+    this.searchAndPageableWarehouse();
+  }
   searchUser(even: any) {
     // Avoid refreshing the page
     even.preventDefault();
 
-    const userName = this.searchedUsername?.value?.trim();
-    this.pageRequest.search = userName;
-    this.pageRequest.page = 0;
+    const userName = this.searchUserForm.get("searchedUsername")?.value?.trim();
+    this.userPageRequest.search = userName;
+    this.userPageRequest.page = 0;
     this.searchAndPageableWarehouseManager();
+  }
+
+  previousUserPage() {
+    this.userPageRequest.page = this.userPageRequest.page! - 1;
+    this.searchAndPageableWarehouse();
+  }
+
+  nextUserPage() {
+    this.userPageRequest.page = this.userPageRequest.page! + 1;
+    this.searchAndPageableWarehouse();
   }
 
   // ********** Get Warehouses ****************
 
-  previousPage() {
-    this.pageRequest.page = this.pageRequest.page! - 1;
-    this.searchAndPageableWarehouse();
-  }
-
-  nextPage() {
-    this.pageRequest.page = this.pageRequest.page! + 1;
-    this.searchAndPageableWarehouse();
-  }
-
   searchAndPageableWarehouse() {
-    this.adminService.searchAndPageableWarehouse(this.pageRequest).subscribe({
+    this.adminService.searchAndPageableWarehouse(this.wareHousePageRequest).subscribe({
       next: (data: PaginatedResponse<Warehouse>) => {
         this.paginatedWarehouseSignal.set(data);
       },
@@ -219,6 +234,16 @@ export class WarehouseComponent {
         this.toastFail("Can not load data. Please try again!");
       },
     });
+  }
+
+  previousWarehousePage() {
+    this.wareHousePageRequest.page = this.wareHousePageRequest.page! - 1;
+    this.searchAndPageableWarehouse();
+  }
+
+  nextWarehousePage() {
+    this.wareHousePageRequest.page = this.wareHousePageRequest.page! + 1;
+    this.searchAndPageableWarehouse();
   }
 
   // ********** Active/Deactive Warehouses ****************
