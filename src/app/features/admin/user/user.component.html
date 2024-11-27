@@ -438,6 +438,13 @@
                                                                                     class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-yellow-500 rounded-full">
                                                                                     ROLE_WAREHOUSE_MANAGER
                                                                               </span>
+                                                                              } @if
+                                                                              (userProfile?.roles?.includes("ROLE_SHIPPER"))
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
+                                                                                    ROLE_SHIPPER
+                                                                              </span>
                                                                               }
                                                                         </span>
                                                                   </div>
@@ -601,6 +608,13 @@
                                                                   class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-yellow-500 rounded-full">
                                                                   ROLE_WAREHOUSE_MANAGER
                                                             </span>
+                                                            } @if
+                                                            (role.includes("ROLE_SHIPPER"))
+                                                            {
+                                                            <span
+                                                                  class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
+                                                                  ROLE_SHIPPER
+                                                            </span>
                                                             }
                                                       </span>
                                                 </li>
@@ -641,6 +655,13 @@
                                                             <span
                                                                   class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-yellow-500 rounded-full">
                                                                   ROLE_WAREHOUSE_MANAGER
+                                                            </span>
+                                                            } @if
+                                                            (role.includes("ROLE_SHIPPER"))
+                                                            {
+                                                            <span
+                                                                  class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
+                                                                  ROLE_SHIPPER
                                                             </span>
                                                             }
                                                       </span>
