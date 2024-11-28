@@ -8,6 +8,7 @@ import { WarehouseComponent } from './features/admin/warehouse/warehouse.compone
 import { UserComponent } from './features/admin/user/user.component';
 import { UserShipmentComponent } from './features/user/user-shipment/user-shipment.component';
 import { ManageShipmentComponent } from './features/warehouse-manager/manage-shipment/manage-shipment.component';
+import { WarehouseInforComponent } from './features/admin/warehouse-infor/warehouse-infor.component';
 
 export const ROUTES = {
       home: '',
@@ -21,6 +22,7 @@ export const ROUTES = {
       admin: {
             adminWarehouse: 'admin/warehouse',
             adminUser: 'adminuser',
+            adminWarehouseInfo: 'admin/warehouse/:warehouseId',
       },
       warehouseManager: {
             manageShipment: 'manage-shipment',
@@ -69,6 +71,10 @@ export const routes: Routes = [
                   {
                         path: ROUTES.admin.adminUser,
                         component: UserComponent
+                  },
+                  {
+                        path: ROUTES.admin.adminWarehouseInfo,
+                        component: WarehouseInforComponent
                   },
             ]
       },

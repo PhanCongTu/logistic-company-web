@@ -10,7 +10,6 @@
 <app-confirm-popup #confirmActivePopupComponent (isConfirm)="handleActiveWarehouse($event)" header="Confirm active"
       title="Do you want to active this item?" confirmButton="Confirm" [isNative]="true"></app-confirm-popup>
 <div class="bg-gray-50 dark:bg-neutral-900 pt-20">
-
       <!-- ========== MAIN CONTENT ========== -->
       <!-- Breadcrumb -->
       <div
@@ -43,93 +42,6 @@
       <div class="w-full lg:ps-32 lg:pe-32">
             <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
                   <!-- Grid -->
-                  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                        <!-- Card -->
-                        <div
-                              class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <div class="p-4 md:p-5">
-                                    <div class="flex items-center gap-x-2">
-                                          <p
-                                                class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Total warehouse
-                                          </p>
-                                    </div>
-
-                                    <div class="mt-1 flex items-center gap-x-2">
-                                          <h3
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                {{paginatedWarehouseSignal()?.totalElements}}
-                                          </h3>
-                                    </div>
-                              </div>
-                        </div>
-                        <!-- End Card -->
-
-                        <!-- Card -->
-                        <div
-                              class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <div class="p-4 md:p-5">
-                                    <div class="flex items-center gap-x-2">
-                                          <p
-                                                class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Sessions
-                                          </p>
-                                    </div>
-
-                                    <div class="mt-1 flex items-center gap-x-2">
-                                          <h3
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
-                                          </h3>
-                                    </div>
-                              </div>
-                        </div>
-                        <!-- End Card -->
-
-                        <!-- Card -->
-                        <div
-                              class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <div class="p-4 md:p-5">
-                                    <div class="flex items-center gap-x-2">
-                                          <p
-                                                class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Avg. Click Rate
-                                          </p>
-                                    </div>
-
-                                    <div class="mt-1 flex items-center gap-x-2">
-                                          <h3
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
-                                          </h3>
-                                    </div>
-                              </div>
-                        </div>
-                        <!-- End Card -->
-
-                        <!-- Card -->
-                        <div
-                              class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <div class="p-4 md:p-5">
-                                    <div class="flex items-center gap-x-2">
-                                          <p
-                                                class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Pageviews
-                                          </p>
-                                    </div>
-
-                                    <div class="mt-1 flex items-center gap-x-2">
-                                          <h3
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
-                                          </h3>
-                                    </div>
-                              </div>
-                        </div>
-                        <!-- End Card -->
-                  </div>
-                  <!-- End Grid -->
-
                   <div class="grid lg:grid-cols-2 gap-4 sm:gap-6">
                         <!-- Card -->
                         <div
@@ -138,11 +50,10 @@
                               <div class="flex justify-between items-center">
                                     <div>
                                           <h2 class="text-sm text-gray-500 dark:text-neutral-500">
-                                                Income
+                                                Tên kho chứa
                                           </h2>
-                                          <p
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
+                                          <p class="text-l sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                {{warehouseInforSignal()?.name}}
                                           </p>
                                     </div>
                               </div>
@@ -159,11 +70,59 @@
                               <div class="flex justify-between items-center">
                                     <div>
                                           <h2 class="text-sm text-gray-500 dark:text-neutral-500">
-                                                Visitors
+                                                Trạng thái
                                           </h2>
-                                          <p
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
+                                          @if (warehouseInforSignal()?.status) {
+                                          <p class="text-l sm:text-xl font-medium text-green-500 dark:text-neutral-200">
+                                                Còn Hoạt Động
+                                          </p>
+                                          } @else {
+                                          <p class="text-l sm:text-xl font-medium text-red-500 dark:text-neutral-200">
+                                                Đã tạm ngưng hoạt động
+                                          </p>
+                                          }
+
+                                    </div>
+                              </div>
+                              <!-- End Header -->
+
+                              <div id="hs-single-area-chart"></div>
+                        </div>
+                        <!-- End Card -->
+                  </div>
+
+                  <div class="grid lg:grid-cols-2 gap-4 sm:gap-6">
+                        <!-- Card -->
+                        <div
+                              class="p-4 md:p-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                              <!-- Header -->
+                              <div class="flex justify-between items-center">
+                                    <div>
+                                          <h2 class="text-sm text-gray-500 dark:text-neutral-500">
+                                                Địa chỉ
+                                          </h2>
+                                          <p class="text-l sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                {{warehouseInforSignal()?.address}}
+                                          </p>
+                                    </div>
+                              </div>
+                              <!-- End Header -->
+
+                              <div id="hs-multiple-bar-charts"></div>
+                        </div>
+                        <!-- End Card -->
+
+                        <!-- Card -->
+                        <div
+                              class="p-4 md:p-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                              <!-- Header -->
+                              <div class="flex justify-between items-center">
+                                    <div>
+                                          <h2 class="text-sm text-gray-500 dark:text-neutral-500">
+                                                Tên người quản lý
+                                          </h2>
+                                          <p class="text-l sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                {{warehouseInforSignal()?.managerUsernames?.toString()}}
                                           </p>
                                     </div>
                               </div>
@@ -181,39 +140,57 @@
                               class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                               <div>
                                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                          Warehouse
+                                          Danh sách người vận chuyển
                                     </h2>
                                     <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                          Add warehouse, edit and more.
+                                          Quản lý người vận chuyển
                                     </p>
                               </div>
-
                               <div>
-                                    <div class="inline-flex gap-x-5">
-                                          <div class="md:inline-flex md:gap-x-10 grid gap-y-3">
-                                                <form [formGroup]="searchWarehouseForm"
-                                                      (ngSubmit)="searchWarehouse($event)">
-                                                      <div class="flex items-center justify-content-center">
+                                    <div class="md:inline-flex md:gap-x-10 grid gap-y-3">
 
-                                                            <div
-                                                                  class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
+                                          <form [formGroup]="searchShipperForm" (ngSubmit)="searchShipper($event)">
+                                                <div class="flex items-center justify-content-center">
 
-                                                                  <input type="text" placeholder="Name or address"
-                                                                        formControlName="searchedWarehouseNameOrAddress"
-                                                                        class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
-                                                                  <i (click)="searchWarehouse($event)"
-                                                                        class="fa-solid fa-magnifying-glass cursor-pointer"></i>
-                                                            </div>
+                                                      <div
+                                                            class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
+
+                                                            <input type="text" placeholder="Search by username"
+                                                                  formControlName="searchedUsername"
+                                                                  class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
+                                                            <i (click)="searchShipper($event)"
+                                                                  class="fa-solid fa-magnifying-glass cursor-pointer"></i>
                                                       </div>
+                                                </div>
 
 
-                                                </form>
+                                          </form>
+                                          <div class="flex items-center justify-content-center"
+                                                (click)="toggleWarehouseMenu($event)">
+                                                <div
+                                                      class="text-2xl flex items-center justify-center px-4 py-1.5 cursor-pointer transform transition-transform duration-100 hover:scale-150">
+                                                      <i class="fa-solid fa-bars "></i>
+
+                                                </div>
+                                                <p-menu #warehouseMenu [model]="warehouseMenuItems" [popup]="true"
+                                                      [style]="{ minWidth: '200px', width:  'fit-content'}"
+                                                      [appendTo]="'body'">
+                                                      <ng-template pTemplate="item" let-item let-root="root">
+
+                                                            <a pRipple class="flex align-items-center p-menuitem-link"
+                                                                  [ngClass]="item.styleClass">
+                                                                  <span [class]="item.icon"></span>
+                                                                  <span class="ml-2">{{
+                                                                        item.label }}</span>
+                                                                  <span *ngIf="item.shortcut"
+                                                                        class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{
+                                                                        item.shortcut }}</span>
+                                                                  <i *ngIf="item.items"
+                                                                        [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+                                                            </a>
+                                                      </ng-template>
+                                                </p-menu>
                                           </div>
-                                          <button
-                                                class="w-fit rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
-                                                (click)="openAddWarehouseModal()">
-                                                <i class="fa-solid fa-plus"></i> Add
-                                          </button>
                                     </div>
                               </div>
                         </div>
@@ -228,11 +205,23 @@
                                           <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                                                 <thead class="bg-gray-50 dark:bg-neutral-800">
                                                       <tr>
-                                                            <th scope="col" class=" py-3 text-start">
-                                                                  <div class="flex items-center justify-center">
+                                                            <th scope="col" class="ps-6 py-3 text-start">
+                                                                  <label for="hs-at-with-checkboxes-main" class="flex">
+                                                                        <div class="flex items-center justify-center">
+                                                                              <span
+                                                                                    class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                    ID
+                                                                              </span>
+                                                                        </div>
+                                                                  </label>
+                                                            </th>
+
+                                                            <th scope="col"
+                                                                  class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                  <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              ID
+                                                                              Tên shipper
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -242,7 +231,17 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Name
+                                                                              Email
+                                                                        </span>
+                                                                  </div>
+                                                            </th>
+
+                                                            <th scope="col"
+                                                                  class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                  <div class="flex items-center gap-x-2">
+                                                                        <span
+                                                                              class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                              Số điện thoại
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -251,25 +250,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Address
-                                                                        </span>
-                                                                  </div>
-                                                            </th>
-
-                                                            <th scope="col" class="px-6 py-3 text-start">
-                                                                  <div class="flex items-center gap-x-2">
-                                                                        <span
-                                                                              class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Status
-                                                                        </span>
-                                                                  </div>
-                                                            </th>
-
-                                                            <th scope="col" class="px-6 py-3 text-start">
-                                                                  <div class="flex items-center gap-x-2">
-                                                                        <span
-                                                                              class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Manager
+                                                                              Roles
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -279,15 +260,14 @@
                                                 </thead>
 
                                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
-                                                      @for (warehouse of paginatedWarehouseSignal()?.content; track
+                                                      @for (userProfile of paginatedShipperSignal()?.content; track
                                                       $index) {
-                                                      <tr class="hover:bg-gray-200 hover:cursor-pointer"
-                                                            (click)="goToWarehouseInfoPage(warehouse?.id)">
+                                                      <tr class="hover:bg-gray-200">
                                                             <td class="size-px whitespace-nowrap">
                                                                   <div class="ps-6 py-3">
                                                                         <label for="hs-at-with-checkboxes-1"
                                                                               class="flex">
-                                                                              <span>{{warehouse?.id}}</span>
+                                                                              <span>{{userProfile?.userId}}</span>
                                                                         </label>
                                                                   </div>
                                                             </td>
@@ -296,59 +276,71 @@
                                                                         <div class="flex items-center gap-x-3">
                                                                               <div class="grow">
                                                                                     <span
-                                                                                          class="block text-sm  text-gray-800 dark:text-neutral-200">
-                                                                                          {{warehouse?.name}}
-                                                                                    </span>
+                                                                                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{userProfile?.username}}</span>
                                                                               </div>
                                                                         </div>
                                                                   </div>
                                                             </td>
-                                                            <td class="h-px w-72 whitespace-nowrap">
-                                                                  <div class="px-6 py-3">
-                                                                        <span
-                                                                              class="block text-sm text-gray-500 dark:text-neutral-500">
-                                                                              {{warehouse?.address}}
-                                                                        </span>
+                                                            <td class="size-px whitespace-nowrap">
+                                                                  <div class="ps-4 lg:ps-2 xl:ps-0 pe-4 py-3 ">
+                                                                        <div class="flex items-center gap-x-3 ">
+                                                                              <span
+                                                                                    class="text-sm text-gray-500 dark:text-neutral-500">{{userProfile?.emailAddress}}</span>
+                                                                        </div>
                                                                   </div>
                                                             </td>
                                                             <td class="size-px whitespace-nowrap">
-                                                                  <div class="px-3 py-3 ">
-                                                                        @if (warehouse?.status) {
-                                                                        <span
-                                                                              class=" cursor-pointer py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  relative group">
-
+                                                                  <div class="ps-4 lg:ps-2 xl:ps-0 pe-4 py-3 ">
+                                                                        <div class="flex items-center gap-x-3 ">
                                                                               <span
-                                                                                    class="status-text transition-opacity duration-300  bg-teal-100 px-2 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500"><i
-                                                                                          class="fa-solid fa-circle-check mr-1"></i>Active</span>
-                                                                        </span>
-                                                                        } @else {
-                                                                        <span
-                                                                              class=" cursor-pointer py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  relative group">
-
-                                                                              <span
-                                                                                    class="status-text transition-opacity duration-300  bg-gray-200 px-2 text-gray-600 rounded-full dark:bg-gray-700/20 dark:text-gray-400"><i
-                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>Deactive</span>
-                                                                        </span>
-                                                                        }
+                                                                                    class="text-sm text-gray-500 dark:text-neutral-500">0123123123</span>
+                                                                        </div>
                                                                   </div>
                                                             </td>
-                                                            <td class="h-px w-24 whitespace-nowrap">
+                                                            <td class="size-px ">
                                                                   <div class="px-6 py-3">
                                                                         <span
-                                                                              class="block text-sm text-gray-500 dark:text-neutral-500">
-                                                                              {{warehouse?.managerUsernames}}
+                                                                              class="text-sm text-gray-500 dark:text-neutral-500">
+                                                                              @if
+                                                                              (userProfile?.roles?.includes("ROLE_ADMIN"))
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-red-500 rounded-full">
+                                                                                    ROLE_ADMIN
+                                                                              </span>
+                                                                              } @if
+                                                                              (userProfile?.roles?.includes("ROLE_USER"))
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-blue-500 rounded-full">
+                                                                                    ROLE_USER
+                                                                              </span>
+                                                                              } @if
+                                                                              (userProfile?.roles?.includes("ROLE_WAREHOUSE_MANAGER"))
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-yellow-500 rounded-full">
+                                                                                    ROLE_WAREHOUSE_MANAGER
+                                                                              </span>
+                                                                              } @if
+                                                                              (userProfile?.roles?.includes("ROLE_SHIPPER"))
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
+                                                                                    ROLE_SHIPPER
+                                                                              </span>
+                                                                              }
                                                                         </span>
                                                                   </div>
                                                             </td>
-                                                            <td class="size-px whitespace-nowrap "
-                                                                  (click)="toggleWarehouseMenu($event, warehouse)">
+                                                            <td class="size-px whitespace-nowrap ">
                                                                   <div
                                                                         class="flex items-center justify-center px-4 py-1.5 cursor-pointer transform transition-transform duration-100 hover:scale-150">
-                                                                        <i class="fa-solid fa-bars "></i>
+                                                                        <i class="fa-solid fa-bars "
+                                                                              (click)="toggleUserMenu($event, userProfile)"></i>
 
                                                                   </div>
-                                                                  <p-menu #warehouseMenu [model]="warehouseMenuItems"
-                                                                        [popup]="true"
+                                                                  <p-menu #userMenu [model]="userItems" [popup]="true"
                                                                         [style]="{ minWidth: '200px', width:  'fit-content'}"
                                                                         [appendTo]="'body'">
                                                                         <ng-template pTemplate="item" let-item
@@ -369,9 +361,9 @@
                                                                         </ng-template>
                                                                   </p-menu>
                                                             </td>
-
                                                       </tr>
                                                       }
+
 
                                                 </tbody>
                                           </table>
@@ -384,30 +376,30 @@
                                                       <p class="text-sm text-gray-600 dark:text-neutral-400">
                                                             Showing
                                                             <span
-                                                                  class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseSignal()?.number!*paginatedWarehouseSignal()?.size!}}</span>
+                                                                  class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.number!*paginatedShipperSignal()?.size!}}</span>
                                                             -
                                                             <span
-                                                                  class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseSignal()?.number!*paginatedWarehouseSignal()?.size!
+                                                                  class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.number!*paginatedShipperSignal()?.size!
                                                                   +
-                                                                  paginatedWarehouseSignal()?.numberOfElements!}}</span>
+                                                                  paginatedShipperSignal()?.numberOfElements!}}</span>
                                                             of
                                                             <span
-                                                                  class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseSignal()?.totalElements}}</span>
+                                                                  class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.totalElements}}</span>
                                                             results
                                                       </p>
                                                 </div>
 
                                                 <div>
                                                       <div class="inline-flex gap-x-2">
-                                                            <button [disabled]="paginatedWarehouseSignal()?.first"
-                                                                  (click)="previousWarehousePage()"
+                                                            <button [disabled]="paginatedShipperSignal()?.first"
+                                                                  (click)="previousPage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                   <i class="fa-solid fa-chevron-left"></i>
                                                                   Prev
                                                             </button>
 
-                                                            <button [disabled]="paginatedWarehouseSignal()?.last"
-                                                                  (click)="nextWarehousePage()"
+                                                            <button [disabled]="paginatedShipperSignal()?.last"
+                                                                  (click)="nextPage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                   Next
                                                                   <i class="fa-solid fa-chevron-right"></i>
@@ -424,96 +416,6 @@
             </div>
       </div>
       <!-- End Content -->
-
-      <p-dialog header="Add warehouse" [(visible)]="isAddWarehouseModalOpenSignal" [modal]="true" [closable]="false"
-            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
-                  '10000px': '50vw',
-                  '1200px': '60vw',
-                  '1199px': '75vw',
-                  '575px': '90vw',
-                }" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
-            <ng-template pTemplate="header">
-                  <div
-                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
-                        <span class="font-bold white-space-nowrap text-xl ">
-                              Add warehouse
-                        </span>
-                  </div>
-            </ng-template>
-            <div>
-                  <form [formGroup]="addWarehouseForm" (ngSubmit)="submitAddWarehouseModal($event)">
-                        <div class="mt-2 space-y-10">
-                              <div class="space-y-2">
-                                    <div>
-                                          <div class="m-1 ml-3 font-bold ">Name</div>
-                                          <div
-                                                class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                                <input type="text" placeholder="Name"
-                                                      class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
-                                                      formControlName="name" />
-
-                                          </div>
-                                    </div>
-                                    @if (isAddWarehouseFormFieldValid("name"))
-                                    {
-                                    <div class="pl-5 text-sm text-red-600">Name is required.</div>
-                                    }
-                              </div>
-
-                              @if (userCoordinatesWithAddressSignal()) {
-                              <div class="space-y-5">
-                                    <div>
-                                          <div class="m-1 ml-3 font-bold ">Address</div>
-                                          <div
-                                                class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                                <input [disabled]="true" type="text"
-                                                      [value]="userCoordinatesWithAddressSignal()?.address"
-                                                      class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
-                                          </div>
-                                    </div>
-                                    <div
-                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input type="text" placeholder="House number, street name, ..."
-                                                formControlName="additionalAddress"
-                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
-                                    </div>
-                              </div>
-                              } @else {
-                              <div class="space-y-2">
-
-                                    <div class="flex items-center justify-center">
-                                          <button type="button"
-                                                class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
-                                                (click)="openMapModal()">
-                                                <i class="fa-solid fa-location-dot"></i> Choose location
-                                          </button>
-                                    </div>
-                                    @if (isRequiredChooseLocaltionSignal())
-                                    {
-                                    <div class="flex items-center justify-center">
-                                          <div class="pl-5 text-sm text-red-600">Please choosse your location.</div>
-                                    </div>
-                                    }
-                              </div>
-
-                              }
-
-                              <div class="flex justify-around">
-                                    <button type="button" (click)="closeAddWarehouseModal()"
-                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
-                                    </button>
-
-                                    <button type="submit"
-                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
-                                    </button>
-                              </div>
-                        </div>
-                  </form>
-            </div>
-      </p-dialog>
-
       <!-- Update warehouse  -->
       <p-dialog header="Add warehouse" [(visible)]="isUpdateWarehouseModalOpenSignal" [modal]="true" [closable]="false"
             [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
@@ -576,7 +478,7 @@
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
                                                 <input type="text" placeholder="Address" [disabled]="true"
-                                                      [value]="selectedWarehouseSignal()?.address"
+                                                      [value]="warehouseInforSignal()?.address"
                                                       class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
 
                                           </div>
@@ -615,8 +517,6 @@
             </div>
       </p-dialog>
 
-
-      <!-- Assign manager to warehouse  -->
       <p-dialog header="Add warehouse" [(visible)]="isAssignManagerToWarehouseModalOpenSignal" [modal]="true"
             [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
                   '10000px': '90%',
@@ -642,7 +542,7 @@
                                           Name
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
-                                          {{selectedWarehouse?.name}}
+                                          {{warehouseInforSignal()?.name}}
                                     </p>
                               </div>
                               <div class="px-2">
@@ -650,7 +550,7 @@
                                           Address
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
-                                          {{selectedWarehouse?.address}}
+                                          {{warehouseInforSignal()?.address}}
                                     </p>
                               </div>
                         </div>
@@ -979,7 +879,7 @@
                                           Name
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
-                                          {{selectedWarehouse?.name}}
+                                          {{warehouseInforSignal()?.name}}
                                     </p>
                               </div>
                               <div class="px-2">
@@ -987,7 +887,7 @@
                                           Address
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
-                                          {{selectedWarehouse?.address}}
+                                          {{warehouseInforSignal()?.address}}
                                     </p>
                               </div>
                         </div>
@@ -1010,8 +910,8 @@
                                           </div>
                                           <div>
                                                 <div class="md:inline-flex md:gap-x-10 grid gap-y-3">
-                                                      <form [formGroup]="searchShipperForm"
-                                                            (ngSubmit)="searchShipper($event)">
+                                                      <form [formGroup]="searchAddShipperForm"
+                                                            (ngSubmit)="searchAddShipper($event)">
                                                             <div class="flex items-center justify-content-center">
 
                                                                   <div
@@ -1021,7 +921,7 @@
                                                                               placeholder="Search by username"
                                                                               formControlName="searchedUsername"
                                                                               class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
-                                                                        <i (click)="searchShipper($event)"
+                                                                        <i (click)="searchAddShipper($event)"
                                                                               class="fa-solid fa-magnifying-glass cursor-pointer"></i>
                                                                   </div>
                                                             </div>
@@ -1148,13 +1048,8 @@
                                                                         <td class="size-px whitespace-nowrap">
                                                                               <div
                                                                                     class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
-                                                                                    <div
-                                                                                          class="flex items-center gap-x-3">
-                                                                                          <div class="grow">
-                                                                                                <span
-                                                                                                      class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{shipper?.emailAddress}}</span>
-                                                                                          </div>
-                                                                                    </div>
+                                                                                    <span
+                                                                                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{shipper?.emailAddress}}</span>
                                                                               </div>
                                                                         </td>
                                                                         <td class="size-px whitespace-nowrap">
@@ -1240,7 +1135,7 @@
                                                                   <div class="inline-flex gap-x-2">
                                                                         <button
                                                                               [disabled]="paginatedAddShipperSignal()?.first"
-                                                                              (click)="previousShipperPage()"
+                                                                              (click)="previousAddShipperPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                               <i class="fa-solid fa-chevron-left"></i>
                                                                               Prev
@@ -1248,7 +1143,7 @@
 
                                                                         <button
                                                                               [disabled]="paginatedAddShipperSignal()?.last"
-                                                                              (click)="nextShipperPage()"
+                                                                              (click)="nextAddShipperPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                               Next
                                                                               <i class="fa-solid fa-chevron-right"></i>

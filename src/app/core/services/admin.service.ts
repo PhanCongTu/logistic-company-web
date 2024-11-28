@@ -20,6 +20,33 @@ export class AdminService {
     private localStorageService: LocalStorageService
   ) { }
 
+  searchAndPageableShipperByWarehouseId(warehouseId: number, pageRequest: PageRequest): Observable<any> {
+
+    const { page, size, search, sortColumn, sortType } = pageRequest;
+
+    const params = new RequestParamBuilder()
+      .setPage(page)
+      .setSize(size)
+      .setSearch(search) // username
+      .setSortColumn(sortColumn)
+      .setSortType(sortType)
+      .build();
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/admin/warehouse/${warehouseId}/shippers`, { headers, params });
+  }
+
+  getWarehouseInfo(warehouseId?: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/admin/warehouse/${warehouseId}`, { headers });
+  }
+
   addShipperToWarehouse(warehouseId: number, shipperId: number) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
