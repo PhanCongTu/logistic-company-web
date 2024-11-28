@@ -237,7 +237,13 @@ export class WarehouseComponent {
         this.searchAndPageableShipper();
       },
       error: (error) => {
-        this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+        if (error?.error?.errorCode === 'NOT_ACCEPTABLE') {
+          if (error?.error?.key === 'NOT_REMOVE_TRANSPORTING_SHIPPER') {
+            this.toastFail("Hiện người này đang vận chuyển hàng nên không thể đổi qua kho khác!");
+          }
+        } else {
+          this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+        }
       },
     });
     this.closeAddShipperToWarehouseModal();

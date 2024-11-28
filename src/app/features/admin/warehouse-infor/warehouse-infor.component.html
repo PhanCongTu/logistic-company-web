@@ -262,7 +262,8 @@
                                                 <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
                                                       @for (userProfile of paginatedShipperSignal()?.content; track
                                                       $index) {
-                                                      <tr class="hover:bg-gray-200">
+                                                      <tr class="hover:bg-gray-200"
+                                                            (click)="selectShipperRowToRemove(userProfile.userId)">
                                                             <td class="size-px whitespace-nowrap">
                                                                   <div class="ps-6 py-3">
                                                                         <label for="hs-at-with-checkboxes-1"
@@ -1016,13 +1017,13 @@
                                                                   paginatedAddShipperSignal()?.content; track
                                                                   $index) {
                                                                   <tr class="hover:bg-gray-200 cursor-pointer"
-                                                                        (click)="selectShipperRow(shipper.userId)">
+                                                                        (click)="selectShipperRowToAdd(shipper.userId)">
                                                                         <td class="size-px whitespace-nowrap">
                                                                               <div class="ps-6 py-3">
                                                                                     <input type="radio" name="options"
                                                                                           [value]="shipper.userId"
-                                                                                          [checked]="selectedShipperIdSignal() === shipper.userId"
-                                                                                          [(ngModel)]="selectedShipperIdSignal" />
+                                                                                          [checked]="selectedShipperIdToAddSignal() === shipper.userId"
+                                                                                          [(ngModel)]="selectedShipperIdToAddSignal" />
                                                                               </div>
                                                                         </td>
                                                                         <td class="size-px whitespace-nowrap">

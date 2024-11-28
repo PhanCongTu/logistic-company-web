@@ -86,7 +86,8 @@ export class WarehouseInforComponent {
   isAddShipperToWarehouseModalOpenSignal: WritableSignal<boolean> = signal(false);
   selectedWarehouseManagerIdSignal: WritableSignal<string | undefined> = signal(undefined);
   //
-  selectedShipperIdSignal: WritableSignal<string | undefined> = signal(undefined);
+  selectedShipperIdToAddSignal: WritableSignal<string | undefined> = signal(undefined);
+  selectedShipperIdToRemoveSignal: WritableSignal<string | undefined> = signal(undefined);
 
   @ViewChild('userMenu') userMenu!: Menu;
   @ViewChild('warehouseMenu') warehouseMenu!: Menu;
@@ -170,7 +171,7 @@ export class WarehouseInforComponent {
     this.userItems = [
       {
         label: 'Xóa', icon: 'fa-solid fa-trash', command: () => {
-
+          this.removeShipperOutOfWarehouse();
         }
       }
     ];
@@ -187,6 +188,35 @@ export class WarehouseInforComponent {
     }
     this.isMapVisibleSignal.set(false);
     this.isUpdateWarehouseModalOpenSignal.set(true);
+  }
+
+  // ********** Remove a Shipper to Warehouse ****************
+  selectShipperRowToRemove(userId: string): void {
+    this.selectedShipperIdToRemoveSignal.set(userId);
+  }
+  removeShipperOutOfWarehouse() {
+    if (!this.selectedShipperIdToRemoveSignal()) {
+      this.toastWarning("Bạn cần phải chọn 1 shipper trước!");
+      return;
+    }
+    if (!this.warehouseInforSignal() || !this.selectedShipperIdToRemoveSignal()) {
+      return;
+    }
+    this.adminService.removeShipperToWarehouse(Number(this.warehouseId), Number(this.selectedShipperIdToRemoveSignal())).subscribe({
+      next: (data) => {
+        this.toastSuccess("Gỡ Shipper thành công!");
+        this.searchAndPageableShipperByWarehouseId();
+      },
+      error: (error) => {
+        if (error?.error?.errorCode === 'NOT_ACCEPTABLE') {
+          if (error?.error?.key === 'NOT_REMOVE_TRANSPORTING_SHIPPER') {
+            this.toastFail("Hiện người này đang vận chuyển hàng nên không thể gỡ khỏi kho!");
+          }
+        } else {
+          this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+        }
+      },
+    });
   }
 
   // ********** Add a Shipper to Warehouse ****************
@@ -208,12 +238,12 @@ export class WarehouseInforComponent {
   }
 
   closeAddShipperToWarehouseModal() {
-    this.selectedShipperIdSignal.set(undefined)
+    this.selectedShipperIdToAddSignal.set(undefined)
     this.isAddShipperToWarehouseModalOpenSignal.set(false);
   }
 
-  selectShipperRow(userId: string): void {
-    this.selectedShipperIdSignal.set(userId);
+  selectShipperRowToAdd(userId: string): void {
+    this.selectedShipperIdToAddSignal.set(userId);
   }
   searchAddShipper(even: any) {
     // Avoid refreshing the page
@@ -236,20 +266,26 @@ export class WarehouseInforComponent {
   }
 
   submitAddShipperToWarehouseModal() {
-    if (!this.selectedShipperIdSignal()) {
+    if (!this.selectedShipperIdToAddSignal()) {
       this.toastWarning("Bạn cần phải chọn 1 shipper trước!");
       return;
     }
-    if (!this.warehouseInforSignal() || !this.selectedShipperIdSignal()) {
+    if (!this.warehouseInforSignal() || !this.selectedShipperIdToAddSignal()) {
       return;
     }
-    this.adminService.addShipperToWarehouse(Number(this.warehouseId), Number(this.selectedShipperIdSignal())).subscribe({
+    this.adminService.addShipperToWarehouse(Number(this.warehouseId), Number(this.selectedShipperIdToAddSignal())).subscribe({
       next: (data) => {
         this.toastSuccess("Thêm Shipper thành công!");
         this.searchAndPageableShipperByWarehouseId();
       },
       error: (error) => {
-        this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+        if (error?.error?.errorCode === 'NOT_ACCEPTABLE') {
+          if (error?.error?.key === 'NOT_REMOVE_TRANSPORTING_SHIPPER') {
+            this.toastFail("Hiện người này đang vận chuyển hàng nên không thể đổi qua kho khác!");
+          }
+        } else {
+          this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+        }
       },
     });
     this.closeAddShipperToWarehouseModal();

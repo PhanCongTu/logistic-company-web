@@ -125,7 +125,13 @@ export class UserComponent {
           this.toastSuccess("Update roles successfully!");
         },
         error: (error) => {
-          this.toastFail("Can not Update roles to this user. Please try again!");
+          if (error?.error?.errorCode === 'NOT_ACCEPTABLE') {
+            if (error?.error?.key === 'NOT_REMOVE_TRANSPORTING_SHIPPER') {
+              this.toastFail("Hiện người này đang vận chuyển hàng nên không thể gỡ bỏ ROLE_SHIPPER!");
+            }
+          } else {
+            this.toastFail("Có lỗi!Vui lòng thử lại sau.");
+          }
         },
       })
     }

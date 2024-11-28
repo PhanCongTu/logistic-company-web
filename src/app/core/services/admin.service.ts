@@ -59,6 +59,18 @@ export class AdminService {
     return this.http.post(`${this.endpoint}/api/admin/warehouse/add-shipper`, null, { headers, params });
   }
 
+  removeShipperToWarehouse(warehouseId: number, shipperId: number) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    const params = {
+      'shipperId': shipperId,
+      'warehouseId': warehouseId
+    };
+    return this.http.post(`${this.endpoint}/api/admin/warehouse/remove-shipper`, null, { headers, params });
+  }
+
   assignWarehouseToManager(warehouseId: number, warehouseManagerId: number) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
