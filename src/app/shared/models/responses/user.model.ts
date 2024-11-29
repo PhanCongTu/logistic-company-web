@@ -9,4 +9,5 @@ export interface User {
       refreshToken?: string;
       roles?: string[];
       expired_in?: string;
+      warehouseId?: number;
 }

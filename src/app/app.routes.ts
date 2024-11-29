@@ -26,6 +26,7 @@ export const ROUTES = {
       },
       warehouseManager: {
             manageShipment: 'manage-shipment',
+            manageWarehouseInfo: 'manage-warehouse',
       }
 };
 
@@ -85,6 +86,10 @@ export const routes: Routes = [
                   {
                         path: ROUTES.warehouseManager.manageShipment,
                         component: ManageShipmentComponent
+                  },
+                  {
+                        path: ROUTES.warehouseManager.manageWarehouseInfo,
+                        component: WarehouseInforComponent
                   }
             ]
       }

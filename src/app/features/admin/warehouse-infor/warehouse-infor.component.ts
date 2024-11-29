@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { DialogModule } from 'primeng/dialog';
@@ -21,6 +21,7 @@ import { CoordinatesWithAddress } from '../../../shared/models/common/coordinate
 import { UpdateWarehouseRequest } from '../../../shared/models/requests/update-warehouse-request.model';
 import { MapComponent } from '../../../shared/components/map/map.component';
 import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component';
+import { ROUTES } from '../../../app.routes';
 
 @Component({
   selector: 'app-warehouse-infor',
@@ -44,6 +45,7 @@ import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/
 })
 export class WarehouseInforComponent {
   warehouseId!: string;
+  isAdminSignal: WritableSignal<boolean> = signal(false);
 
   items: MenuItem[] | undefined;
   warehouseMenuItems: MenuItem[] | undefined;
@@ -103,6 +105,7 @@ export class WarehouseInforComponent {
     this.warehouseMenuItems = [
       {
         label: 'Update warehouse',
+        visible: this.isAdminSignal(),
         icon: 'fa-solid fa-pen',
         command: () => {
           this.openUpdateWarehouseModal();
@@ -124,6 +127,7 @@ export class WarehouseInforComponent {
       },
       {
         label: 'Assign to manager',
+        visible: this.isAdminSignal(),
         icon: 'fa-solid fa-user-plus',
         command: () => {
           this.openAssignManagerToWarehouseModal();
@@ -131,6 +135,7 @@ export class WarehouseInforComponent {
       },
       {
         label: 'Add a shipper',
+        visible: this.isAdminSignal(),
         icon: 'fa-solid fa-user-plus',
         command: () => {
           this.openAddShipperToWarehouseModal();
@@ -141,15 +146,27 @@ export class WarehouseInforComponent {
   }
 
   constructor(
+    private router: Router,
     private route: ActivatedRoute,
     private adminService: AdminService,
     private messageService: MessageService,
     private formBuilder: FormBuilder,
     private localStorageService: LocalStorageService
   ) {
-    this.route.params.subscribe((params) => {
-      this.warehouseId = params['warehouseId'];
-    });
+    const regex = /^\/admin\/warehouse\/\d+$/;
+    let currentPath = this.router.url;
+
+    if (regex.test(currentPath)) {
+      // It's admin
+      this.isAdminSignal.set(regex.test(currentPath));
+      this.route.params.subscribe((params) => {
+        this.warehouseId = params['warehouseId'];
+      });
+    } else {
+      // It's Warehouse manager
+      this.warehouseId = this.localStorageService.getUser().warehouseId?.toString() || '';
+    }
+
 
     this.getWarehouseInformation();
     this.searchAndPageableShipperByWarehouseId();
@@ -170,7 +187,10 @@ export class WarehouseInforComponent {
     });
     this.userItems = [
       {
-        label: 'Xóa', icon: 'fa-solid fa-trash', command: () => {
+        label: 'Xóa',
+        visible: this.isAdminSignal(),
+        icon: 'fa-solid fa-trash',
+        command: () => {
           this.removeShipperOutOfWarehouse();
         }
       }

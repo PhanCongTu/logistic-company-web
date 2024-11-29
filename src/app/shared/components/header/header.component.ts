@@ -112,6 +112,11 @@ export class HeaderComponent {
                 icon: 'fa-solid fa-list-check',
                 items: [
                     {
+                        label: 'Warehouse information',
+                        icon: 'fa-solid fa-house',
+                        command: () => this.router.navigate([this.routes.warehouseManager.manageWarehouseInfo])
+                    },
+                    {
                         label: 'Shipment Management',
                         icon: 'fa-solid fa-truck',
                         command: () => this.router.navigate([this.routes.warehouseManager.manageShipment])
