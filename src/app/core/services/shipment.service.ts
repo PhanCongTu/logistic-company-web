@@ -26,6 +26,34 @@ export class ShipmentService {
     return this.http.get(`${this.endpoint}/api/shipper/${shipperId}/shipment/count`, { headers });
   }
 
+
+
+  startDeliveryShipment(shipmentId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+
+    const params = {
+      'shipmentId': shipmentId
+    };
+
+    return this.http.post(`${this.endpoint}/api/shipper/delivery`, null, { headers, params });
+  }
+
+  completeDeliveryShipment(shipmentId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+
+    const params = {
+      'shipmentId': shipmentId
+    };
+
+    return this.http.post(`${this.endpoint}/api/shipper/complete-delivery`, null, { headers, params });
+  }
+
   startPickUpShipment(shipmentId: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -37,6 +65,20 @@ export class ShipmentService {
     };
 
     return this.http.post(`${this.endpoint}/api/shipper/pickup`, null, { headers, params });
+  }
+
+  completePickUpShipment(shipmentId: string, isPaid: boolean): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+
+    const params = {
+      'shipmentId': shipmentId,
+      'isPaid': isPaid
+    };
+
+    return this.http.post(`${this.endpoint}/api/shipper/complete-pickup`, null, { headers, params });
   }
 
 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
@@ -17,6 +17,7 @@ import { PaginatedResponse } from '../../../shared/models/responses/paginated-re
 import { SHIPMENT_STATUS, SHIPPER_TYPE } from '../../../shared/constants/app-constants.constant';
 import { PageRequest } from '../../../shared/models/requests/page-request.model';
 import { CountShipment } from '../../../shared/models/responses/count-shipment.model';
+import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/confirm-popup.component';
 
 @Component({
   selector: 'app-delivery-shippment',
@@ -30,7 +31,8 @@ import { CountShipment } from '../../../shared/models/responses/count-shipment.m
     DialogModule,
     ReactiveFormsModule,
     RouterLink,
-    FormsModule
+    FormsModule,
+    ConfirmPopupComponent
   ],
   providers: [MessageService],
   templateUrl: './delivery-shippment.component.html',
@@ -48,10 +50,14 @@ export class DeliveryShippmentComponent {
     search: ''
   };
 
+  searchShipmentForm: FormGroup;
+
   paginatedShipmentSignal: WritableSignal<PaginatedResponse<Shipment> | undefined> = signal(undefined);
   isShipmentInforOpenSignal: WritableSignal<boolean> = signal(false);
 
   @ViewChild('shipmentMenu') shipmentMenu!: Menu;
+  @ViewChild('confirmIsPaidPopupComponent') confirmIsPaidPopupComponent!: ConfirmPopupComponent;
+  @ViewChild('warningNeedToPaidPopupComponent') warningNeedToPaidPopupComponent!: ConfirmPopupComponent;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -61,23 +67,58 @@ export class DeliveryShippmentComponent {
     private messageService: MessageService,
     private localStorageService: LocalStorageService,
     private adminService: AdminService,
-    private ShipmentService: ShipmentService
+    private shipmentService: ShipmentService
   ) {
     this.setUpTab();
     this.countUserShipments();
+    this.searchShipmentForm = this.formBuilder.group({
+      searchedShipment: ['']
+    });
   }
 
   ngOnInit() {
     this.searchAndPageableShipment();
   }
 
+  searchShipment(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    const trackingNumber = this.searchShipmentForm.get("searchedShipment")?.value?.trim();
+
+    this.pageRequest.search = trackingNumber;
+    this.pageRequest.page = 0;
+    this.searchAndPageableShipment();
+  }
+
   initShipmentMenuItems() {
     this.shipmentMenuItems = [
       {
-        label: 'Bắt đầu lấy hàng', icon: 'fa-solid fa-check',
+        label: 'Bắt đầu lấy hàng', icon: 'fa-solid fa-truck-ramp-box',
         visible: this.activeTabItem === '1',
         command: () => {
           this.startPickUpShipment();
+        }
+      },
+      {
+        label: 'Lấy hàng thành công', icon: 'fa-solid fa-check',
+        visible: this.activeTabItem === '2',
+        command: () => {
+          this.openIsPaidPopupPopup();
+        }
+      },
+      {
+        label: 'Bắt đầu giao hàng', icon: 'fa-solid fa-truck-arrow-right',
+        visible: this.activeTabItem === '3',
+        command: () => {
+          this.startDeliveryShipment();
+        }
+      },
+      {
+        label: 'Bắt đầu giao hàng', icon: 'fa-solid fa-check',
+        visible: this.activeTabItem === '4',
+        command: () => {
+          this.openWarningNeedToPaidPopup();
         }
       }
     ];
@@ -85,7 +126,7 @@ export class DeliveryShippmentComponent {
 
   countUserShipments() {
     let sipperId = this.localStorageService.getUser()?.userId;
-    this.ShipmentService.countShipperShipments(Number(sipperId)).subscribe({
+    this.shipmentService.countShipperShipments(Number(sipperId)).subscribe({
       next: (data: CountShipment) => {
         this.countShipment = data;
         this.setUpTab(data);
@@ -131,24 +172,97 @@ export class DeliveryShippmentComponent {
         badge: data?.OUT_FOR_DELIVERY.toString()
       }
     ];
-    this.activeTabItem = this.tabItems[0].id;
+    this.activeTabItem = this.activeTabItem || this.tabItems[0].id;
   }
 
-  // ************* Start pick up shipment ****************
-  startPickUpShipment() {
+  // ************* Start delivery shipment ****************
+  startDeliveryShipment() {
+    this.isShipmentInforOpenSignal.set(false);
     if (!this.selectedShipment) {
       this.toastWarning("Vui lòng chọn một đơn hàng trước!")
       return;
     };
-    this.ShipmentService.startPickUpShipment(this.selectedShipment?.id.toString()).subscribe({
+    this.shipmentService.startDeliveryShipment(this.selectedShipment?.id.toString()).subscribe({
+      next: (data) => {
+        this.searchAndPageableShipment();
+        this.toastSuccess("Đã bắt đầu giao đơn hàng!");
+      },
+      error: (error) => {
+        this.toastFail("Có lỗi! Vui lòng thử lại!");
+      },
+    });
+    this.selectedShipment = undefined;
+  }
+
+  // ************* Complete delivery shipment ****************
+  openWarningNeedToPaidPopup() {
+    this.isShipmentInforOpenSignal.set(false);
+    if (this.selectedShipment?.isPaid) {
+      this.completeDeliveryShipment(true);
+    } else {
+      this.warningNeedToPaidPopupComponent.show();
+    }
+  }
+  completeDeliveryShipment(isConfirmed: boolean) {
+    if (!this.selectedShipment) {
+      this.toastWarning("Vui lòng chọn một đơn hàng trước!")
+      return;
+    };
+    if (this.selectedShipment && isConfirmed) {
+      this.shipmentService.completeDeliveryShipment(this.selectedShipment?.id.toString()).subscribe({
+        next: (data) => {
+          this.searchAndPageableShipment();
+          this.toastSuccess("Đã giao hàng thành công!");
+        },
+        error: (error) => {
+          this.toastFail("Có lỗi! Vui lòng thử lại!");
+        },
+      });
+    }
+    this.selectedShipment = undefined;
+  }
+
+  // ************* Start pick up shipment ****************
+  startPickUpShipment() {
+    this.isShipmentInforOpenSignal.set(false);
+    if (!this.selectedShipment) {
+      this.toastWarning("Vui lòng chọn một đơn hàng trước!")
+      return;
+    };
+    this.shipmentService.startPickUpShipment(this.selectedShipment?.id.toString()).subscribe({
       next: (data) => {
         this.searchAndPageableShipment();
         this.toastSuccess("Đã bắt đầu lấy đơn hàng!");
       },
       error: (error) => {
-        this.toastFail("Can not load data. Please try again!");
+        this.toastFail("Có lỗi! Vui lòng thử lại!");
       },
     });
+    this.selectedShipment = undefined;
+  }
+
+  // ************* Complete pick up shipment ****************
+  openIsPaidPopupPopup() {
+    this.isShipmentInforOpenSignal.set(false);
+    this.confirmIsPaidPopupComponent.show();
+  }
+  completePickUpShipment(isPaid: boolean) {
+    if (!this.selectedShipment) {
+      this.toastWarning("Vui lòng chọn một đơn hàng trước!")
+      return;
+    };
+    if (this.selectedShipment) {
+
+      this.shipmentService.completePickUpShipment(this.selectedShipment?.id.toString(), isPaid).subscribe({
+        next: (data) => {
+          this.searchAndPageableShipment();
+          this.toastSuccess("Đã lấy hàng thành công!");
+        },
+        error: (error) => {
+          this.toastFail("Có lỗi! Vui lòng thử lại!");
+        },
+      });
+    }
     this.selectedShipment = undefined;
   }
 
@@ -164,6 +278,7 @@ export class DeliveryShippmentComponent {
   }
   searchAndPageableShipment() {
     this.initShipmentMenuItems();
+    this.countUserShipments();
     let statuses = '';
     let shipperType = ''
     if (this.activeTabItem === '1') {
@@ -180,13 +295,13 @@ export class DeliveryShippmentComponent {
       shipperType = SHIPPER_TYPE.DELIVERY;
     }
 
-    this.ShipmentService.getAllShipmentOfShipperByStatusAndType(this.pageRequest, statuses, shipperType).subscribe({
+    this.shipmentService.getAllShipmentOfShipperByStatusAndType(this.pageRequest, statuses, shipperType).subscribe({
       next: (data: PaginatedResponse<Shipment>) => {
         this.paginatedShipmentSignal.set(data);
 
       },
       error: (error) => {
-        this.toastFail("Can not load data. Please try again!");
+        this.toastFail("Có lỗi! Vui lòng thử lại!");
       },
     });
 

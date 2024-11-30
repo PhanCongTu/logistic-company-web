@@ -2,6 +2,14 @@
       <p-toast [showTransformOptions]="'translateY(100%)'" [showTransitionOptions]="'500ms'"
             [hideTransitionOptions]="'500ms'" [showTransformOptions]="'translateX(100%)'" />
 </div>
+<app-confirm-popup #confirmIsPaidPopupComponent (isConfirm)="completePickUpShipment($event)"
+      header="Xác nhận thanh toán" title="Đơn hàng này đã được thanh toán!" confirmButton="Đã thanh toán"
+      cancelButton="Chưa thanh toán" [isNative]="true"></app-confirm-popup>
+
+<app-confirm-popup #warningNeedToPaidPopupComponent (isConfirm)="completeDeliveryShipment($event)"
+      header="Chưa thanh toán"
+      title="Đơn hàng này chưa được thanh toán!<br/> <b>Xác nhận</b> đã thanh toán đơn hàng này chứ?"
+      confirmButton="Đã thanh toán" cancelButton="Hủy giao hàng" [isNative]="true"></app-confirm-popup>
 <div class="bg-gray-50 dark:bg-neutral-900 pt-20">
 
       <!-- ========== MAIN CONTENT ========== -->
@@ -158,6 +166,26 @@
                                     <p class="text-sm text-gray-600 dark:text-neutral-400">
                                           Xác nhận, quản lý và điều phối đơn hàng.
                                     </p>
+                              </div>
+                              <div>
+                                    <div class="inline-flex gap-x-2">
+                                          <form [formGroup]="searchShipmentForm" (ngSubmit)="searchShipment($event)">
+                                                <div class="flex items-center justify-content-center">
+
+                                                      <div
+                                                            class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
+
+                                                            <input type="text" placeholder="Search by tracking number"
+                                                                  formControlName="searchedShipment"
+                                                                  class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
+                                                            <i (click)="searchShipment($event)"
+                                                                  class="fa-solid fa-magnifying-glass cursor-pointer"></i>
+                                                      </div>
+                                                </div>
+
+
+                                          </form>
+                                    </div>
                               </div>
                         </div>
                         <div class="-m-1.5 overflow-x-auto pt-5">
@@ -422,7 +450,7 @@
 
 
                               <div
-                                    class="p-4 space-y-3 mb-6 md:p-5 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                    class="p-4 space-y-3 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                                     <div
                                           class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                                           <div class="flex flex-col sm:flex-row w-full">
@@ -556,7 +584,37 @@
 
                                           </div>
                                     </div>
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex justify-start items-center ">
+                                                <div class="px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Địa chỉ kho tiếp nhận
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.originWarehouseAddress}}
+                                                      </p>
+                                                </div>
 
+                                          </div>
+                                    </div>
+
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex justify-start items-center ">
+                                                <div class="px-2">
+                                                      <h2 class="text-base text-gray-500 dark:text-neutral-500">
+                                                            Địa chỉ kho giao hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
+                                                            {{selectedShipment?.destinationWarehouseAddress}}
+                                                      </p>
+                                                </div>
+
+                                          </div>
+                                    </div>
                                     <div
                                           class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                                           <div class="flex justify-start items-center ">
@@ -579,11 +637,35 @@
                               </div>
 
 
-                              <div class="flex justify-around pt-5">
+                              <div class="flex justify-around ">
                                     <button type="button" (click)="closeShipmentInforModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Close
+                                          <i class="fa-solid fa-xmark"></i> Đóng
                                     </button>
+                                    @if (selectedShipment?.status?.includes("PICKUP_SCHEDULED")) {
+                                    <button type="button" (click)="startPickUpShipment()"
+                                          class="w-60 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-truck-ramp-box"></i> Bắt đầu lấy hàng
+                                    </button>
+                                    }
+                                    @if (selectedShipment?.status?.includes("OUT_FOR_PICKUP")) {
+                                    <button type="button" (click)="openIsPaidPopupPopup()"
+                                          class="w-60 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Lấy hàng thành công
+                                    </button>
+                                    }
+                                    @if (selectedShipment?.status?.includes("DELIVERY_SCHEDULED")) {
+                                    <button type="button" (click)="startDeliveryShipment()"
+                                          class="w-60 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-truck-arrow-right"></i> Bắt đầu giao hàng
+                                    </button>
+                                    }
+                                    @if (selectedShipment?.status?.includes("OUT_FOR_DELIVERY")) {
+                                    <button type="button" (click)="openWarningNeedToPaidPopup()"
+                                          class="w-60 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Giao hàng thành công
+                                    </button>
+                                    }
                               </div>
                         </div>
                   </div>

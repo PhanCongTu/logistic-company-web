@@ -12,6 +12,7 @@ export class ConfirmPopupComponent {
   @Input() header = 'Header';
   @Input() title = 'This is the title of the popup';
   @Input() confirmButton = 'Confirm';
+  @Input() cancelButton = 'Cancel';
   @Input() isNative = false; // color of the confirm button (red/blue)
 
   isVisible = false;

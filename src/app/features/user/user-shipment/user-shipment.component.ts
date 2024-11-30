@@ -457,7 +457,7 @@ export class UserShipmentComponent {
       },
 
     ];
-    this.activeTabItem = this.items[0].id;
+    this.activeTabItem = this.activeTabItem || this.items[0].id;
   }
 
   // ************ 

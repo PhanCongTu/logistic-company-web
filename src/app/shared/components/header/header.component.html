@@ -26,6 +26,10 @@
                               @if (userInfoSignal()) {
                               <div class="flex items-center justify-center align-items-center"
                                     (click)="toggleMenu($event)">
+                                    <span class="inline-flex flex-column p-3">
+                                          <span class="font-bold">{{userInfoSignal()?.username}}</span>
+                                          <span class="text-sm text-red-600 pl-1">{{userInfoSignal()?.roles}}</span>
+                                    </span>
                                     <p-avatar class="avatar"
                                           image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
                                           shape="circle" />
@@ -40,8 +44,6 @@
                                                       class="mr-2" shape="circle" />
                                                 <span class="inline-flex flex-column">
                                                       <span class="font-bold">{{userInfoSignal()?.username}}</span>
-                                                      <span
-                                                            class="text-sm text-red-600 pl-1">{{userInfoSignal()?.roles}}</span>
                                                 </span>
                                           </button>
                                     </ng-template>

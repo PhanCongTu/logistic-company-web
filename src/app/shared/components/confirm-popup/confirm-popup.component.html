@@ -8,14 +8,13 @@
 'text-blue-600' : isNative,
                   }" class="fa-solid fa-circle-exclamation text-xl px-2 "></i>{{header}}</h2>
 
-            <p class="text-gray-600 dark:text-gray-400 mb-6">
-                  {{title}}
+            <p class="text-gray-600 dark:text-gray-400 mb-6" [innerHTML]="title">
             </p>
             <!-- Actions -->
             <div class="flex justify-end space-x-3">
                   <button (click)="cancel()"
                         class="px-5 py-3 rounded-2xl border-b-4 border-b-gray-300 bg-gray-200 font-bold text-black hover:bg-gray-300 active:translate-y-[0.125rem] ">
-                        Cancel
+                        {{cancelButton}}
                   </button>
                   <button (click)="confirm()" [ngClass]="{
                        'border-b-blue-600 bg-blue-500 font-bold !text-white hover:bg-blue-600': isNative, 

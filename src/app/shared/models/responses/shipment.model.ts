@@ -21,4 +21,8 @@ export interface Shipment {
       deliveryPersonUsername: string;
       returnedPickerUsername: string;
       returnedDeliveryPersonUsername: string;
+      destinationWarehouseId: Number;
+      destinationWarehouseAddress: string;
+      originWarehouseId: Number;
+      originWarehouseAddress: string;
 }

@@ -11,7 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { CountShipment } from '../../../shared/models/responses/count-shipment.model';
 import { UserService } from '../../../core/services/user.service';
 import { PageRequest } from '../../../shared/models/requests/page-request.model';
-import { SHIPMENT_STATUS } from '../../../shared/constants/app-constants.constant';
+import { ROLES, SHIPMENT_STATUS } from '../../../shared/constants/app-constants.constant';
 import { PaginatedResponse } from '../../../shared/models/responses/paginated-response.model';
 import { Shipment } from '../../../shared/models/responses/shipment.model';
 import { WarehouseService } from '../../../core/services/warehouse.service';
@@ -19,6 +19,7 @@ import { LocalStorageService } from '../../../core/services/local-storage.servic
 import { AdminService } from '../../../core/services/admin.service';
 import { UserProfile } from '../../../shared/models/responses/user-profile.model';
 import { ShipmentService } from '../../../core/services/shipment.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-manage-shipment',
@@ -31,8 +32,8 @@ import { ShipmentService } from '../../../core/services/shipment.service';
     ToastModule,
     DialogModule,
     ReactiveFormsModule,
-    RouterLink,
-    FormsModule
+    FormsModule,
+    DropdownModule
   ],
   providers: [MessageService],
   templateUrl: './manage-shipment.component.html',
@@ -103,8 +104,25 @@ export class ManageShipmentComponent {
         command: () => {
           this.confirmToPickUp();
         }
+      },
+      {
+        label: 'Giao hàng', icon: 'fa-solid fa-truck-arrow-right',
+        visible: this.activeTabItem === '3' && this.selectedShipment?.originWarehouseId === this.selectedShipment?.destinationWarehouseId,
+        command: () => {
+          this.confirmToPickUp();
+        }
+      },
+      {
+        label: 'Chuyển tiếp', icon: 'fa-solid fa-truck-plane',
+        visible: this.activeTabItem === '3' && this.selectedShipment?.originWarehouseId !== this.selectedShipment?.destinationWarehouseId,
+        command: () => {
+
+        }
       }
     ];
+  }
+  onValueChange(event: any) {
+    this.searchAndPageableShipment();
   }
   // *********** Choose shipper model ***************
 
@@ -117,15 +135,6 @@ export class ManageShipmentComponent {
     this.isChoosingShipperModalOpenSignal.set(false);
     this.selectedShipperIdSignal.set(undefined);
   }
-
-  // ****************** PICK UP **********************
-  confirmToPickUp() {
-    if (!this.selectedShipment) {
-      this.toastWarning("Hãy chọn 1 đơn hàng trước!");
-    }
-    this.openChoosingShipperModal();
-  }
-
   selectShipperRow(shipperId: string): void {
     this.selectedShipperIdSignal.set(shipperId);
   }
@@ -164,26 +173,32 @@ export class ManageShipmentComponent {
       },
     });
   }
+  // ****************** PICK UP / DELIVERY **********************
+  confirmToPickUp() {
+    if (!this.selectedShipment) {
+      this.toastWarning("Hãy chọn 1 đơn hàng trước!");
+    }
+    this.openChoosingShipperModal();
+  }
 
   shubmitChoosingShipperModal() {
     if (!this.selectedShipment || !this.selectedShipperIdSignal()) {
       return;
     }
-    this.ShipmentService.deliveryShipment(this.selectedShipment?.id.toString(), this.selectedShipperIdSignal() || '').subscribe({
-      next: (data) => {
-        this.toastSuccess("Xác nhận đơn hàng thành công!");
-        this.searchAndPageableShipment();
-      },
-      error: (error) => {
-        this.toastFail("Có lỗi sảy ra khi chọn shipper này!");
-      },
-    });
+    if (this.activeTabItem === '1' || this.activeTabItem === '3') {
+      this.ShipmentService.deliveryShipment(this.selectedShipment?.id.toString(), this.selectedShipperIdSignal() || '').subscribe({
+        next: (data) => {
+          this.toastSuccess("Thành công!");
+          this.searchAndPageableShipment();
+        },
+        error: (error) => {
+          this.toastFail("Có lỗi sảy ra khi chọn shipper này!");
+        },
+      });
+    }
+
     this.closeChoosingShipperModal();
   }
-
-
-
-
 
   // ********************************************
 
@@ -231,45 +246,37 @@ export class ManageShipmentComponent {
         command: () => {
           this.navigateWithQuery('4')
         },
-        badge: ((data?.IN_TRANSIT || 0)).toString()
+        badge: ((data?.IN_TRANSIT || 0) + (data?.TRANSITED || 0)).toString()
       },
       {
         id: '5',
-        label: 'Tiếp nhận',
-        command: () => {
-          this.navigateWithQuery('5')
-        },
-        badge: ((data?.TRANSITED || 0)).toString()
-      },
-      {
-        id: '6',
         label: 'Đang giao hàng',
         command: () => {
-          this.navigateWithQuery('6')
+          this.navigateWithQuery('5')
         },
         badge: data?.OUT_FOR_DELIVERY.toString()
       },
       {
-        id: '7',
+        id: '6',
         label: 'Hoàn thành',
         command: () => {
-          this.navigateWithQuery('7')
+          this.navigateWithQuery('6')
         },
         badge: data?.DELIVERED.toString()
       },
       {
-        id: '8',
+        id: '7',
         label: 'Đã hủy',
         command: () => {
-          this.navigateWithQuery('8')
+          this.navigateWithQuery('7')
         },
         badge: data?.CANCELED.toString()
       },
       {
-        id: '9',
-        label: 'Trả hàng/hoàn tiền',
+        id: '8',
+        label: 'Trả hàng',
         command: () => {
-          this.navigateWithQuery('9')
+          this.navigateWithQuery('8')
         },
         badge: ((data?.RETURNED || 0) + (data?.DELIVERED_FAILED || 0)).toString()
       },
@@ -295,12 +302,14 @@ export class ManageShipmentComponent {
     } else if (this.activeTabItem === '2') {
       statuses = SHIPMENT_STATUS.PICKUP_SCHEDULED + ', ' + SHIPMENT_STATUS.OUT_FOR_PICKUP;
     } else if (this.activeTabItem === '3') {
-      statuses = SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
+      statuses = SHIPMENT_STATUS.PICKED_UP;
     } else if (this.activeTabItem === '4') {
-      statuses = SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+      statuses = SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
     } else if (this.activeTabItem === '5') {
-      statuses = SHIPMENT_STATUS.DELIVERED;
+      statuses = SHIPMENT_STATUS.OUT_FOR_DELIVERY;
     } else if (this.activeTabItem === '6') {
+      statuses = SHIPMENT_STATUS.DELIVERED;
+    } else if (this.activeTabItem === '7') {
       statuses = SHIPMENT_STATUS.CANCELED;
     } else {
       statuses = SHIPMENT_STATUS.RETURNED + ', ' + SHIPMENT_STATUS.DELIVERED_FAILED;
@@ -308,7 +317,6 @@ export class ManageShipmentComponent {
     this.warehouseService.getAllShipmentOfWarehouse(this.isOriginWareHouseSignal(), this.pageRequest, statuses).subscribe({
       next: (data: PaginatedResponse<Shipment>) => {
         this.paginatedShipmentSignal.set(data);
-
       },
       error: (error) => {
         this.toastFail("Can not load data. Please try again!");
@@ -333,6 +341,7 @@ export class ManageShipmentComponent {
     event.stopPropagation();
     this.selectedShipment = shipment;
     this.shipmentMenu.toggle(event); // Hiển thị dropdown
+    this.initShipmentMenuItems();
   }
 
   toastSuccess(message: string) {
