@@ -1,4 +1,5 @@
 export interface CountShipment {
+      DELIVERY_SCHEDULED: number
       DELIVERED: number;
       DELIVERED_FAILED: number;
       OUT_FOR_PICKUP: number;
