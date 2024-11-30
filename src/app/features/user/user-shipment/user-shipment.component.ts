@@ -87,7 +87,7 @@ export class UserShipmentComponent {
   ) {
     this.setUpTab();
     this.searchAndPageableShipment();
-    this.countUserShipments();
+
 
     this.searchForm = this.formBuilder.group({
       searchedShipment: ['']
@@ -358,6 +358,7 @@ export class UserShipmentComponent {
   }
 
   searchAndPageableShipment() {
+    this.countUserShipments();
     let statuses = '';
     if (this.activeTabItem === '1') {
       statuses = SHIPMENT_STATUS.ORDER_RECEIVED;

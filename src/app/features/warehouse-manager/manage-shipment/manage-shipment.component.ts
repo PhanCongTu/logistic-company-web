@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, ViewChild, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
@@ -15,6 +15,10 @@ import { SHIPMENT_STATUS } from '../../../shared/constants/app-constants.constan
 import { PaginatedResponse } from '../../../shared/models/responses/paginated-response.model';
 import { Shipment } from '../../../shared/models/responses/shipment.model';
 import { WarehouseService } from '../../../core/services/warehouse.service';
+import { LocalStorageService } from '../../../core/services/local-storage.service';
+import { AdminService } from '../../../core/services/admin.service';
+import { UserProfile } from '../../../shared/models/responses/user-profile.model';
+import { ShipmentService } from '../../../core/services/shipment.service';
 
 @Component({
   selector: 'app-manage-shipment',
@@ -27,14 +31,15 @@ import { WarehouseService } from '../../../core/services/warehouse.service';
     ToastModule,
     DialogModule,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    FormsModule
   ],
   providers: [MessageService],
   templateUrl: './manage-shipment.component.html',
   styleUrl: './manage-shipment.component.scss'
 })
 export class ManageShipmentComponent {
-
+  warehouseId: string;
   items: MenuItem[] | undefined;
   activeTabItem: string | undefined;
   selectedShipment: Shipment | undefined;
@@ -46,11 +51,20 @@ export class ManageShipmentComponent {
     search: ''
   };
 
+  shipperPageRequest: PageRequest = {
+    page: 0,
+    search: ''
+  };
+
   searchForm: FormGroup;
+  searchChoosingShipperForm: FormGroup;
 
   paginatedShipmentSignal: WritableSignal<PaginatedResponse<Shipment> | undefined> = signal(undefined);
   isOriginWareHouseSignal: WritableSignal<Boolean> = signal(true);
   isShipmentInforOpenSignal: WritableSignal<boolean> = signal(false);
+  isChoosingShipperModalOpenSignal: WritableSignal<boolean> = signal(false);
+  selectedShipperIdSignal: WritableSignal<string | undefined> = signal(undefined);
+  paginatedShipperSignal: WritableSignal<PaginatedResponse<UserProfile> | undefined> = signal(undefined);
 
   @ViewChild('shipmentMenu') shipmentMenu!: Menu;
 
@@ -60,29 +74,118 @@ export class ManageShipmentComponent {
     private route: ActivatedRoute,
     private warehouseService: WarehouseService,
     private messageService: MessageService,
+    private localStorageService: LocalStorageService,
+    private adminService: AdminService,
+    private ShipmentService: ShipmentService
   ) {
+    this.warehouseId = this.localStorageService.getUser().warehouseId?.toString() || '';
     this.setUpTab();
     this.searchAndPageableShipment();
     this.searchForm = this.formBuilder.group({
       searchedShipment: ['']
     });
+    this.searchChoosingShipperForm = this.formBuilder.group({
+      searchedUsername: ['']
+    });
+
   }
 
   ngOnInit() {
+
     this.initShipmentMenuItems();
   }
 
   initShipmentMenuItems() {
     this.shipmentMenuItems = [
       {
-        label: 'Chờ xác nhận', icon: 'fa-solid fa-pen',
+        label: 'Xác nhận', icon: 'fa-solid fa-check',
         visible: this.activeTabItem === '1',
         command: () => {
-
+          this.confirmToPickUp();
         }
       }
     ];
   }
+  // *********** Choose shipper model ***************
+
+  openChoosingShipperModal() {
+    this.isChoosingShipperModalOpenSignal.set(true);
+    this.searchAndPageableShipperOfWarehouse();
+  }
+  closeChoosingShipperModal() {
+    this.selectedShipment = undefined;
+    this.isChoosingShipperModalOpenSignal.set(false);
+    this.selectedShipperIdSignal.set(undefined);
+  }
+
+  // ****************** PICK UP **********************
+  confirmToPickUp() {
+    if (!this.selectedShipment) {
+      this.toastWarning("Hãy chọn 1 đơn hàng trước!");
+    }
+    this.openChoosingShipperModal();
+  }
+
+  selectShipperRow(shipperId: string): void {
+    this.selectedShipperIdSignal.set(shipperId);
+  }
+
+  searchChoosingShipper(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+    const userName = this.searchChoosingShipperForm.get("searchedUsername")?.value?.trim();
+    this.shipperPageRequest.search = userName;
+    this.shipperPageRequest.page = 0;
+    this.searchAndPageableShipperOfWarehouse();
+  }
+
+  previousChoosingShipperPage() {
+    this.shipperPageRequest.page = this.shipperPageRequest.page! - 1;
+    this.searchAndPageableShipperOfWarehouse();
+  }
+
+  nextChoosingShipperPage() {
+    this.shipperPageRequest.page = this.shipperPageRequest.page! + 1;
+    this.searchAndPageableShipperOfWarehouse();
+  }
+
+  searchAndPageableShipperOfWarehouse() {
+    if (!this.warehouseId) {
+      this.toastFail("Không thể tìm thấy nhà kho nào!")
+    }
+    let warehouseIdLong = Number(this.warehouseId);
+
+    this.adminService.searchAndPageableShipperByWarehouseId(warehouseIdLong, this.shipperPageRequest).subscribe({
+      next: (data: PaginatedResponse<UserProfile>) => {
+        this.paginatedShipperSignal.set(data);
+      },
+      error: (error) => {
+        this.toastFail("Không tìm thấy người vận chuyển nào của kho này!");
+      },
+    });
+  }
+
+  shubmitChoosingShipperModal() {
+    if (!this.selectedShipment || !this.selectedShipperIdSignal()) {
+      return;
+    }
+    this.ShipmentService.deliveryShipment(this.selectedShipment?.id.toString(), this.selectedShipperIdSignal() || '').subscribe({
+      next: (data) => {
+        this.toastSuccess("Xác nhận đơn hàng thành công!");
+        this.searchAndPageableShipment();
+      },
+      error: (error) => {
+        this.toastFail("Có lỗi sảy ra khi chọn shipper này!");
+      },
+    });
+    this.closeChoosingShipperModal();
+  }
+
+
+
+
+
+  // ********************************************
 
   navigateWithQuery(tab: string): void {
     this.activeTabItem = tab;

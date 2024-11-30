@@ -392,7 +392,7 @@
                                                                   <div class="px-6 py-3">
                                                                         <span
                                                                               class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">
-                                                                              0989478932
+                                                                              {{shipment.recipientPhone}}
                                                                         </span>
                                                                   </div>
                                                             </td>
@@ -666,6 +666,308 @@
                               </div>
                         </div>
                   </div>
+            </div>
+      </p-dialog>
+
+      <!-- Add shipper to warehouse  -->
+      <p-dialog header="Add shipper" [(visible)]="isChoosingShipperModalOpenSignal" [modal]="true" [closable]="false"
+            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      '10000px': '90%',
+      '1200px': '90%',
+      '1199px': '90%',
+      '575px': '90%',
+}" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Chọn 1 shipper để vận chuyển
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <form>
+                        <div class="mt-2 space-y-10">
+
+                              <div class="flex flex-col">
+                                    <!-- Header -->
+                                    <div
+                                          class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+                                          <div>
+                                                <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
+                                                      Warehouse manager
+                                                </h2>
+                                                <p class="text-sm text-gray-600 dark:text-neutral-400">
+                                                      Add a shipper to this warehouse
+                                                </p>
+                                          </div>
+                                          <div>
+                                                <div class="md:inline-flex md:gap-x-10 grid gap-y-3">
+                                                      <form [formGroup]="searchChoosingShipperForm"
+                                                            (ngSubmit)="searchChoosingShipper($event)">
+                                                            <div class="flex items-center justify-content-center">
+
+                                                                  <div
+                                                                        class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
+
+                                                                        <input type="text"
+                                                                              placeholder="Search by username"
+                                                                              formControlName="searchedUsername"
+                                                                              class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
+                                                                        <i (click)="searchChoosingShipper($event)"
+                                                                              class="fa-solid fa-magnifying-glass cursor-pointer"></i>
+                                                                  </div>
+                                                            </div>
+
+
+                                                      </form>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <!-- End Header -->
+                                    <div class="-m-1.5 overflow-x-auto">
+                                          <div class="p-1.5 min-w-full inline-block align-middle">
+                                                <div
+                                                      class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-800 dark:border-neutral-700">
+
+
+                                                      <!-- Table -->
+                                                      <table
+                                                            class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
+                                                            <thead class="bg-gray-50 dark:bg-neutral-800">
+                                                                  <tr>
+                                                                        <th scope="col" class="px-6 py-3 text-end"></th>
+
+                                                                        <th scope="col" class="ps-6 py-3 text-start">
+                                                                              <label for="hs-at-with-checkboxes-main"
+                                                                                    class="flex">
+                                                                                    <div
+                                                                                          class="flex items-center justify-center">
+                                                                                          <span
+                                                                                                class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                                ID
+                                                                                          </span>
+                                                                                    </div>
+                                                                              </label>
+                                                                        </th>
+
+                                                                        <th scope="col"
+                                                                              class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Tên shipper
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col"
+                                                                              class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Email
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col"
+                                                                              class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Số điện thoại
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col"
+                                                                              class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Mã kho
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                        <th scope="col" class="px-6 py-3 text-start">
+                                                                              <div class="flex items-center gap-x-2">
+                                                                                    <span
+                                                                                          class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
+                                                                                          Roles
+                                                                                    </span>
+                                                                              </div>
+                                                                        </th>
+
+                                                                  </tr>
+                                                            </thead>
+
+                                                            <tbody
+                                                                  class="divide-y divide-gray-200 dark:divide-neutral-700">
+                                                                  @for (shipper of
+                                                                  paginatedShipperSignal()?.content; track
+                                                                  $index) {
+                                                                  <tr class="hover:bg-gray-200 cursor-pointer"
+                                                                        (click)="selectShipperRow(shipper.userId)">
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div class="ps-6 py-3">
+                                                                                    <input type="radio" name="options"
+                                                                                          [value]="shipper.userId"
+                                                                                          [checked]="selectedShipperIdSignal() === shipper.userId"
+                                                                                          [(ngModel)]="selectedShipperIdSignal" />
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div class="ps-6 py-3">
+                                                                                    <label for="hs-at-with-checkboxes-1"
+                                                                                          class="flex">
+                                                                                          <span>{{shipper?.userId}}</span>
+                                                                                    </label>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    <div
+                                                                                          class="flex items-center gap-x-3">
+                                                                                          <div class="grow">
+                                                                                                <span
+                                                                                                      class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{shipper?.username}}</span>
+                                                                                          </div>
+                                                                                    </div>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    <div
+                                                                                          class="flex items-center gap-x-3">
+                                                                                          <div class="grow">
+                                                                                                <span
+                                                                                                      class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{shipper?.emailAddress}}</span>
+                                                                                          </div>
+                                                                                    </div>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    <span
+                                                                                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">012312313</span>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px whitespace-nowrap">
+                                                                              <div
+                                                                                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                                                                                    <span
+                                                                                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{shipper?.warehouseId}}</span>
+                                                                              </div>
+                                                                        </td>
+                                                                        <td class="size-px ">
+                                                                              <div class="px-6 py-3">
+                                                                                    <span
+                                                                                          class="text-sm text-gray-500 dark:text-neutral-500">
+                                                                                          @if
+                                                                                          (shipper?.roles?.includes("ROLE_ADMIN"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-red-500 rounded-full">
+                                                                                                ROLE_ADMIN
+                                                                                          </span>
+                                                                                          } @if
+                                                                                          (shipper?.roles?.includes("ROLE_USER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-blue-500 rounded-full">
+                                                                                                ROLE_USER
+                                                                                          </span>
+                                                                                          } @if
+                                                                                          (shipper?.roles?.includes("ROLE_WAREHOUSE_MANAGER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-yellow-500 rounded-full">
+                                                                                                ROLE_WAREHOUSE_MANAGER
+                                                                                          </span>
+                                                                                          } @if
+                                                                                          (shipper?.roles?.includes("ROLE_SHIPPER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
+                                                                                                ROLE_SHIPPER
+                                                                                          </span>
+                                                                                          }
+                                                                                    </span>
+                                                                              </div>
+                                                                        </td>
+                                                                  </tr>
+                                                                  }
+
+
+                                                            </tbody>
+                                                      </table>
+                                                      <!-- End Table -->
+
+                                                      <!-- Footer -->
+                                                      <div
+                                                            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
+                                                            <div>
+                                                                  <p
+                                                                        class="text-sm text-gray-600 dark:text-neutral-400">
+                                                                        Showing
+                                                                        <span
+                                                                              class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.number!*paginatedShipperSignal()?.size!}}</span>
+                                                                        -
+                                                                        <span
+                                                                              class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.number!*paginatedShipperSignal()?.size!
+                                                                              +
+                                                                              paginatedShipperSignal()?.numberOfElements!}}</span>
+                                                                        of
+                                                                        <span
+                                                                              class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.totalElements}}</span>
+                                                                        results
+                                                                  </p>
+                                                            </div>
+
+                                                            <div>
+                                                                  <div class="inline-flex gap-x-2">
+                                                                        <button
+                                                                              [disabled]="paginatedShipperSignal()?.first"
+                                                                              (click)="previousChoosingShipperPage()"
+                                                                              class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                                                              <i class="fa-solid fa-chevron-left"></i>
+                                                                              Prev
+                                                                        </button>
+
+                                                                        <button
+                                                                              [disabled]="paginatedShipperSignal()?.last"
+                                                                              (click)="nextChoosingShipperPage()"
+                                                                              class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+                                                                              Next
+                                                                              <i class="fa-solid fa-chevron-right"></i>
+                                                                        </button>
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                      <!-- End Footer -->
+                                                </div>
+                                          </div>
+                                    </div>
+                              </div>
+
+                              <div class="flex justify-around">
+                                    <button type="button" (click)="closeChoosingShipperModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                    </button>
+
+                                    <button type="button" (click)="shubmitChoosingShipperModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Save
+                                    </button>
+                              </div>
+                        </div>
+                  </form>
             </div>
       </p-dialog>
 </div>

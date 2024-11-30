@@ -257,6 +257,8 @@ export class WarehouseComponent {
   }
 
   closeAssignManagerToWarehouseModal() {
+    this.selectedWarehouseManager = undefined;
+    this.selectedWarehouseManagerIdSignal.set(undefined);
     this.selectedWarehouse = undefined;
     this.isAssignManagerToWarehouseModalOpenSignal.set(false);
   }
@@ -277,7 +279,7 @@ export class WarehouseComponent {
     this.adminService.assignWarehouseToManager(this.selectedWarehouse.id, Number(this.selectedWarehouseManagerIdSignal())).subscribe({
       next: (data) => {
         this.toastSuccess("Assign to the selected warehouse manager successfully!");
-        this.searchAndPageableWarehouseManager();
+        this.searchAndPageableWarehouse();
       },
       error: (error) => {
         this.toastFail("Can not load data. Please try again!");
