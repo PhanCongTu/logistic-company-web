@@ -30,7 +30,6 @@ import { ConfirmPopupComponent } from '../../../shared/components/confirm-popup/
     ToastModule,
     DialogModule,
     ReactiveFormsModule,
-    RouterLink,
     FormsModule,
     ConfirmPopupComponent
   ],

@@ -55,6 +55,10 @@ export class HeaderComponent {
         });
     }
 
+    get isTransporter(): boolean {
+        return this.userInfoSignal()?.roles?.includes(ROLES.ROLE_TRANSPORTER) || false;
+    }
+
     get isShipper(): boolean {
         return this.userInfoSignal()?.roles?.includes(ROLES.ROLE_SHIPPER) || false;
     }
@@ -136,6 +140,18 @@ export class HeaderComponent {
                         label: 'Shipping Management',
                         icon: 'fa-solid fa-truck',
                         command: () => this.router.navigate([this.routes.shipper.deliveryShipment])
+                    }
+                ]
+            },
+            {
+                label: 'Transporting',
+                visible: this.isTransporter,
+                icon: 'fa-solid fa-truck-moving',
+                items: [
+                    {
+                        label: 'Transporting Management',
+                        icon: 'fa-solid fa-truck',
+                        command: () => this.router.navigate([this.routes.transporter.transportingShipment])
                     }
                 ]
             },

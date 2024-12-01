@@ -51,4 +51,25 @@ export class WarehouseService {
 
     return this.http.get(`${this.endpoint}/${path}`, { headers, params });
   }
+
+  getAllShipmentOfBothWarehouses(pageRequest: PageRequest, statuses: string): Observable<any> {
+    const { page, size, search, sortColumn, sortType } = pageRequest;
+
+    let params = new RequestParamBuilder()
+      .setPage(page)
+      .setSize(size)
+      .setSearch(search) // The tracking number
+      .setSortColumn(sortColumn)
+      .setSortType(sortType)
+      .build();
+
+    params = params.set('statuses', statuses ?? []); // List of status
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+
+    return this.http.get(`${this.endpoint}/api/warehouse-manager/all-shipments`, { headers, params });
+  }
 }

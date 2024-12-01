@@ -330,6 +330,13 @@
                                                                                     class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
                                                                                     ROLE_SHIPPER
                                                                               </span>
+                                                                              } @if
+                                                                              (userProfile?.roles?.includes("ROLE_TRANSPORTER"))
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-black rounded-full">
+                                                                                    ROLE_TRANSPORTER
+                                                                              </span>
                                                                               }
                                                                         </span>
                                                                   </div>
@@ -779,6 +786,13 @@
                                                                                                 class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
                                                                                                 ROLE_SHIPPER
                                                                                           </span>
+                                                                                          } @if
+                                                                                          (manager?.roles?.includes("ROLE_TRANSPORTER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-black rounded-full">
+                                                                                                ROLE_TRANSPORTER
+                                                                                          </span>
                                                                                           }
                                                                                     </span>
                                                                               </div>
@@ -1098,6 +1112,13 @@
                                                                                           <span
                                                                                                 class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-green-500 rounded-full">
                                                                                                 ROLE_SHIPPER
+                                                                                          </span>
+                                                                                          } @if
+                                                                                          (shipper?.roles?.includes("ROLE_TRANSPORTER"))
+                                                                                          {
+                                                                                          <span
+                                                                                                class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium border-2 border-gray-300  text-black rounded-full">
+                                                                                                ROLE_TRANSPORTER
                                                                                           </span>
                                                                                           }
                                                                                     </span>

@@ -10,6 +10,7 @@ import { UserShipmentComponent } from './features/user/user-shipment/user-shipme
 import { ManageShipmentComponent } from './features/warehouse-manager/manage-shipment/manage-shipment.component';
 import { WarehouseInforComponent } from './features/admin/warehouse-infor/warehouse-infor.component';
 import { DeliveryShippmentComponent } from './features/shipper/delivery-shippment/delivery-shippment.component';
+import { TransportingShipmentComponent } from './features/transporter/transporting-shipment/transporting-shipment.component';
 
 export const ROUTES = {
       home: '',
@@ -31,6 +32,9 @@ export const ROUTES = {
       },
       shipper: {
             deliveryShipment: 'shipper/delivery'
+      },
+      transporter: {
+            transportingShipment: 'transporter/transporting'
       }
 };
 
@@ -104,6 +108,16 @@ export const routes: Routes = [
                   {
                         path: ROUTES.shipper.deliveryShipment,
                         component: DeliveryShippmentComponent
+                  }
+            ]
+      },
+      {
+            title: 'TRANSPORTER',
+            path: '',
+            children: [
+                  {
+                        path: ROUTES.transporter.transportingShipment,
+                        component: TransportingShipmentComponent
                   }
             ]
       }
