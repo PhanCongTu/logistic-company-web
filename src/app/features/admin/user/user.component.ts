@@ -61,8 +61,8 @@ export class UserComponent {
   ngOnInit() {
     this.items = [
       { icon: 'pi pi-home', route: '/' },
-      { label: 'Manage' },
-      { label: 'Users', route: '/admin/user' },
+      { label: 'Quản lý' },
+      { label: 'Người dùng', route: '/admin/user' },
     ];
 
   }
@@ -84,7 +84,7 @@ export class UserComponent {
     this.selectedRole = undefined;
     this.userItems = [
       {
-        label: 'Add/remove roles', icon: 'fa-solid fa-plus-minus', command: () => {
+        label: 'Cập nhật quyền', icon: 'fa-solid fa-plus-minus', command: () => {
           this.openUpdateUserRolesModal();
         }
       }

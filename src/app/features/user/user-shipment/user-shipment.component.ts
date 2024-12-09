@@ -107,7 +107,7 @@ export class UserShipmentComponent {
   ngOnInit() {
     this.shipmentItems = [
       {
-        label: 'Update shipment', icon: 'fa-solid fa-pen',
+        label: 'Cập nhật đơn hàng', icon: 'fa-solid fa-pen',
         command: () => {
           this.openUpdateShipmentModal();
         }
@@ -181,10 +181,10 @@ export class UserShipmentComponent {
     if (this.upsertShipmentForm.valid) {
       const createShipmentBody: CreateShipmentRequest = {
         name: this.upsertShipmentForm.get("name")?.value,
-        pickUpAddress: this.pickUpCoordinatesWithAddressSignal()?.address || '',
+        pickUpAddress: this.upsertShipmentForm.get("pickUpAdditionalAddress")?.value.trim() + " " + this.pickUpCoordinatesWithAddressSignal()?.address || '',
         pickUpLatitude: this.pickUpCoordinatesWithAddressSignal()?.lat || 0,
         pickUpLongitude: this.pickUpCoordinatesWithAddressSignal()?.lng || 0,
-        recipientAddress: this.recipientCoordinatesWithAddressSignal()?.address || '',
+        recipientAddress: this.upsertShipmentForm.get("recipientAdditionalAddress")?.value.trim() + " " + this.recipientCoordinatesWithAddressSignal()?.address || '',
         recipientLatitude: this.recipientCoordinatesWithAddressSignal()?.lat || 0,
         recipientLongitude: this.recipientCoordinatesWithAddressSignal()?.lng || 0,
         recipientPhone: this.upsertShipmentForm.get("recipientPhone")?.value,
@@ -367,7 +367,7 @@ export class UserShipmentComponent {
     } else if (this.activeTabItem === '3') {
       statuses = SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
     } else if (this.activeTabItem === '4') {
-      statuses = SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+      statuses = SHIPMENT_STATUS.DELIVERY_SCHEDULED + ', ' + SHIPMENT_STATUS.OUT_FOR_DELIVERY;
     } else if (this.activeTabItem === '5') {
       statuses = SHIPMENT_STATUS.DELIVERED;
     } else if (this.activeTabItem === '6') {
@@ -429,7 +429,7 @@ export class UserShipmentComponent {
         command: () => {
           this.navigateWithQuery('4')
         },
-        badge: data?.OUT_FOR_DELIVERY.toString()
+        badge: ((data?.DELIVERY_SCHEDULED || 0) + (data?.OUT_FOR_DELIVERY || 0)).toString()
       },
       {
         id: '5',
@@ -439,22 +439,22 @@ export class UserShipmentComponent {
         },
         badge: data?.DELIVERED.toString()
       },
-      {
-        id: '6',
-        label: 'Đã hủy',
-        command: () => {
-          this.navigateWithQuery('6')
-        },
-        badge: data?.CANCELED.toString()
-      },
-      {
-        id: '7',
-        label: 'Trả hàng/hoàn tiền',
-        command: () => {
-          this.navigateWithQuery('7')
-        },
-        badge: ((data?.RETURNED || 0) + (data?.DELIVERED_FAILED || 0)).toString()
-      },
+      // {
+      //   id: '6',
+      //   label: 'Đã hủy',
+      //   command: () => {
+      //     this.navigateWithQuery('6')
+      //   },
+      //   badge: data?.CANCELED.toString()
+      // },
+      // {
+      //   id: '7',
+      //   label: 'Trả hàng/hoàn tiền',
+      //   command: () => {
+      //     this.navigateWithQuery('7')
+      //   },
+      //   badge: ((data?.RETURNED || 0) + (data?.DELIVERED_FAILED || 0)).toString()
+      // },
 
     ];
     this.activeTabItem = this.activeTabItem || this.items[0].id;

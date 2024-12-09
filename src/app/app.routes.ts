@@ -11,6 +11,7 @@ import { ManageShipmentComponent } from './features/warehouse-manager/manage-shi
 import { WarehouseInforComponent } from './features/admin/warehouse-infor/warehouse-infor.component';
 import { DeliveryShippmentComponent } from './features/shipper/delivery-shippment/delivery-shippment.component';
 import { TransportingShipmentComponent } from './features/transporter/transporting-shipment/transporting-shipment.component';
+import { ShipmentInfoComponent } from './features/warehouse-manager/shipment-info/shipment-info.component';
 
 export const ROUTES = {
       home: '',
@@ -29,6 +30,7 @@ export const ROUTES = {
       warehouseManager: {
             manageShipment: 'manage-shipment',
             manageWarehouseInfo: 'manage-warehouse',
+            shipmentInfo: 'shipment-info/:trackingNumber',
       },
       shipper: {
             deliveryShipment: 'shipper/delivery'
@@ -98,6 +100,10 @@ export const routes: Routes = [
                   {
                         path: ROUTES.warehouseManager.manageWarehouseInfo,
                         component: WarehouseInforComponent
+                  },
+                  {
+                        path: ROUTES.warehouseManager.shipmentInfo,
+                        component: ShipmentInfoComponent
                   }
             ]
       },

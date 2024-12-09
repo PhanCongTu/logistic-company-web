@@ -229,7 +229,7 @@
                                                                         <div class="flex items-center justify-center">
                                                                               <span
                                                                                     class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                    Tracking number
+                                                                                    Mã đơn hàng
                                                                               </span>
                                                                         </div>
                                                                   </label>
@@ -240,7 +240,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Name
+                                                                              Tên
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -250,7 +250,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Receipent Name
+                                                                              Tên người nhận
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -259,7 +259,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Pick-up Address
+                                                                              Địa chỉ lấy hàng
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -267,7 +267,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Receipent Address
+                                                                              Địa chỉ giao hàng
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -276,7 +276,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Receipent phone number
+                                                                              Số điện thoại người nhận
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -387,7 +387,7 @@
                                                 class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
                                                 <div>
                                                       <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                            Showing
+                                                            Hiển thị
                                                             <span
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipmentSignal()?.number!*paginatedShipmentSignal()?.size!}}</span>
                                                             -
@@ -395,10 +395,10 @@
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipmentSignal()?.number!*paginatedShipmentSignal()?.size!
                                                                   +
                                                                   paginatedShipmentSignal()?.numberOfElements!}}</span>
-                                                            of
+                                                            của
                                                             <span
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipmentSignal()?.totalElements}}</span>
-                                                            results
+                                                            kết quả
                                                       </p>
                                                 </div>
 
@@ -408,13 +408,13 @@
                                                                   (click)="previousPage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                   <i class="fa-solid fa-chevron-left"></i>
-                                                                  Prev
+                                                                  Trước
                                                             </button>
 
                                                             <button [disabled]="paginatedShipmentSignal()?.last"
                                                                   (click)="nextPage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                  Next
+                                                                  Sau
                                                                   <i class="fa-solid fa-chevron-right"></i>
                                                             </button>
                                                       </div>
@@ -437,11 +437,15 @@
 '575px': '90vw',
 }" [draggable]="false" [resizable]="false" [style]="{ width: '25rem' }">
             <ng-template pTemplate="header">
-                  <div
-                        class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
-                        <span class="font-bold white-space-nowrap text-xl ">
-                              Thông tin đơn hàng
-                        </span>
+                  <div class="inline-flex align-items-center justify-content-center">
+                        <div class=" gap-2 border-b-1 border-gray-400 shadow-md">
+                              <span class="font-bold white-space-nowrap text-xl ">
+                                    Thông tin đơn hàng
+                              </span>
+                        </div>
+                        <div class="ml-3 text-blue-600 gap-2 border-b-2 border-blue-400">
+                              <a [routerLink]="['/shipment-info', selectedShipment?.code]">Xem chi tiết</a>
+                        </div>
                   </div>
             </ng-template>
             <div>

@@ -417,14 +417,15 @@ export class ManageShipmentComponent {
     } else if (this.activeTabItem === '4') {
       statuses = SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
     } else if (this.activeTabItem === '5') {
-      statuses = SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+      statuses = SHIPMENT_STATUS.DELIVERY_SCHEDULED + ', ' + SHIPMENT_STATUS.OUT_FOR_DELIVERY;
     } else if (this.activeTabItem === '6') {
       statuses = SHIPMENT_STATUS.DELIVERED;
-    } else if (this.activeTabItem === '7') {
-      statuses = SHIPMENT_STATUS.CANCELED;
-    } else {
-      statuses = SHIPMENT_STATUS.RETURNED + ', ' + SHIPMENT_STATUS.DELIVERED_FAILED;
     }
+    // else if (this.activeTabItem === '7') {
+    //   statuses = SHIPMENT_STATUS.CANCELED;
+    // } else {
+    //   statuses = SHIPMENT_STATUS.RETURNED + ', ' + SHIPMENT_STATUS.DELIVERED_FAILED;
+    // }
 
     if (this.activeTabItem === '6') {
       this.warehouseService.getAllShipmentOfBothWarehouses(this.pageRequest, statuses).subscribe({

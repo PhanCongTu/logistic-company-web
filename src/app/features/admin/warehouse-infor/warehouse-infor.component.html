@@ -140,10 +140,10 @@
                               class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                               <div>
                                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                          Danh sách người vận chuyển
+                                          Danh sách người lấy, giao hàng
                                     </h2>
                                     <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                          Quản lý người vận chuyển
+                                          Danh sách người lấy, giao hàng
                                     </p>
                               </div>
                               <div>
@@ -155,7 +155,7 @@
                                                       <div
                                                             class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
 
-                                                            <input type="text" placeholder="Search by username"
+                                                            <input type="text" placeholder="Tên đăng nhập"
                                                                   formControlName="searchedUsername"
                                                                   class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
                                                             <i (click)="searchShipper($event)"
@@ -250,7 +250,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Roles
+                                                                              Quyền
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -382,7 +382,7 @@
                                                 class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
                                                 <div>
                                                       <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                            Showing
+                                                            Hiển thị
                                                             <span
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.number!*paginatedShipperSignal()?.size!}}</span>
                                                             -
@@ -390,10 +390,10 @@
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.number!*paginatedShipperSignal()?.size!
                                                                   +
                                                                   paginatedShipperSignal()?.numberOfElements!}}</span>
-                                                            of
+                                                            của
                                                             <span
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedShipperSignal()?.totalElements}}</span>
-                                                            results
+                                                            kết quả
                                                       </p>
                                                 </div>
 
@@ -403,13 +403,13 @@
                                                                   (click)="previousPage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                   <i class="fa-solid fa-chevron-left"></i>
-                                                                  Prev
+                                                                  Trước
                                                             </button>
 
                                                             <button [disabled]="paginatedShipperSignal()?.last"
                                                                   (click)="nextPage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                  Next
+                                                                  Sau
                                                                   <i class="fa-solid fa-chevron-right"></i>
                                                             </button>
                                                       </div>
@@ -425,8 +425,8 @@
       </div>
       <!-- End Content -->
       <!-- Update warehouse  -->
-      <p-dialog header="Add warehouse" [(visible)]="isUpdateWarehouseModalOpenSignal" [modal]="true" [closable]="false"
-            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      <p-dialog header="Cập nhật kho hàng" [(visible)]="isUpdateWarehouseModalOpenSignal" [modal]="true"
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
             '10000px': '50vw',
             '1200px': '60vw',
             '1199px': '75vw',
@@ -436,7 +436,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Update warehouse
+                              Cập nhật kho hàng
                         </span>
                   </div>
             </ng-template>
@@ -445,10 +445,10 @@
                         <div class="mt-2 space-y-10">
                               <div class="space-y-2">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Name</div>
+                                          <div class="m-1 ml-3 font-bold ">Tên kho</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                                <input type="text" placeholder="Name"
+                                                <input type="text" placeholder="Tên kho"
                                                       class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
                                                       formControlName="name" />
 
@@ -457,14 +457,14 @@
 
                                     @if (isUpdateWarehouseFormFieldValid("name"))
                                     {
-                                    <div class="pl-5 text-sm text-red-600">Name is required.</div>
+                                    <div class="pl-5 text-sm text-red-600">Yêu cầu tên kho</div>
                                     }
                               </div>
 
                               @if (userCoordinatesWithAddressSignal()) {
                               <div class="space-y-5">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Address</div>
+                                          <div class="m-1 ml-3 font-bold ">Địa chỉ</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
                                                 <input [disabled]="true" type="text"
@@ -474,7 +474,7 @@
                                     </div>
                                     <div
                                           class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input type="text" placeholder="House number, street name, ..."
+                                          <input type="text" placeholder="Số nhà, tên đường, ..."
                                                 formControlName="additionalAddress"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
@@ -482,7 +482,7 @@
                               } @else {
                               <div class="space-y-2">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Address</div>
+                                          <div class="m-1 ml-3 font-bold ">Địa chỉ</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
                                                 <input type="text" placeholder="Address" [disabled]="true"
@@ -495,14 +495,14 @@
                                           <button type="button"
                                                 class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                                 (click)="openMapModal()">
-                                                <i class="fa-solid fa-location-dot"></i> Choose location
+                                                <i class="fa-solid fa-location-dot"></i> Chọn địa điểm
                                           </button>
                                     </div>
 
                                     @if (isRequiredChooseLocaltionSignal())
                                     {
                                     <div class="flex items-center justify-center">
-                                          <div class="pl-5 text-sm text-red-600">Please choosse your location.</div>
+                                          <div class="pl-5 text-sm text-red-600">Hãy chọn địa điểm</div>
                                     </div>
                                     }
                               </div>
@@ -512,12 +512,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeUpdateWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="submit"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
@@ -525,8 +525,8 @@
             </div>
       </p-dialog>
 
-      <p-dialog header="Add warehouse" [(visible)]="isAssignManagerToWarehouseModalOpenSignal" [modal]="true"
-            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      <p-dialog header="Chỉ định người quản lý cho kho hàng" [(visible)]="isAssignManagerToWarehouseModalOpenSignal"
+            [modal]="true" [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
                   '10000px': '90%',
                   '1200px': '90%',
                   '1199px': '90%',
@@ -536,7 +536,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Assign manager to warehouse
+                              Chỉ định người quản lý cho kho hàng
                         </span>
                   </div>
             </ng-template>
@@ -547,7 +547,7 @@
                         <div class="flex justify-around items-center ">
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Name
+                                          Tên kho
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{warehouseInforSignal()?.name}}
@@ -555,7 +555,7 @@
                               </div>
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Address
+                                          Địa chỉ
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{warehouseInforSignal()?.address}}
@@ -573,10 +573,10 @@
                                           class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                                           <div>
                                                 <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                                      Warehouse manager
+                                                      Quản lý kho hàng
                                                 </h2>
                                                 <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                      Choose a warehouse manager to manage this warehouse
+                                                      Chọn người quản lý để quản lý kho hàng
                                                 </p>
                                           </div>
                                           <div>
@@ -588,8 +588,7 @@
                                                                   <div
                                                                         class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
 
-                                                                        <input type="text"
-                                                                              placeholder="Search by username"
+                                                                        <input type="text" placeholder="Tên"
                                                                               formControlName="searchedUsername"
                                                                               class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
                                                                         <i (click)="searchWarehouseManager($event)"
@@ -634,7 +633,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Username
+                                                                                          Tên
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -652,7 +651,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Verified Status
+                                                                                          Trạng thái xác thực
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -661,7 +660,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Address
+                                                                                          Địa chỉ
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -670,7 +669,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Roles
+                                                                                          Quyền
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -732,13 +731,14 @@
                                                                                           class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                                                                           <i
                                                                                                 class="fa-solid fa-circle-check mr-1"></i>
-                                                                                          Verified
+                                                                                          Đã xác thực
                                                                                     </span>
                                                                                     } @else {
                                                                                     <span
                                                                                           class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
                                                                                           <i
-                                                                                                class="fa-solid fa-circle-xmark mr-1"></i>Unverified
+                                                                                                class="fa-solid fa-circle-xmark mr-1"></i>Chưa
+                                                                                          xác thực
                                                                                     </span>
                                                                                     }
 
@@ -811,7 +811,7 @@
                                                             <div>
                                                                   <p
                                                                         class="text-sm text-gray-600 dark:text-neutral-400">
-                                                                        Showing
+                                                                        Hiển thị
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.number!*paginatedWarehouseManagerSignal()?.size!}}</span>
                                                                         -
@@ -819,10 +819,10 @@
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.number!*paginatedWarehouseManagerSignal()?.size!
                                                                               +
                                                                               paginatedWarehouseManagerSignal()?.numberOfElements!}}</span>
-                                                                        of
+                                                                        của
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.totalElements}}</span>
-                                                                        results
+                                                                        kết quả
                                                                   </p>
                                                             </div>
 
@@ -833,14 +833,14 @@
                                                                               (click)="previousUserPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                               <i class="fa-solid fa-chevron-left"></i>
-                                                                              Prev
+                                                                              Trước
                                                                         </button>
 
                                                                         <button
                                                                               [disabled]="paginatedWarehouseManagerSignal()?.last"
                                                                               (click)="nextUserPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                              Next
+                                                                              Sau
                                                                               <i class="fa-solid fa-chevron-right"></i>
                                                                         </button>
                                                                   </div>
@@ -855,12 +855,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeAssignManagerToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="button" (click)="submitAssignManagerToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
@@ -869,8 +869,8 @@
       </p-dialog>
 
       <!-- Add shipper to warehouse  -->
-      <p-dialog header="Add shipper" [(visible)]="isAddShipperToWarehouseModalOpenSignal" [modal]="true"
-            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      <p-dialog header="Thêm người lấy, giao hàng cho kho" [(visible)]="isAddShipperToWarehouseModalOpenSignal"
+            [modal]="true" [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
                   '10000px': '90%',
                   '1200px': '90%',
                   '1199px': '90%',
@@ -880,7 +880,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Add shipper to warehouse
+                              Thêm người lấy, giao hàng vào kho
                         </span>
                   </div>
             </ng-template>
@@ -891,7 +891,7 @@
                         <div class="flex justify-around items-center ">
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Name
+                                          Tên kho
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{warehouseInforSignal()?.name}}
@@ -899,7 +899,7 @@
                               </div>
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Address
+                                          Địa chỉ
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{warehouseInforSignal()?.address}}
@@ -917,10 +917,10 @@
                                           class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                                           <div>
                                                 <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                                      Warehouse manager
+                                                      Quản lý kho
                                                 </h2>
                                                 <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                      Add a shipper to this warehouse
+                                                      Thêm người lấy, giao hàng vào kho
                                                 </p>
                                           </div>
                                           <div>
@@ -932,8 +932,7 @@
                                                                   <div
                                                                         class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
 
-                                                                        <input type="text"
-                                                                              placeholder="Search by username"
+                                                                        <input type="text" placeholder="Tên"
                                                                               formControlName="searchedUsername"
                                                                               class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
                                                                         <i (click)="searchAddShipper($event)"
@@ -1017,7 +1016,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Roles
+                                                                                          Quyền
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -1138,7 +1137,7 @@
                                                             <div>
                                                                   <p
                                                                         class="text-sm text-gray-600 dark:text-neutral-400">
-                                                                        Showing
+                                                                        Hiển thị
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedAddShipperSignal()?.number!*paginatedAddShipperSignal()?.size!}}</span>
                                                                         -
@@ -1146,10 +1145,10 @@
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedAddShipperSignal()?.number!*paginatedAddShipperSignal()?.size!
                                                                               +
                                                                               paginatedAddShipperSignal()?.numberOfElements!}}</span>
-                                                                        of
+                                                                        của
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedAddShipperSignal()?.totalElements}}</span>
-                                                                        results
+                                                                        Kết quả
                                                                   </p>
                                                             </div>
 
@@ -1160,14 +1159,14 @@
                                                                               (click)="previousAddShipperPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                               <i class="fa-solid fa-chevron-left"></i>
-                                                                              Prev
+                                                                              Trước
                                                                         </button>
 
                                                                         <button
                                                                               [disabled]="paginatedAddShipperSignal()?.last"
                                                                               (click)="nextAddShipperPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                              Next
+                                                                              Sau
                                                                               <i class="fa-solid fa-chevron-right"></i>
                                                                         </button>
                                                                   </div>
@@ -1182,12 +1181,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeAddShipperToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="button" (click)="submitAddShipperToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>

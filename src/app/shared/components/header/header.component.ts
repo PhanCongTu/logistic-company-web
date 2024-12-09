@@ -78,36 +78,36 @@ export class HeaderComponent {
     initializeMenuItems() {
         this.items = [
             {
-                label: 'Home',
+                label: 'Trang chủ',
                 icon: 'pi pi-home',
                 command: () => {
                     this.router.navigate(['/']);
                 }
             },
             {
-                label: 'Admin',
+                label: 'Người quản trị',
                 visible: this.isAdmin,
                 icon: 'fa-solid fa-list-check',
                 items: [
                     {
-                        label: 'Warehouse',
+                        label: 'Kho hàng',
                         icon: 'fa-solid fa-warehouse',
                         command: () => this.router.navigate([this.routes.admin.adminWarehouse])
                     },
                     {
-                        label: 'User',
+                        label: 'Người dùng',
                         icon: 'fa-solid fa-users',
                         command: () => this.router.navigate([this.routes.admin.adminUser])
                     },
                 ]
             },
             {
-                label: 'Feature',
+                label: 'Tính năng',
                 visible: this.isUser,
                 icon: 'fa-regular fa-star',
                 items: [
                     {
-                        label: 'My shipment',
+                        label: 'Đơn hàng của tôi',
                         icon: 'fa-solid fa-truck',
                         command: () => this.router.navigate([this.routes.user.userShipment])
 
@@ -115,41 +115,41 @@ export class HeaderComponent {
                 ]
             },
             {
-                label: 'Warehouse Manager',
+                label: 'Người quản lý kho',
                 visible: this.isWarehouseManager,
                 icon: 'fa-solid fa-list-check',
                 items: [
                     {
-                        label: 'Warehouse information',
+                        label: 'Thông tin kho',
                         icon: 'fa-solid fa-house',
                         command: () => this.router.navigate([this.routes.warehouseManager.manageWarehouseInfo])
                     },
                     {
-                        label: 'Shipment Management',
+                        label: 'Quản lý đơn hàng',
                         icon: 'fa-solid fa-truck',
                         command: () => this.router.navigate([this.routes.warehouseManager.manageShipment])
                     }
                 ]
             },
             {
-                label: 'Shipping',
+                label: 'Giao hàng',
                 visible: this.isShipper,
                 icon: 'fa-solid fa-truck',
                 items: [
                     {
-                        label: 'Shipping Management',
+                        label: 'Quản lý giao hàng',
                         icon: 'fa-solid fa-truck',
                         command: () => this.router.navigate([this.routes.shipper.deliveryShipment])
                     }
                 ]
             },
             {
-                label: 'Transporting',
+                label: 'Vận chuyển',
                 visible: this.isTransporter,
                 icon: 'fa-solid fa-truck-moving',
                 items: [
                     {
-                        label: 'Transporting Management',
+                        label: 'Quản lý vận chuyển',
                         icon: 'fa-solid fa-truck',
                         command: () => this.router.navigate([this.routes.transporter.transportingShipment])
                     }
@@ -158,10 +158,9 @@ export class HeaderComponent {
         ];
 
         this.avatarItems = [
-            { label: 'Profile', icon: 'pi pi-user', command: () => this.goToProfile() },
-            { label: 'Settings', icon: 'pi pi-cog', command: () => this.goToSettings() },
+            { label: 'Hồ sơ của tôi', icon: 'pi pi-user', command: () => this.goToProfile() },
             {
-                label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout(),
+                label: 'Đăng xuất', icon: 'pi pi-sign-out', command: () => this.logout(),
                 styleClass: 'logoutItem'
             }
         ];

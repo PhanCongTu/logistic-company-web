@@ -18,6 +18,15 @@ export class ShipmentService {
     private localStorageService: LocalStorageService
   ) { }
 
+  getShipmentInfoByTrackingNumber(trackingNumber: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+
+    return this.http.get(`${this.endpoint}/api/shipment/code/${trackingNumber}`, { headers });
+  }
+
   transitShipment(shipmentId: string, transporterId: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

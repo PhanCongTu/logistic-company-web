@@ -51,28 +51,7 @@
                                     <div class="flex items-center gap-x-2">
                                           <p
                                                 class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Total warehouse
-                                          </p>
-                                    </div>
-
-                                    <div class="mt-1 flex items-center gap-x-2">
-                                          <h3
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                {{paginatedWarehouseSignal()?.totalElements}}
-                                          </h3>
-                                    </div>
-                              </div>
-                        </div>
-                        <!-- End Card -->
-
-                        <!-- Card -->
-                        <div
-                              class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <div class="p-4 md:p-5">
-                                    <div class="flex items-center gap-x-2">
-                                          <p
-                                                class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Sessions
+                                                --
                                           </p>
                                     </div>
 
@@ -93,7 +72,7 @@
                                     <div class="flex items-center gap-x-2">
                                           <p
                                                 class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Avg. Click Rate
+                                                --
                                           </p>
                                     </div>
 
@@ -114,7 +93,28 @@
                                     <div class="flex items-center gap-x-2">
                                           <p
                                                 class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
-                                                Pageviews
+                                                --
+                                          </p>
+                                    </div>
+
+                                    <div class="mt-1 flex items-center gap-x-2">
+                                          <h3
+                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
+                                                --
+                                          </h3>
+                                    </div>
+                              </div>
+                        </div>
+                        <!-- End Card -->
+
+                        <!-- Card -->
+                        <div
+                              class="flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                              <div class="p-4 md:p-5">
+                                    <div class="flex items-center gap-x-2">
+                                          <p
+                                                class="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-500">
+                                                --
                                           </p>
                                     </div>
 
@@ -130,50 +130,6 @@
                   </div>
                   <!-- End Grid -->
 
-                  <div class="grid lg:grid-cols-2 gap-4 sm:gap-6">
-                        <!-- Card -->
-                        <div
-                              class="p-4 md:p-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <!-- Header -->
-                              <div class="flex justify-between items-center">
-                                    <div>
-                                          <h2 class="text-sm text-gray-500 dark:text-neutral-500">
-                                                Income
-                                          </h2>
-                                          <p
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
-                                          </p>
-                                    </div>
-                              </div>
-                              <!-- End Header -->
-
-                              <div id="hs-multiple-bar-charts"></div>
-                        </div>
-                        <!-- End Card -->
-
-                        <!-- Card -->
-                        <div
-                              class="p-4 md:p-5 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-                              <!-- Header -->
-                              <div class="flex justify-between items-center">
-                                    <div>
-                                          <h2 class="text-sm text-gray-500 dark:text-neutral-500">
-                                                Visitors
-                                          </h2>
-                                          <p
-                                                class="text-xl sm:text-2xl font-medium text-gray-800 dark:text-neutral-200">
-                                                --
-                                          </p>
-                                    </div>
-                              </div>
-                              <!-- End Header -->
-
-                              <div id="hs-single-area-chart"></div>
-                        </div>
-                        <!-- End Card -->
-                  </div>
-
                   <!-- Card -->
                   <div class="flex flex-col">
                         <!-- Header -->
@@ -181,10 +137,10 @@
                               class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                               <div>
                                     <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                          Warehouse
+                                          Kho hàng
                                     </h2>
                                     <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                          Add warehouse, edit and more.
+                                          Quản lý kho hàng
                                     </p>
                               </div>
 
@@ -198,7 +154,7 @@
                                                             <div
                                                                   class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
 
-                                                                  <input type="text" placeholder="Name or address"
+                                                                  <input type="text" placeholder="Tên hoặc địa chỉ"
                                                                         formControlName="searchedWarehouseNameOrAddress"
                                                                         class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
                                                                   <i (click)="searchWarehouse($event)"
@@ -212,7 +168,7 @@
                                           <button
                                                 class="w-fit rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                                 (click)="openAddWarehouseModal()">
-                                                <i class="fa-solid fa-plus"></i> Add
+                                                <i class="fa-solid fa-plus"></i> Thêm
                                           </button>
                                     </div>
                               </div>
@@ -242,7 +198,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Name
+                                                                              Tên
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -251,7 +207,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Address
+                                                                              Địa chỉ
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -260,7 +216,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Status
+                                                                              Trạng thái
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -269,7 +225,7 @@
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
                                                                               class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Manager
+                                                                              Người quản lý
                                                                         </span>
                                                                   </div>
                                                             </th>
@@ -319,7 +275,8 @@
 
                                                                               <span
                                                                                     class="status-text transition-opacity duration-300  bg-teal-100 px-2 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500"><i
-                                                                                          class="fa-solid fa-circle-check mr-1"></i>Active</span>
+                                                                                          class="fa-solid fa-circle-check mr-1"></i>Hoạt
+                                                                                    động</span>
                                                                         </span>
                                                                         } @else {
                                                                         <span
@@ -327,7 +284,8 @@
 
                                                                               <span
                                                                                     class="status-text transition-opacity duration-300  bg-gray-200 px-2 text-gray-600 rounded-full dark:bg-gray-700/20 dark:text-gray-400"><i
-                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>Deactive</span>
+                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>Bị
+                                                                                    vô hiệu hóa</span>
                                                                         </span>
                                                                         }
                                                                   </div>
@@ -382,7 +340,7 @@
                                                 class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700">
                                                 <div>
                                                       <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                            Showing
+                                                            Hiển thị
                                                             <span
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseSignal()?.number!*paginatedWarehouseSignal()?.size!}}</span>
                                                             -
@@ -390,10 +348,10 @@
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseSignal()?.number!*paginatedWarehouseSignal()?.size!
                                                                   +
                                                                   paginatedWarehouseSignal()?.numberOfElements!}}</span>
-                                                            of
+                                                            của
                                                             <span
                                                                   class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseSignal()?.totalElements}}</span>
-                                                            results
+                                                            kết quả
                                                       </p>
                                                 </div>
 
@@ -403,13 +361,13 @@
                                                                   (click)="previousWarehousePage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                   <i class="fa-solid fa-chevron-left"></i>
-                                                                  Prev
+                                                                  Trước
                                                             </button>
 
                                                             <button [disabled]="paginatedWarehouseSignal()?.last"
                                                                   (click)="nextWarehousePage()"
                                                                   class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                  Next
+                                                                  Sau
                                                                   <i class="fa-solid fa-chevron-right"></i>
                                                             </button>
                                                       </div>
@@ -425,7 +383,7 @@
       </div>
       <!-- End Content -->
 
-      <p-dialog header="Add warehouse" [(visible)]="isAddWarehouseModalOpenSignal" [modal]="true" [closable]="false"
+      <p-dialog header="Thêm kho hàng" [(visible)]="isAddWarehouseModalOpenSignal" [modal]="true" [closable]="false"
             [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
                   '10000px': '50vw',
                   '1200px': '60vw',
@@ -436,7 +394,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Add warehouse
+                              Thêm kho hàng
                         </span>
                   </div>
             </ng-template>
@@ -445,10 +403,10 @@
                         <div class="mt-2 space-y-10">
                               <div class="space-y-2">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Name</div>
+                                          <div class="m-1 ml-3 font-bold ">Tên kho</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                                <input type="text" placeholder="Name"
+                                                <input type="text" placeholder="Tên kho"
                                                       class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
                                                       formControlName="name" />
 
@@ -456,14 +414,14 @@
                                     </div>
                                     @if (isAddWarehouseFormFieldValid("name"))
                                     {
-                                    <div class="pl-5 text-sm text-red-600">Name is required.</div>
+                                    <div class="pl-5 text-sm text-red-600">Yêu cầu tên kho</div>
                                     }
                               </div>
 
                               @if (userCoordinatesWithAddressSignal()) {
                               <div class="space-y-5">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Address</div>
+                                          <div class="m-1 ml-3 font-bold ">Địa chỉ</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
                                                 <input [disabled]="true" type="text"
@@ -473,7 +431,7 @@
                                     </div>
                                     <div
                                           class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input type="text" placeholder="House number, street name, ..."
+                                          <input type="text" placeholder="Số nhà, tên đường, ..."
                                                 formControlName="additionalAddress"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
@@ -485,13 +443,13 @@
                                           <button type="button"
                                                 class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                                 (click)="openMapModal()">
-                                                <i class="fa-solid fa-location-dot"></i> Choose location
+                                                <i class="fa-solid fa-location-dot"></i> Chọn địa điểm
                                           </button>
                                     </div>
                                     @if (isRequiredChooseLocaltionSignal())
                                     {
                                     <div class="flex items-center justify-center">
-                                          <div class="pl-5 text-sm text-red-600">Please choosse your location.</div>
+                                          <div class="pl-5 text-sm text-red-600">Hãy chọn địa điểm</div>
                                     </div>
                                     }
                               </div>
@@ -501,12 +459,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeAddWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="submit"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
@@ -515,7 +473,7 @@
       </p-dialog>
 
       <!-- Update warehouse  -->
-      <p-dialog header="Add warehouse" [(visible)]="isUpdateWarehouseModalOpenSignal" [modal]="true" [closable]="false"
+      <p-dialog header="Cập nhật kho" [(visible)]="isUpdateWarehouseModalOpenSignal" [modal]="true" [closable]="false"
             [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
             '10000px': '50vw',
             '1200px': '60vw',
@@ -526,7 +484,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Update warehouse
+                              Cập nhật kho hàng
                         </span>
                   </div>
             </ng-template>
@@ -535,10 +493,10 @@
                         <div class="mt-2 space-y-10">
                               <div class="space-y-2">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Name</div>
+                                          <div class="m-1 ml-3 font-bold ">Tên kho</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                                <input type="text" placeholder="Name"
+                                                <input type="text" placeholder="Tên kho"
                                                       class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
                                                       formControlName="name" />
 
@@ -547,14 +505,14 @@
 
                                     @if (isUpdateWarehouseFormFieldValid("name"))
                                     {
-                                    <div class="pl-5 text-sm text-red-600">Name is required.</div>
+                                    <div class="pl-5 text-sm text-red-600">Yêu cầu tên kho hàng</div>
                                     }
                               </div>
 
                               @if (userCoordinatesWithAddressSignal()) {
                               <div class="space-y-5">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Address</div>
+                                          <div class="m-1 ml-3 font-bold ">Địa chỉ</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
                                                 <input [disabled]="true" type="text"
@@ -564,7 +522,7 @@
                                     </div>
                                     <div
                                           class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input type="text" placeholder="House number, street name, ..."
+                                          <input type="text" placeholder="Số nhà, tên đường, ..."
                                                 formControlName="additionalAddress"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
@@ -572,10 +530,10 @@
                               } @else {
                               <div class="space-y-2">
                                     <div>
-                                          <div class="m-1 ml-3 font-bold ">Address</div>
+                                          <div class="m-1 ml-3 font-bold ">Địa chỉ</div>
                                           <div
                                                 class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                                <input type="text" placeholder="Address" [disabled]="true"
+                                                <input type="text" placeholder="Địa chỉ" [disabled]="true"
                                                       [value]="selectedWarehouseSignal()?.address"
                                                       class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
 
@@ -585,14 +543,14 @@
                                           <button type="button"
                                                 class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                                 (click)="openMapModal()">
-                                                <i class="fa-solid fa-location-dot"></i> Choose location
+                                                <i class="fa-solid fa-location-dot"></i> Chọn địa điểm
                                           </button>
                                     </div>
 
                                     @if (isRequiredChooseLocaltionSignal())
                                     {
                                     <div class="flex items-center justify-center">
-                                          <div class="pl-5 text-sm text-red-600">Please choosse your location.</div>
+                                          <div class="pl-5 text-sm text-red-600">Hãy chọn địa điểm</div>
                                     </div>
                                     }
                               </div>
@@ -602,12 +560,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeUpdateWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="submit"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
@@ -617,8 +575,8 @@
 
 
       <!-- Assign manager to warehouse  -->
-      <p-dialog header="Add warehouse" [(visible)]="isAssignManagerToWarehouseModalOpenSignal" [modal]="true"
-            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      <p-dialog header="Chỉ định người quản lý kho" [(visible)]="isAssignManagerToWarehouseModalOpenSignal"
+            [modal]="true" [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
                   '10000px': '90%',
                   '1200px': '90%',
                   '1199px': '90%',
@@ -628,7 +586,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Assign manager to warehouse
+                              Chỉ định người quản lý kho
                         </span>
                   </div>
             </ng-template>
@@ -639,7 +597,7 @@
                         <div class="flex justify-around items-center ">
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Name
+                                          Tên kho
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{selectedWarehouse?.name}}
@@ -647,7 +605,7 @@
                               </div>
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Address
+                                          Địa chỉ
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{selectedWarehouse?.address}}
@@ -665,10 +623,10 @@
                                           class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                                           <div>
                                                 <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                                      Warehouse manager
+                                                      Quản lý kho hàng
                                                 </h2>
                                                 <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                      Choose a warehouse manager to manage this warehouse
+                                                      Chọn người quản lý để quản lý kho
                                                 </p>
                                           </div>
                                           <div>
@@ -681,7 +639,7 @@
                                                                         class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
 
                                                                         <input type="text"
-                                                                              placeholder="Search by username"
+                                                                              placeholder="Tên người quản lý"
                                                                               formControlName="searchedUsername"
                                                                               class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
                                                                         <i (click)="searchWarehouseManager($event)"
@@ -726,7 +684,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Username
+                                                                                          Tên
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -744,7 +702,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Verified Status
+                                                                                          Trạng thái xác thực email
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -753,7 +711,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Address
+                                                                                          Địa chỉ
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -762,7 +720,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Roles
+                                                                                          Quyền
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -824,13 +782,14 @@
                                                                                           class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
                                                                                           <i
                                                                                                 class="fa-solid fa-circle-check mr-1"></i>
-                                                                                          Verified
+                                                                                          Đã xác thực
                                                                                     </span>
                                                                                     } @else {
                                                                                     <span
                                                                                           class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
                                                                                           <i
-                                                                                                class="fa-solid fa-circle-xmark mr-1"></i>Unverified
+                                                                                                class="fa-solid fa-circle-xmark mr-1"></i>Chưa
+                                                                                          xác thực
                                                                                     </span>
                                                                                     }
 
@@ -903,7 +862,7 @@
                                                             <div>
                                                                   <p
                                                                         class="text-sm text-gray-600 dark:text-neutral-400">
-                                                                        Showing
+                                                                        Hiển thị
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.number!*paginatedWarehouseManagerSignal()?.size!}}</span>
                                                                         -
@@ -911,10 +870,10 @@
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.number!*paginatedWarehouseManagerSignal()?.size!
                                                                               +
                                                                               paginatedWarehouseManagerSignal()?.numberOfElements!}}</span>
-                                                                        of
+                                                                        của
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedWarehouseManagerSignal()?.totalElements}}</span>
-                                                                        results
+                                                                        kết quả
                                                                   </p>
                                                             </div>
 
@@ -925,14 +884,14 @@
                                                                               (click)="previousUserPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                               <i class="fa-solid fa-chevron-left"></i>
-                                                                              Prev
+                                                                              Trước
                                                                         </button>
 
                                                                         <button
                                                                               [disabled]="paginatedWarehouseManagerSignal()?.last"
                                                                               (click)="nextUserPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                              Next
+                                                                              Sau
                                                                               <i class="fa-solid fa-chevron-right"></i>
                                                                         </button>
                                                                   </div>
@@ -947,12 +906,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeAssignManagerToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="button" (click)="submitAssignManagerToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
@@ -960,9 +919,9 @@
             </div>
       </p-dialog>
 
-      <!-- Add shipper to warehouse  -->
-      <p-dialog header="Add shipper" [(visible)]="isAddShipperToWarehouseModalOpenSignal" [modal]="true"
-            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
+      <!-- Thêm người lấy, giao hàng vào kho  -->
+      <p-dialog header="Thêm người lấy, giao hàng vào kho" [(visible)]="isAddShipperToWarehouseModalOpenSignal"
+            [modal]="true" [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]="{
                   '10000px': '90%',
                   '1200px': '90%',
                   '1199px': '90%',
@@ -972,7 +931,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-1 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Add shipper to warehouse
+                              Thêm người lấy, giao hàng vào kho
                         </span>
                   </div>
             </ng-template>
@@ -983,7 +942,7 @@
                         <div class="flex justify-around items-center ">
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Name
+                                          Tên kho
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{selectedWarehouse?.name}}
@@ -991,7 +950,7 @@
                               </div>
                               <div class="px-2">
                                     <h2 class="text-base text-gray-500 dark:text-neutral-500">
-                                          Address
+                                          Địa chỉ
                                     </h2>
                                     <p class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
                                           {{selectedWarehouse?.address}}
@@ -1009,10 +968,10 @@
                                           class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
                                           <div>
                                                 <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
-                                                      Warehouse manager
+                                                      Quản lý kho
                                                 </h2>
                                                 <p class="text-sm text-gray-600 dark:text-neutral-400">
-                                                      Add a shipper to this warehouse
+                                                      Thêm người lấy, giao hàng vào kho
                                                 </p>
                                           </div>
                                           <div>
@@ -1024,8 +983,7 @@
                                                                   <div
                                                                         class="flex items-center w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-300 focus-within:ring-blue-400">
 
-                                                                        <input type="text"
-                                                                              placeholder="Search by username"
+                                                                        <input type="text" placeholder="Tên"
                                                                               formControlName="searchedUsername"
                                                                               class="my-2 w-full border-none bg-transparent outline-none focus:outline-none">
                                                                         <i (click)="searchShipper($event)"
@@ -1109,7 +1067,7 @@
                                                                               <div class="flex items-center gap-x-2">
                                                                                     <span
                                                                                           class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                                          Roles
+                                                                                          Quyền
                                                                                     </span>
                                                                               </div>
                                                                         </th>
@@ -1235,7 +1193,7 @@
                                                             <div>
                                                                   <p
                                                                         class="text-sm text-gray-600 dark:text-neutral-400">
-                                                                        Showing
+                                                                        Hiển thị
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedAddShipperSignal()?.number!*paginatedAddShipperSignal()?.size!}}</span>
                                                                         -
@@ -1243,10 +1201,10 @@
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedAddShipperSignal()?.number!*paginatedAddShipperSignal()?.size!
                                                                               +
                                                                               paginatedAddShipperSignal()?.numberOfElements!}}</span>
-                                                                        of
+                                                                        của
                                                                         <span
                                                                               class="font-semibold text-gray-800 dark:text-neutral-200">{{paginatedAddShipperSignal()?.totalElements}}</span>
-                                                                        results
+                                                                        Kết quả
                                                                   </p>
                                                             </div>
 
@@ -1257,14 +1215,14 @@
                                                                               (click)="previousShipperPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
                                                                               <i class="fa-solid fa-chevron-left"></i>
-                                                                              Prev
+                                                                              Trước
                                                                         </button>
 
                                                                         <button
                                                                               [disabled]="paginatedAddShipperSignal()?.last"
                                                                               (click)="nextShipperPage()"
                                                                               class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
-                                                                              Next
+                                                                              Sau
                                                                               <i class="fa-solid fa-chevron-right"></i>
                                                                         </button>
                                                                   </div>
@@ -1279,12 +1237,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeAddShipperToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="button" (click)="submitAddShipperToWarehouseModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>

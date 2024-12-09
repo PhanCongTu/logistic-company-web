@@ -98,13 +98,13 @@ export class WarehouseInforComponent {
   ngOnInit() {
     this.items = [
       { icon: 'pi pi-home', route: '/' },
-      { label: 'Manage' },
-      { label: 'Warehouse', route: '/admin/warehouse' },
+      { label: 'Quản lý' },
+      { label: 'Kho hàng', route: '/admin/warehouse' },
       { label: this.warehouseId },
     ];
     this.warehouseMenuItems = [
       {
-        label: 'Update warehouse',
+        label: 'Cập nhật kho',
         visible: this.isAdminSignal(),
         icon: 'fa-solid fa-pen',
         command: () => {
@@ -112,21 +112,21 @@ export class WarehouseInforComponent {
         }
       },
       {
-        label: 'Active',
+        label: 'Kích hoạt',
         icon: 'fa-solid fa-check',
         command: () => {
           this.openActivePopup();
         }
       },
       {
-        label: 'Deactivate',
+        label: 'Vô hiệu hóa',
         icon: 'fa-regular fa-trash-can',
         command: () => {
           this.openDeletePopup();
         }
       },
       {
-        label: 'Assign to manager',
+        label: 'Chỉ định người quản lý',
         visible: this.isAdminSignal(),
         icon: 'fa-solid fa-user-plus',
         command: () => {
@@ -134,7 +134,7 @@ export class WarehouseInforComponent {
         }
       },
       {
-        label: 'Add a shipper',
+        label: 'Thêm người lấy, giao hàng',
         visible: this.isAdminSignal(),
         icon: 'fa-solid fa-user-plus',
         command: () => {
