@@ -14,9 +14,9 @@ import { ROUTES } from '../../app.routes';
   selector: 'app-signup',
   standalone: true,
   imports: [
-    ReactiveFormsModule, 
-    CommonModule, 
-    RouterLink, 
+    ReactiveFormsModule,
+    CommonModule,
+    RouterLink,
     FontAwesomeModule
   ],
   templateUrl: './signup.component.html',
@@ -43,7 +43,8 @@ export class SignupComponent {
       username: ['', [Validators.required, CustomValidators.usernameValidator()]],
       password: ['', [Validators.required, CustomValidators.passwordValidator()]],
       confirmPassword: ['', [Validators.required]],
-      emailAddress: ['', [Validators.required, CustomValidators.emailValidator()]]
+      emailAddress: ['', [Validators.required, CustomValidators.emailValidator()]],
+      phoneNumber: ['', [Validators.required, CustomValidators.phoneNumberValidator()]],
     });
 
     this.formSubmitAttempt = false;
@@ -64,29 +65,30 @@ export class SignupComponent {
     this.formSubmitAttempt = true;
     this.signUpFailed = false;
 
-    
+
 
     if (this.signupForm.valid) {
       const signUpData: SignUpRequest = {
         username: this.signupForm.get('username')?.value,
         password: this.signupForm.get('password')?.value,
         emailAddress: this.signupForm.get('emailAddress')?.value,
+        phoneNumber: this.signupForm.get('phoneNumber')?.value,
       }
-  
+
       this.authService.signUp(signUpData).subscribe({
-        next: (data) => { 
+        next: (data) => {
           this.localStorageService.saveUser(data);
           this.router.navigate([this.routes.home]);
-        },   
-        error: (error) => { 
+        },
+        error: (error) => {
           this.signUpFailed = true;
         },
       });
 
       // Reset the value
       this.reset();
-    } 
-    
+    }
+
   }
 
   isFieldValid(field: string) {
@@ -106,5 +108,5 @@ export class SignupComponent {
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
-  
+
 }

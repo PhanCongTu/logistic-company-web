@@ -94,7 +94,27 @@
                                     formControlName="emailAddress" />
                         </div>
                         @if (isFieldValid("emailAddress")) {
+                        @if (signupForm.get('password')?.errors?.['required']) {
                         <div class="pl-5 text-sm text-red-600">Yêu cầu địa chỉ email</div>
+                        } @else {
+                        <div class="pl-5 text-sm text-red-600">Địa chỉ email không hợp lệ</div>
+                        }
+                        }
+                  </div>
+
+                  <div class="space-y-2">
+                        <div [ngClass]="{ 'ring-red-400': isFieldValid('phoneNumber') }"
+                              class="flex w-full items-center space-x-2 rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                              <input placeholder="Số điện thoại"
+                                    class="my-3 w-full border-none bg-transparent outline-none"
+                                    formControlName="phoneNumber" />
+                        </div>
+                        @if (isFieldValid("phoneNumber")) {
+                        @if (signupForm.get('phoneNumber')?.errors?.['required']) {
+                        <div class="pl-5 text-sm text-red-600">Yêu cầu số điện thoại</div>
+                        } @else {
+                        <div class="pl-5 text-sm text-red-600">Số điện thoại email không hợp lệ</div>
+                        }
                         }
                   </div>
 

@@ -22,12 +22,12 @@ import { TooltipModule } from 'primeng/tooltip';
   selector: 'app-user-infor',
   standalone: true,
   imports: [
-    CommonModule, 
-    GoogleMapsModule, 
-    MapComponent, 
-    DirectionMapComponent, 
-    DialogModule, 
-    ButtonModule, 
+    CommonModule,
+    GoogleMapsModule,
+    MapComponent,
+    DirectionMapComponent,
+    DialogModule,
+    ButtonModule,
     ReactiveFormsModule,
     ToastModule,
     TooltipModule
@@ -40,6 +40,7 @@ export class UserInforComponent implements OnInit {
 
   // Forms
   changeEmailForm: FormGroup;
+  changePhoneNumberForm: FormGroup;
   changePasswordForm: FormGroup;
 
   // Signals
@@ -47,10 +48,11 @@ export class UserInforComponent implements OnInit {
   isMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isDirectionMapVisibleSignal: WritableSignal<boolean> = signal(false);
   isChangeEmailModalOpenSignal: WritableSignal<boolean> = signal(false);
+  isChangePhoneNumberModalOpenSignal: WritableSignal<boolean> = signal(false);
   isVerifyEmailModalOpenSignal: WritableSignal<boolean> = signal(false);
   isChangePasswordModalOpenSignal: WritableSignal<boolean> = signal(false);
   isChangeAddressModalOpenSignal: WritableSignal<boolean> = signal(false);
-  userCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress| undefined> = signal(undefined);
+  userCoordinatesWithAddressSignal: WritableSignal<CoordinatesWithAddress | undefined> = signal(undefined);
 
   isShowOldPassword: WritableSignal<boolean> = signal(false);
   isShowNewPassword: WritableSignal<boolean> = signal(false);
@@ -59,13 +61,14 @@ export class UserInforComponent implements OnInit {
   isRequiredVerificationCodeSignal: WritableSignal<boolean> = signal(false);
 
   // check it's submmitted form.
-  isChangedEmailSubmitted: boolean  = false;
-  isChangedPasswordSubmitted: boolean  = false;
+  isChangedEmailSubmitted: boolean = false;
+  isChangedPhoneNumberSubmitted: boolean = false;
+  isChangedPasswordSubmitted: boolean = false;
 
   // User address
   additonalAddress = new FormControl('');
   verificationCode = new FormControl('');
-  
+
   constructor(
     private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
@@ -75,6 +78,9 @@ export class UserInforComponent implements OnInit {
     // Reactive form
     this.changeEmailForm = this.formBuilder.group({
       emailAddress: ['', [Validators.required, CustomValidators.emailValidator()]]
+    });
+    this.changePhoneNumberForm = this.formBuilder.group({
+      phoneNumber: ['', [Validators.required, CustomValidators.phoneNumberValidator()]]
     });
 
     this.changePasswordForm = this.formBuilder.group({
@@ -100,7 +106,7 @@ export class UserInforComponent implements OnInit {
   receivedMapData(data: CoordinatesWithAddress | boolean) {
     if (typeof data !== 'boolean') {
       this.userCoordinatesWithAddressSignal.set(data);
-    } 
+    }
     this.openChangeAddressModal();
     this.isMapVisibleSignal.set(false);
   }
@@ -110,13 +116,13 @@ export class UserInforComponent implements OnInit {
       coordinatesWithAddress: pointData
     }
     this.userService.updateUser(updatePointData).subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.toastSuccess('Change address successfully!');
 
         const user: User = this.localStorageService.getUser();
-        const newUser: User = {...user, address: pointData.address};
+        const newUser: User = { ...user, address: pointData.address };
         this.localStorageService.saveUser(newUser);
-      },   
+      },
       error: (error) => {
         this.toastFail('Change address failed!');
       }
@@ -126,7 +132,42 @@ export class UserInforComponent implements OnInit {
   receivedDirectionMapData(data: boolean) {
     if (typeof data === 'boolean') {
       this.isDirectionMapVisibleSignal.set(data);
-    } 
+    }
+  }
+  // ********** Change user phone number ****************
+  openChangePhoneNumberModal() {
+    this.isChangePhoneNumberModalOpenSignal.set(true);
+  }
+
+  closeChangedPhoneNumberModal() {
+    this.isChangePhoneNumberModalOpenSignal.set(false);
+    // reset the form
+    this.changePhoneNumberForm.reset();
+  }
+
+  submitChangedPhoneNumberModal(even: any) {
+    // Avoid refreshing the page
+    even.preventDefault();
+
+    const changedPhoneNumberData: UpdateUserRequest = {
+      phoneNumber: this.changePhoneNumberForm.value.phoneNumber
+    }
+
+    this.isChangedPhoneNumberSubmitted = true;
+    if (this.changePhoneNumberForm.valid) {
+      this.userService.updateUser(changedPhoneNumberData).subscribe({
+        next: (data) => {
+          this.toastSuccess('Thay đổi số điện thoại thành công!');
+          this.refreshUserInfo();
+        },
+        error: (error) => {
+          this.toastFail('Thay đổi mật số điện thoại thất bại! Có thể đã có người sử dụng số điện thoại này!');
+        }
+      });
+      this.isChangedPhoneNumberSubmitted = false;
+      this.closeChangedPhoneNumberModal();
+    }
+
   }
 
   // ********** Change user email address ****************
@@ -140,8 +181,7 @@ export class UserInforComponent implements OnInit {
     this.changeEmailForm.reset();
   }
 
-  submitChangedEmailModal(even: any) 
-  {
+  submitChangedEmailModal(even: any) {
     // Avoid refreshing the page
     even.preventDefault();
 
@@ -149,15 +189,15 @@ export class UserInforComponent implements OnInit {
       emailAddress: this.changeEmailForm.value.emailAddress
     }
 
-    this.isChangedEmailSubmitted  = true;
+    this.isChangedEmailSubmitted = true;
     if (this.changeEmailForm.valid) {
       this.userService.updateUser(changedEmailData).subscribe({
-        next: (data) => { 
+        next: (data) => {
           this.toastSuccess('Change email address successfully!');
           this.toastInfo('Please check your email to verification!');
           this.refreshUserInfo();
           this.openVerifyEmailModal();
-        },   
+        },
         error: (error) => {
           this.toastFail('Change email address failed!');
         }
@@ -165,7 +205,7 @@ export class UserInforComponent implements OnInit {
       this.isChangedEmailSubmitted = false;
       this.closeChangedEmailModal();
     }
-    
+
   }
 
   // ********* Verify Email ********************
@@ -181,9 +221,9 @@ export class UserInforComponent implements OnInit {
 
   sendVerificationCode() {
     this.userService.resendVerificationEmail().subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.toastSuccess('Please check your email address!');
-      },   
+      },
       error: (error) => {
         this.toastFail('Please try later!');
       }
@@ -197,12 +237,12 @@ export class UserInforComponent implements OnInit {
       this.isRequiredVerificationCodeSignal.set(true);
       return;
     }
-    
+
     this.userService.verifyEmail(verificationCode).subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.toastSuccess('Successfully verified email address!');
         this.refreshUserInfo();
-      },   
+      },
       error: (error) => {
         this.toastFail('Unsuccessfully verified email address!');
       }
@@ -218,10 +258,11 @@ export class UserInforComponent implements OnInit {
       next: (data) => {
         const user: User = this.localStorageService.getUser();
         const newUser: User = {
-          ...user, 
+          ...user,
           emailAddress: data.emailAddress,
           newEmailAddress: data.newEmailAddress,
-          isEmailAddressVerified: data.isEmailAddressVerified
+          isEmailAddressVerified: data.isEmailAddressVerified,
+          phoneNumber: data.phoneNumber
         };
         this.localStorageService.saveUser(newUser);
       },
@@ -243,8 +284,7 @@ export class UserInforComponent implements OnInit {
     this.changePasswordForm.reset();
   }
 
-  submitChangedPasswordModal(even: any) 
-  {
+  submitChangedPasswordModal(even: any) {
     // Avoid refreshing the page
     even.preventDefault();
 
@@ -253,12 +293,12 @@ export class UserInforComponent implements OnInit {
       newPassword: this.changePasswordForm.value.newPassword,
     }
 
-    this.isChangedPasswordSubmitted  = true;
+    this.isChangedPasswordSubmitted = true;
     if (this.changePasswordForm.valid) {
       this.userService.changePassword(changedPasswordData).subscribe({
-        next: (data) => { 
+        next: (data) => {
           this.toastSuccess("Change Password Successfully!");
-        },   
+        },
         error: (error) => {
           this.toastFail("Your old password may not incorrectly!")
         }
@@ -290,8 +330,7 @@ export class UserInforComponent implements OnInit {
     this.isDirectionMapVisibleSignal.set(true);
   }
 
-  submitChangedAddressModal(even: any) 
-  {
+  submitChangedAddressModal(even: any) {
     // Avoid refreshing the page
     even.preventDefault();
 
@@ -318,12 +357,12 @@ export class UserInforComponent implements OnInit {
 
     if (this.userCoordinatesWithAddressSignal()) {
       this.userService.updateUser(changedAddressData).subscribe({
-        next: (data) => { 
+        next: (data) => {
           this.toastSuccess('Change address successfully!');
           const user: User = this.localStorageService.getUser();
-          const newUser: User = {...user, address: fullAddress};
+          const newUser: User = { ...user, address: fullAddress };
           this.localStorageService.saveUser(newUser);
-        },   
+        },
         error: (error) => {
           this.toastFail('Change address failed!');
         }
@@ -343,14 +382,14 @@ export class UserInforComponent implements OnInit {
   }
 
   toastSuccess(message: string) {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail:  message});
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
   }
 
   toastInfo(message: string) {
-    this.messageService.add({ severity: 'info', summary: 'Info', detail:  message});
+    this.messageService.add({ severity: 'info', summary: 'Info', detail: message });
   }
 
   toastFail(message: string) {
-    this.messageService.add({ severity: 'error', summary: 'Error', detail:  message});
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: message });
   }
 }

@@ -211,15 +211,6 @@
                                                                         </span>
                                                                   </div>
                                                             </th>
-
-                                                            <th scope="col" class="px-6 py-3 text-start">
-                                                                  <div class="flex items-center gap-x-2">
-                                                                        <span
-                                                                              class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200">
-                                                                              Trạng thái email
-                                                                        </span>
-                                                                  </div>
-                                                            </th>
                                                             <th scope="col" class="px-6 py-3 text-start">
                                                                   <div class="flex items-center gap-x-2">
                                                                         <span
@@ -275,29 +266,26 @@
                                                             <td class="size-px whitespace-nowrap">
                                                                   <div class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
                                                                         <span
-                                                                              class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{userProfile?.emailAddress}}</span>
+                                                                              class="block text-sm font-semibold text-gray-800 dark:text-neutral-200">{{userProfile?.emailAddress}}
+                                                                              @if
+                                                                              (userProfile?.isEmailAddressVerified)
+                                                                              {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                                                                                    <i
+                                                                                          class="fa-solid fa-circle-check mr-1"></i>
+
+                                                                              </span>
+                                                                              } @else {
+                                                                              <span
+                                                                                    class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium  text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
+                                                                                    <i
+                                                                                          class="fa-solid fa-circle-xmark mr-1"></i>
+                                                                              </span>
+                                                                              }
+                                                                        </span>
                                                                         <span
                                                                               class="block text-sm text-gray-500 dark:text-neutral-500">{{userProfile?.newEmailAddress}}</span>
-                                                                  </div>
-                                                            </td>
-                                                            <td class="size-px whitespace-nowrap">
-                                                                  <div class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
-                                                                        @if (userProfile?.isEmailAddressVerified) {
-                                                                        <span
-                                                                              class="py-1 px-1.5 inline-flex items-center justify-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
-                                                                              <i
-                                                                                    class="fa-solid fa-circle-check mr-1"></i>
-                                                                              Đã xác thực
-                                                                        </span>
-                                                                        } @else {
-                                                                        <span
-                                                                              class="py-1 px-1.5 inline-flex items-center justify-center gap-x-1 text-xs font-medium bg-red-100 text-red-800 rounded-full dark:bg-red-500/10 dark:text-red-500">
-                                                                              <i
-                                                                                    class="fa-solid fa-circle-xmark mr-1"></i>Chưa
-                                                                              xác thực
-                                                                        </span>
-                                                                        }
-
                                                                   </div>
                                                             </td>
                                                             <td class="size-px whitespace-nowrap">
@@ -305,7 +293,7 @@
                                                                         <div
                                                                               class="flex items-center justify-center gap-x-3 ">
                                                                               <span
-                                                                                    class="text-sm text-gray-500 dark:text-neutral-500">TBD</span>
+                                                                                    class="text-sm text-gray-500 dark:text-neutral-500">{{userProfile?.phoneNumber}}</span>
                                                                         </div>
                                                                   </div>
                                                             </td>

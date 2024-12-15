@@ -32,67 +32,80 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div
                         class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 border border-gray-400">
-                        <h3 class="font-semibold text-xl text-gray-800 mb-4">Personal Information</h3>
+                        <h3 class="font-semibold text-xl text-gray-800 mb-4">Thông tin cá nhân</h3>
                         <div class="flex justify-between mb-2">
-                              <span class="text-gray-600 pr-3">Name:</span>
+                              <span class="text-gray-600 pr-3">Tên đăng nhập:</span>
                               <span class="text-gray-900">{{ userInfoSignal()?.username }}</span>
                         </div>
                         <div class="flex justify-between mb-2">
-                              <span class="text-gray-600 pr-3">Email:</span>
-                              <span class="text-gray-900">{{ userInfoSignal()?.emailAddress }}
-                                    @if(userInfoSignal()?.isEmailAddressVerified) {
-                                    <i class="fa-regular fa-circle-check text-green-500"></i>
-                                    } @else {
-                                    <i class="fa-regular fa-circle-xmark text-red-500"></i>
-                                    }
-                              </span>
+                              <span class="text-gray-600 pr-3">Địa chỉ email:</span>
+
+                              <div class="">
+                                    <span class="text-gray-900">{{ userInfoSignal()?.emailAddress }}
+                                          @if(userInfoSignal()?.isEmailAddressVerified) {
+                                          <i class="fa-regular fa-circle-check text-green-500"></i>
+                                          } @else {
+                                          <i class="fa-regular fa-circle-xmark text-red-500"></i>
+                                          }
+                                    </span>
+                                    <button
+                                          class=" rounded-2xl  bg-white px-4 py-1 font-bold text-blue-500  hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
+                                          (click)="openChangeEmailModal()">
+                                          <i class="fas fa-edit mr-1"></i>
+                                    </button>
+                              </div>
                         </div>
                         @if (userInfoSignal()?.newEmailAddress ) {
                         <div class="flex justify-between mb-2">
-                              <span class="text-gray-600 pr-3">New email:</span>
+                              <span class="text-gray-600 pr-3">Địa chỉ email mới:</span>
                               <span class="text-gray-900">{{ userInfoSignal()?.newEmailAddress }}
                                     <i class="fa-regular fa-circle-xmark text-red-500"></i>
                               </span>
                         </div>
                         }
                         <div class="flex justify-between mb-2">
+                              <span class="text-gray-600 pr-3">Số điện thoại:</span>
+
+                              <div class="">
+                                    <span class="text-gray-900">{{ userInfoSignal()?.phoneNumber }}
+                                    </span>
+                                    <button
+                                          class=" rounded-2xl  bg-white px-4 py-1 font-bold text-blue-500  hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
+                                          (click)="openChangePhoneNumberModal()">
+                                          <i class="fas fa-edit mr-1"></i>
+                                    </button>
+                              </div>
+                        </div>
+                        <div class="flex justify-between mb-2">
                               <span class="text-gray-600">Role:</span>
                               <span class="text-gray-900">{{ userInfoSignal()?.roles }}</span>
                         </div>
                         <div class="flex flex-wrap justify-between md:flex-nowrap mt-10">
-                              <div class="w-full md:w-1/2  p-1 md:mt-0 text-right my-1">
+                              <div class="w-full   p-1 md:mt-0 text-right my-1">
                                     <button
                                           class=" rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                           (click)="openVerifyEmailModal()">
-                                          <i class="fas fa-edit mr-1"></i> Verify email
-                                    </button>
-                              </div>
-                              <div class="w-full md:w-1/2  p-1  md:mt-0 text-right my-1">
-                                    <button
-                                          class=" rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
-                                          (click)="openChangeEmailModal()">
-                                          <i class="fas fa-edit mr-1"></i> Change email
+                                          <i class="fas fa-edit mr-1"></i> Xác thực email
                                     </button>
                               </div>
                         </div>
-
                   </div>
 
                   <div class="space-y-5">
                         <div
                               class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 border border-gray-400">
-                              <h3 class="font-semibold text-xl text-gray-800 mb-4 ">Localtion <i
+                              <h3 class="font-semibold text-xl text-gray-800 mb-4 ">Vị trí <i
                                           pTooltip="We determine your location based on your coordinates, not your address!"
                                           class="fa-solid fa-circle-info text-blue-600 pl-2 cursor-pointer"></i></h3>
                               <div class="flex justify-between mb-2">
-                                    <span class="text-gray-600 pr-3">Address:</span>
+                                    <span class="text-gray-600 pr-3">Địa chỉ:</span>
                                     <span class="text-gray-900">{{ userInfoSignal()?.address }}</span>
                               </div>
                               <div class="flex items-center justify-end">
                                     <button
                                           class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                           (click)="openChangeAddressModal()">
-                                          <i class="fa-solid fa-location-dot"></i> Choose location
+                                          <i class="fa-solid fa-location-dot"></i> Chọn vị trí
                                     </button>
                               </div>
 
@@ -100,12 +113,12 @@
                         </div>
                         <div
                               class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 duration-300 border border-gray-400">
-                              <h3 class="font-semibold text-xl text-gray-800 ">Account Settings</h3>
+                              <h3 class="font-semibold text-xl text-gray-800 ">Cài đặt tài khoản</h3>
                               <div class="flex items-center justify-end">
                                     <button
                                           class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                           (click)="openChangePasswordModal()">
-                                          <i class="fas fa-lock mr-1"></i> Change Password
+                                          <i class="fas fa-lock mr-1"></i> Thay đổi mật khẩu
                                     </button>
                               </div>
 
@@ -116,7 +129,7 @@
 
             <div class="pt-6">
                   <div class="bg-white p-6 rounded-lg shadow-md transition-transform border border-gray-400">
-                        <h3 class="font-semibold text-xl text-gray-800 mb-4">Others</h3>
+                        <h3 class="font-semibold text-xl text-gray-800 mb-4">Khác</h3>
 
                   </div>
 
@@ -125,7 +138,7 @@
 
 
       <!-- Modal for Change email address -->
-      <p-dialog header="Change email address" [(visible)]="isChangeEmailModalOpenSignal" [modal]="true"
+      <p-dialog header="Thay đổi địa chỉ email" [(visible)]="isChangeEmailModalOpenSignal" [modal]="true"
             [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
             [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
             [style]="{ width: '25rem' }">
@@ -133,7 +146,7 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Change email address
+                              Thay đổi địa chỉ email
                         </span>
                   </div>
             </ng-template>
@@ -150,22 +163,22 @@
                                     @if (isChangeEmailFormFieldValid("emailAddress"))
                                     {
                                     @if (changeEmailForm.get('emailAddress')?.errors?.['emailInvalid']) {
-                                    <div class="pl-5 text-sm text-red-600">Email is invalid.</div>
+                                    <div class="pl-5 text-sm text-red-600">Địa chỉ email không hợp lệ</div>
                                     }
                                     @else {
-                                    <div class="pl-5 text-sm text-red-600">Email is required.</div>
+                                    <div class="pl-5 text-sm text-red-600">Yêu cầu địa chỉ email</div>
                                     }
                                     }
                               </div>
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeChangedEmailModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="submit"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
@@ -173,8 +186,8 @@
             </div>
       </p-dialog>
 
-      <!-- Modal for Verify email address -->
-      <p-dialog header="Verify email address" [(visible)]="isVerifyEmailModalOpenSignal" [modal]="true"
+      <!-- Modal for Change email address -->
+      <p-dialog header="Thay đổi số điện thoại" [(visible)]="isChangePhoneNumberModalOpenSignal" [modal]="true"
             [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
             [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
             [style]="{ width: '25rem' }">
@@ -182,7 +195,56 @@
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Verify email address
+                              Thay đổi số điện thoại
+                        </span>
+                  </div>
+            </ng-template>
+            <div>
+                  <form [formGroup]="changePhoneNumberForm" (ngSubmit)="submitChangedPhoneNumberModal($event)">
+                        <div class="mt-2 space-y-10">
+                              <div class="space-y-2">
+                                    <div
+                                          class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
+                                          <input type="text" placeholder="Số điện thoại"
+                                                class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
+                                                formControlName="phoneNumber" />
+                                    </div>
+                                    @if (isChangeEmailFormFieldValid("phoneNumber"))
+                                    {
+                                    @if (changeEmailForm.get('phoneNumber')?.errors?.['phoneNumberInvalid']) {
+                                    <div class="pl-5 text-sm text-red-600">Số điện thoại không hợp lệ</div>
+                                    }
+                                    @else {
+                                    <div class="pl-5 text-sm text-red-600">Yêu cầu số điện thoại</div>
+                                    }
+                                    }
+                              </div>
+                              <div class="flex justify-around">
+                                    <button type="button" (click)="closeChangedPhoneNumberModal()"
+                                          class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
+                                          <i class="fa-solid fa-xmark"></i> Hủy
+                                    </button>
+
+                                    <button type="submit"
+                                          class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Lưu
+                                    </button>
+                              </div>
+                        </div>
+                  </form>
+            </div>
+      </p-dialog>
+
+      <!-- Modal for Xác thực địa chỉ email -->
+      <p-dialog header="Xác thực địa chỉ email" [(visible)]="isVerifyEmailModalOpenSignal" [modal]="true"
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
+            [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
+            [style]="{ width: '25rem' }">
+            <ng-template pTemplate="header">
+                  <div
+                        class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
+                        <span class="font-bold white-space-nowrap text-xl ">
+                              Xác thực địa chỉ email
                         </span>
                   </div>
             </ng-template>
@@ -192,7 +254,7 @@
                               <div class="space-y-2">
                                     <div
                                           class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input type="text" placeholder="Veriication code"
+                                          <input type="text" placeholder="Mã xác thực"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none"
                                                 [formControl]="verificationCode" />
                                     </div>
@@ -200,26 +262,26 @@
                                     @if (isRequiredVerificationCodeSignal())
                                     {
                                     <div class="flex items-center justify-center">
-                                          <div class="pl-5 text-sm text-red-600">Please check your email and enter the
-                                                code.</div>
+                                          <div class="pl-5 text-sm text-red-600">Hãy điền mã xác thực được gửi về email
+                                                của bạn.</div>
                                     </div>
                                     }
                                     <div class="flex items-center justify-center cursor-pointer !mt-5">
                                           <button type="button" (click)="sendVerificationCode()"
                                                 class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                                <i class="fa-regular fa-paper-plane"></i> Send again
+                                                <i class="fa-regular fa-paper-plane"></i> Gửi lại
                                           </button>
                                     </div>
                               </div>
                               <div class="flex justify-around ">
                                     <button type="button" (click)="closeVerifyEmailModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button type="button" (click)="submitVerifyEmailModal($event)"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Verify
+                                          <i class="fa-solid fa-check"></i> Xác thực
                                     </button>
                               </div>
                         </div>
@@ -228,14 +290,15 @@
       </p-dialog>
 
       <!-- Modal for Changing Password -->
-      <p-dialog header="Change password" [(visible)]="isChangePasswordModalOpenSignal" [modal]="true" [closable]="false"
-            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }"
-            [draggable]="false" [resizable]="false" [style]="{ width: '30rem' }">
+      <p-dialog header="Thay đổi mật khẩu" [(visible)]="isChangePasswordModalOpenSignal" [modal]="true"
+            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
+            [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
+            [style]="{ width: '30rem' }">
             <ng-template pTemplate="header">
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Change password
+                              Thay đổi mật khẩu
                         </span>
                   </div>
             </ng-template>
@@ -244,7 +307,7 @@
                         <div class="space-y-2">
                               <div
                                     class="flex w-full items-center rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                    <input [type]="isShowOldPassword() ? 'text' : 'password'" placeholder="Old password"
+                                    <input [type]="isShowOldPassword() ? 'text' : 'password'" placeholder="Mật khẩu cũ"
                                           formControlName="oldPassword"
                                           class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     <div class="h-8 cursor-pointer pr-2 flex items-center"
@@ -258,13 +321,13 @@
                               </div>
                               @if (isChangePasswordFormFieldValid("oldPassword"))
                               {
-                              <div class="pl-5 text-sm text-red-600">Password is required.</div>
+                              <div class="pl-5 text-sm text-red-600">Yêu cầu mật khẩu</div>
                               }
                         </div>
                         <div class="space-y-2">
                               <div
                                     class="flex w-full items-center rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                    <input [type]="isShowNewPassword() ? 'text' : 'password'" placeholder="New password"
+                                    <input [type]="isShowNewPassword() ? 'text' : 'password'" placeholder="Mật khẩu mới"
                                           formControlName="newPassword"
                                           class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     <div class="h-8 cursor-pointer pr-2 flex items-center"
@@ -279,21 +342,21 @@
                               @if (isChangePasswordFormFieldValid("newPassword"))
                               {
                               @if (changePasswordForm.get('newPassword')?.errors?.['required']) {
-                              <div class="pl-5 text-sm text-red-600">Confirm Password is required.</div>
+                              <div class="pl-5 text-sm text-red-600">Yêu cầu mật khẩu mới</div>
                               } @else {
-                              <div class="pl-5 text-sm text-red-600">Confirm Password is invalid.</div>
+                              <div class="pl-5 text-sm text-red-600">Mật khẩu mới không hợp lệ</div>
                               }
                               }
                         </div>
                         <div class="flex justify-around">
                               <button type="button" (click)="closeChangePasswordModal()"
                                     class="w-32 rounded-2xl border-b-2  border-b-gray-300 bg-white   py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                    <i class="fa-solid fa-xmark"></i> Cancel
+                                    <i class="fa-solid fa-xmark"></i> Hủy
                               </button>
 
                               <button type="submit"
                                     class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500   py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                    <i class="fa-solid fa-check"></i> Save
+                                    <i class="fa-solid fa-check"></i> Lưu
                               </button>
                         </div>
                   </div>
@@ -302,15 +365,14 @@
       </p-dialog>
 
       <!-- Modal for Change user address-->
-      <p-dialog header="Change user address" [(visible)]="isChangeAddressModalOpenSignal" [modal]="true"
-            [closable]="false" [styleClass]="' p-4 rounded-2xl bg-white'"
-            [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }" [draggable]="false" [resizable]="false"
-            [style]="{ width: '40rem' }">
+      <p-dialog header="Thay đổi địa chỉ" [(visible)]="isChangeAddressModalOpenSignal" [modal]="true" [closable]="false"
+            [styleClass]="' p-4 rounded-2xl bg-white'" [breakpoints]=" { '1199px' : '75vw' , '575px' : '90vw' }"
+            [draggable]="false" [resizable]="false" [style]="{ width: '40rem' }">
             <ng-template pTemplate="header">
                   <div
                         class="inline-flex align-items-center justify-content-center gap-2 border-b-2 border-gray-400 shadow-md">
                         <span class="font-bold white-space-nowrap text-xl ">
-                              Change user address
+                              Thay đổi địa chỉ
                         </span>
                   </div>
             </ng-template>
@@ -320,7 +382,7 @@
                               @if (userCoordinatesWithAddressSignal()) {
                               <div class="space-y-5">
                                     <div class="flex justify-center mb-2 ">
-                                          <span class="text-gray-600 pr-3 text-xl">Address:</span>
+                                          <span class="text-gray-600 pr-3 text-xl">Địa chỉ:</span>
                                           <span class="text-gray-900 text-xl">{{
                                                 userCoordinatesWithAddressSignal()?.address
                                                 }}</span>
@@ -339,13 +401,13 @@
                                           <button type="button"
                                                 class="w-fit mt-3 rounded-2xl border-b-2 border-b-gray-300 bg-white px-4 py-1 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200"
                                                 (click)="openMapModal()">
-                                                <i class="fa-solid fa-location-dot"></i> Choose location
+                                                <i class="fa-solid fa-location-dot"></i> Chọn vị trí
                                           </button>
                                     </div>
                                     @if (isRequiredChooseLocaltionSignal())
                                     {
                                     <div class="flex items-center justify-center">
-                                          <div class="pl-5 text-sm text-red-600">Please choosse your location.</div>
+                                          <div class="pl-5 text-sm text-red-600">Hãy chọn vị trí của bạn</div>
                                     </div>
                                     }
                               </div>
@@ -354,12 +416,12 @@
                               <div class="flex justify-around">
                                     <button type="button" (click)="closeChangeAddressModal()"
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
-                                          <i class="fa-solid fa-xmark"></i> Cancel
+                                          <i class="fa-solid fa-xmark"></i> Hủy
                                     </button>
 
                                     <button (click)="submitChangedAddressModal($event)"
                                           class="w-32 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
-                                          <i class="fa-solid fa-check"></i> Save
+                                          <i class="fa-solid fa-check"></i> Lưu
                                     </button>
                               </div>
                         </div>
