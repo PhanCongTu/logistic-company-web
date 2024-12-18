@@ -27,4 +27,5 @@ export interface Shipment {
       destinationWarehouseAddress: string;
       originWarehouseId: Number;
       originWarehouseAddress: string;
+      transporterUsername: string;
 }

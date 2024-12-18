@@ -41,6 +41,14 @@ export class ShipmentService {
     return this.http.post(`${this.endpoint}/api/shipment/transit-shipment`, null, { headers, params });
   }
 
+  countManagerShipments(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/warehouse-manager/shipment/count`, { headers });
+  }
+
   countShipperShipments(shipperId: Number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

@@ -91,6 +91,7 @@ export class ManageShipmentComponent {
     this.warehouseId = this.localStorageService.getUser().warehouseId?.toString() || '';
     this.setUpTab();
     this.searchAndPageableShipment();
+    this.countManagerShipments();
     this.searchForm = this.formBuilder.group({
       searchedShipment: ['']
     });
@@ -106,6 +107,18 @@ export class ManageShipmentComponent {
   ngOnInit() {
 
     this.initShipmentMenuItems();
+  }
+
+  countManagerShipments() {
+    this.ShipmentService.countManagerShipments().subscribe({
+      next: (data: CountShipment) => {
+        this.countShipment = data;
+        this.setUpTab(data);
+      },
+      error: (error) => {
+        this.toastFail("Không thể đếm đơn hàng, vui lòng thử lại sau!");
+      },
+    });
   }
 
   searchShipment(even: any) {
@@ -144,7 +157,7 @@ export class ManageShipmentComponent {
       },
       {
         label: 'Giao hàng', icon: 'fa-solid fa-truck-arrow-right',
-        visible: this.activeTabItem === '4',
+        visible: this.activeTabItem === '5' && this.selectedShipment?.status === 'TRANSITED',
         command: () => {
           this.confirmToPickUp();
         }
@@ -295,7 +308,7 @@ export class ManageShipmentComponent {
     if (!this.selectedShipment || !this.selectedShipperIdSignal()) {
       return;
     }
-    if (this.activeTabItem === '1' || this.activeTabItem === '3' || this.activeTabItem === '4') {
+    if (this.activeTabItem === '1' || this.activeTabItem === '3' || (this.activeTabItem === '5' && this.selectedShipment?.status === 'TRANSITED')) {
       this.ShipmentService.deliveryShipment(this.selectedShipment?.id.toString(), this.selectedShipperIdSignal() || '').subscribe({
         next: (data) => {
           this.toastSuccess("Thành công!");
@@ -353,25 +366,33 @@ export class ManageShipmentComponent {
       },
       {
         id: '4',
-        label: 'Được chuyển tiếp',
+        label: 'Đang chuyển tiếp đi',
         command: () => {
           this.navigateWithQuery('4')
         },
-        badge: ((data?.IN_TRANSIT || 0) + (data?.TRANSITED || 0)).toString()
+        badge: ((data?.ORIGIN_TRANSIT_SCHEDULED || 0) + (data?.ORIGIN_IN_TRANSIT || 0) + (data?.ORIGIN_TRANSITED || 0)).toString()
       },
       {
         id: '5',
-        label: 'Đang giao hàng',
+        label: 'Được chuyển tiếp đến',
         command: () => {
           this.navigateWithQuery('5')
         },
-        badge: data?.OUT_FOR_DELIVERY.toString()
+        badge: ((data?.DESTINATION_TRANSIT_SCHEDULED || 0) + (data?.DESTINATION_IN_TRANSIT || 0) + (data?.DESTINATION_TRANSITED || 0)).toString()
       },
       {
         id: '6',
-        label: 'Hoàn thành',
+        label: 'Đang giao hàng',
         command: () => {
           this.navigateWithQuery('6')
+        },
+        badge: ((data?.DELIVERY_SCHEDULED || 0) + (data?.OUT_FOR_DELIVERY || 0)).toString()
+      },
+      {
+        id: '7',
+        label: 'Hoàn thành',
+        command: () => {
+          this.navigateWithQuery('7')
         },
         badge: data?.DELIVERED.toString()
       },
@@ -393,7 +414,7 @@ export class ManageShipmentComponent {
       // },
 
     ];
-    this.activeTabItem = this.items[0].id;
+    this.activeTabItem = this.activeTabItem || this.items[0].id;
   }
 
 
@@ -415,10 +436,12 @@ export class ManageShipmentComponent {
     } else if (this.activeTabItem === '3') {
       statuses = SHIPMENT_STATUS.PICKED_UP;
     } else if (this.activeTabItem === '4') {
-      statuses = SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
+      statuses = SHIPMENT_STATUS.TRANSIT_SCHEDULED + ', ' + SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
     } else if (this.activeTabItem === '5') {
-      statuses = SHIPMENT_STATUS.DELIVERY_SCHEDULED + ', ' + SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+      statuses = SHIPMENT_STATUS.TRANSIT_SCHEDULED + ', ' + SHIPMENT_STATUS.IN_TRANSIT + ', ' + SHIPMENT_STATUS.TRANSITED;
     } else if (this.activeTabItem === '6') {
+      statuses = SHIPMENT_STATUS.DELIVERY_SCHEDULED + ', ' + SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+    } else if (this.activeTabItem === '7') {
       statuses = SHIPMENT_STATUS.DELIVERED;
     }
     // else if (this.activeTabItem === '7') {
@@ -427,7 +450,7 @@ export class ManageShipmentComponent {
     //   statuses = SHIPMENT_STATUS.RETURNED + ', ' + SHIPMENT_STATUS.DELIVERED_FAILED;
     // }
 
-    if (this.activeTabItem === '6') {
+    if (this.activeTabItem === '7') {
       this.warehouseService.getAllShipmentOfBothWarehouses(this.pageRequest, statuses).subscribe({
         next: (data: PaginatedResponse<Shipment>) => {
           this.paginatedShipmentSignal.set(data);
@@ -437,7 +460,7 @@ export class ManageShipmentComponent {
         },
       });
     } else {
-      let isOriginWareHouse = !['4', '5'].includes(this.activeTabItem || '0');
+      let isOriginWareHouse = !['5', '6'].includes(this.activeTabItem || '0');
       this.warehouseService.getAllShipmentOfWarehouse(isOriginWareHouse, this.pageRequest, statuses).subscribe({
         next: (data: PaginatedResponse<Shipment>) => {
           this.paginatedShipmentSignal.set(data);
@@ -447,6 +470,8 @@ export class ManageShipmentComponent {
         },
       });
     }
+
+    this.countManagerShipments();
   }
 
   // ************  Shipment information model ********************************
