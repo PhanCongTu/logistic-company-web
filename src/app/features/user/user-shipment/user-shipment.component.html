@@ -428,13 +428,19 @@
                                     <label for="recipientPhone" class="pl-3">Số điện thoại người nhận</label>
                                     <div
                                           class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input id="recipientPhone" type="number"
-                                                placeholder="Số điện thoại người nhận" formControlName="recipientPhone"
+                                          <input id="recipientPhone" type="text" placeholder="Số điện thoại người nhận"
+                                                formControlName="recipientPhone"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
                                     @if (isUpsertShipmentFormFieldValid("recipientPhone"))
                                     {
+                                    @if (upsertShipmentForm.get('recipientPhone')?.errors?.['phoneNumberInvalid']) {
+                                    <div class="pl-5 text-sm text-red-600">Số điện thoại không hợp lệ</div>
+                                    }
+                                    @else {
                                     <div class="pl-5 text-sm text-red-600">Số điện thoại không được bỏ trống!</div>
+                                    }
+
                                     }
                               </div>
 
@@ -564,8 +570,8 @@
                                     <label for="recipientPhone" class="pl-3">Số điện thoại người nhận</label>
                                     <div
                                           class="w-full rounded-2xl bg-gray-50 px-4 ring-2 ring-gray-200 focus-within:ring-blue-400">
-                                          <input id="recipientPhone" type="number"
-                                                placeholder="Số điện thoại người nhận" formControlName="recipientPhone"
+                                          <input id="recipientPhone" type="text" placeholder="Số điện thoại người nhận"
+                                                formControlName="recipientPhone"
                                                 class="my-3 w-full border-none bg-transparent outline-none focus:outline-none" />
                                     </div>
                                     @if (isUpsertShipmentFormFieldValid("recipientPhone"))
@@ -735,6 +741,51 @@
                                     <div
                                           class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                                           <div class="flex flex-col sm:flex-row w-full">
+                                                <div class="w-full  px-2">
+                                                      <h2
+                                                            class="text-base text-gray-700 font-bold dark:text-neutral-500">
+                                                            Trạng thái đơn hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-green-600 dark:text-neutral-200">
+                                                            @if (selectedShipment?.status === 'ORDER_RECEIVED') {
+                                                            Đang chờ xác nhận đơn hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'PICKUP_SCHEDULED') {
+                                                            Đơn hàng đã được xác nhận. Chuẩn bị lấy hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'OUT_FOR_PICKUP') {
+                                                            Đang lấy hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'PICKED_UP') {
+                                                            Đã lấy hàng. Chuẩn bị vận chuyển và giao hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'TRANSIT_SCHEDULED') {
+                                                            Đang lên kế hoạch vận chuyển.
+                                                            }
+                                                            @if (selectedShipment?.status === 'IN_TRANSIT') {
+                                                            Đang vận chuyển đến kho đích.
+                                                            }
+                                                            @if (selectedShipment?.status === 'TRANSITED') {
+                                                            Đã vận chuyển đến kho đích và sẽ sớm được giao.
+                                                            }
+                                                            @if (selectedShipment?.status === 'DELIVERY_SCHEDULED')
+                                                            {
+                                                            Chuẩn bị giao hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'OUT_FOR_DELIVERY') {
+                                                            Đang giao hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'DELIVERED') {
+                                                            Đã giao hàng thành công.
+                                                            }
+                                                      </p>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex flex-col sm:flex-row w-full">
                                                 <div class="w-full sm:w-1/2 px-2">
                                                       <h2 class="text-base text-gray-500 dark:text-neutral-500">
                                                             Tên đơn hàng
@@ -813,7 +864,7 @@
                                                       </h2>
                                                       <p
                                                             class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
-                                                            TBD
+                                                            {{selectedShipment?.senderPhone}}
                                                       </p>
                                                 </div>
                                           </div>

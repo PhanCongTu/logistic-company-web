@@ -8,6 +8,7 @@ import { Shipment } from '../../../shared/models/responses/shipment.model';
 import { ShipmentService } from '../../../core/services/shipment.service';
 import { TimelineModule } from 'primeng/timeline';
 import { CommonModule } from '@angular/common';
+import { User } from '../../../shared/models/responses/user.model';
 
 @Component({
   selector: 'app-shipment-info',
@@ -25,11 +26,13 @@ export class ShipmentInfoComponent {
   events: any[];
   shipmentInfoSignal: WritableSignal<Shipment | undefined> = signal(undefined);
   statusId: WritableSignal<Number> = signal(1);
+  currentUser: User;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private shipmentService: ShipmentService
+    private shipmentService: ShipmentService,
+    private localStorageService: LocalStorageService
   ) {
     this.events = [
       { id: 1, code: 'ORDER_RECEIVED', status: 'Ordered', date: '15/10/2020 10:30', icon: 'pi pi-shopping-cart', color: '#9C27B0' },
@@ -42,7 +45,7 @@ export class ShipmentInfoComponent {
       { id: 8, code: 'OUT_FOR_DELIVERY', status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' },
       { id: 9, code: 'DELIVERED', status: 'Delivered', date: '16/10/2020 10:00', icon: 'pi pi-check', color: '#607D8B' },
     ];
-
+    this.currentUser = localStorageService.getUser();
   }
 
   ngOnInit() {

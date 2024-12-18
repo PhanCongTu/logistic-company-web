@@ -89,16 +89,16 @@ export class TransportingShipmentComponent {
   }
 
   countUserShipments() {
-    let sipperId = this.localStorageService.getUser()?.userId;
-    // this.shipmentService.countShipperShipments(Number(sipperId)).subscribe({
-    //   next: (data: CountShipment) => {
-    //     this.countShipment = data;
-    //     this.setUpTab(data);
-    //   },
-    //   error: (error) => {
-    //     this.toastFail("Không thể đếm đơn hàng, vui lòng thử lại sau!");
-    //   },
-    // });
+    let transporterId = this.localStorageService.getUser()?.userId;
+    this.shipmentService.countTransporterShipments(Number(transporterId)).subscribe({
+      next: (data: CountShipment) => {
+        this.countShipment = data;
+        this.setUpTab(data);
+      },
+      error: (error) => {
+        this.toastFail("Không thể đếm đơn hàng, vui lòng thử lại sau!");
+      },
+    });
   }
 
   setUpTab(data?: CountShipment) {

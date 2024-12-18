@@ -8,6 +8,8 @@ export interface Shipment {
       recipientAddress: string;
       recipientLatitude: number;
       recipientLongitude: number;
+      senderName: string;
+      senderPhone: string;
       recipientName: string;
       recipientPhone: string;
       estimatedDelivery: string;

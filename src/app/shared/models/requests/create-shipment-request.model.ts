@@ -6,6 +6,8 @@ export interface CreateShipmentRequest {
       pickUpAddress: string;
       pickUpLatitude: number;
       pickUpLongitude: number;
+      senderName: string;
+      senderPhone: string;
       recipientPhone: string;
       recipientName: string;
       notes?: string;

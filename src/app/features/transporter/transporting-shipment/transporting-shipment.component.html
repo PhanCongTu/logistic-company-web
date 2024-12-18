@@ -449,6 +449,51 @@
                                     <div
                                           class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
                                           <div class="flex flex-col sm:flex-row w-full">
+                                                <div class="w-full px-2">
+                                                      <h2
+                                                            class="text-base text-gray-700 font-bold dark:text-neutral-500">
+                                                            Trạng thái đơn hàng
+                                                      </h2>
+                                                      <p
+                                                            class="text-base sm:text-xl font-medium text-green-600 dark:text-neutral-200">
+                                                            @if (selectedShipment?.status === 'ORDER_RECEIVED') {
+                                                            Đang chờ xác nhận đơn hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'PICKUP_SCHEDULED') {
+                                                            Đơn hàng đã được xác nhận. Chuẩn bị lấy hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'OUT_FOR_PICKUP') {
+                                                            Đang lấy hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'PICKED_UP') {
+                                                            Đã lấy hàng. Chuẩn bị vận chuyển và giao hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'TRANSIT_SCHEDULED') {
+                                                            Đang lên kế hoạch vận chuyển.
+                                                            }
+                                                            @if (selectedShipment?.status === 'IN_TRANSIT') {
+                                                            Đang vận chuyển đến kho đích.
+                                                            }
+                                                            @if (selectedShipment?.status === 'TRANSITED') {
+                                                            Đã vận chuyển đến kho đích và sẽ sớm được giao.
+                                                            }
+                                                            @if (selectedShipment?.status === 'DELIVERY_SCHEDULED')
+                                                            {
+                                                            Chuẩn bị giao hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'OUT_FOR_DELIVERY') {
+                                                            Đang giao hàng.
+                                                            }
+                                                            @if (selectedShipment?.status === 'DELIVERED') {
+                                                            Đã giao hàng thành công.
+                                                            }
+                                                      </p>
+                                                </div>
+                                          </div>
+                                    </div>
+                                    <div
+                                          class="  p-2 flex flex-col bg-white border-2 border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+                                          <div class="flex flex-col sm:flex-row w-full">
                                                 <div class="w-full sm:w-1/2 px-2">
                                                       <h2 class="text-base text-gray-500 dark:text-neutral-500">
                                                             Tên đơn hàng
@@ -527,7 +572,7 @@
                                                       </h2>
                                                       <p
                                                             class="text-base sm:text-xl font-medium text-gray-800 dark:text-neutral-200">
-                                                            TBD
+                                                            {{selectedShipment?.senderPhone}}
                                                       </p>
                                                 </div>
                                           </div>
@@ -637,6 +682,18 @@
                                           class="w-32 rounded-2xl border-b-2 border-b-gray-300 bg-white  py-2 font-bold text-blue-500 ring-2 ring-gray-300 hover:bg-gray-200 active:translate-y-[0.125rem] active:border-b-gray-200">
                                           <i class="fa-solid fa-xmark"></i> Đóng
                                     </button>
+                                    @if (selectedShipment?.status?.includes("TRANSIT_SCHEDULED")) {
+                                    <button type="button" (click)="startTransit()"
+                                          class="w-60 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-truck-ramp-box"></i> Bắt đầu chuyển hàng
+                                    </button>
+                                    }
+                                    @if (selectedShipment?.status?.includes("IN_TRANSIT")) {
+                                    <button type="button" (click)="completeTransit()"
+                                          class="w-60 rounded-2xl border-b-2 border-b-blue-600 bg-blue-500  py-2 font-bold text-white ring-2 ring-gray-300 hover:bg-blue-400 active:translate-y-[0.125rem] active:border-b-blue-400">
+                                          <i class="fa-solid fa-check"></i> Chuyển hàng thành công
+                                    </button>
+                                    }
                               </div>
                         </div>
                   </div>

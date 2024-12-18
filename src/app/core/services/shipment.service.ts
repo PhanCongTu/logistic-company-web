@@ -21,7 +21,7 @@ export class ShipmentService {
   getShipmentInfoByTrackingNumber(trackingNumber: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+      // 'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
 
     return this.http.get(`${this.endpoint}/api/shipment/code/${trackingNumber}`, { headers });
@@ -47,6 +47,14 @@ export class ShipmentService {
       'Authorization': 'Bearer ' + this.localStorageService.getToken(),
     });
     return this.http.get(`${this.endpoint}/api/shipper/${shipperId}/shipment/count`, { headers });
+  }
+
+  countTransporterShipments(transporterId: Number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.localStorageService.getToken(),
+    });
+    return this.http.get(`${this.endpoint}/api/transporter/${transporterId}/shipment/count`, { headers });
   }
 
 

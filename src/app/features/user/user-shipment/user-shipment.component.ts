@@ -19,6 +19,9 @@ import { UpdateShipmentRequest } from '../../../shared/models/requests/update-sh
 import { MapComponent } from '../../../shared/components/map/map.component';
 import { ROUTES } from '../../../app.routes';
 import { CreateShipmentRequest } from '../../../shared/models/requests/create-shipment-request.model';
+import { LocalStorageService } from '../../../core/services/local-storage.service';
+import { User } from '../../../shared/models/responses/user.model';
+import { CustomValidators } from '../../../shared/custom-validators.validator';
 
 @Component({
   selector: 'app-user-shipment',
@@ -41,6 +44,8 @@ import { CreateShipmentRequest } from '../../../shared/models/requests/create-sh
 export class UserShipmentComponent {
   readonly appRoutes = ROUTES;
 
+
+
   items: MenuItem[] | undefined;
   activeTabItem: string | undefined;
   selectedShipment: Shipment | undefined;
@@ -55,7 +60,7 @@ export class UserShipmentComponent {
   isLocationWarningModalOpenSignal: WritableSignal<boolean> = signal(false);
   locationWarningModalOpenSignal: WritableSignal<string | undefined> = signal(undefined);
   isShipmentInforOpenSignal: WritableSignal<boolean> = signal(false);
-
+  userInfoSignal: WritableSignal<User | undefined> = signal(undefined);
   // Create shipment
   isChoosingPickUpAddress = false
   isChoosingRecipientAddress = false
@@ -84,6 +89,7 @@ export class UserShipmentComponent {
     private route: ActivatedRoute,
     private userService: UserService,
     private messageService: MessageService,
+    private localStorageService: LocalStorageService,
   ) {
     this.setUpTab();
     this.searchAndPageableShipment();
@@ -99,7 +105,7 @@ export class UserShipmentComponent {
       recipientAdditionalAddress: [''],
       pickUpAddress: ['', [Validators.required]],
       pickUpAdditionalAddress: [''],
-      recipientPhone: ['', [Validators.required]],
+      recipientPhone: ['', [Validators.required, CustomValidators.phoneNumberValidator()]],
       recipientName: ['', [Validators.required]],
       notes: ['']
     });
@@ -113,6 +119,9 @@ export class UserShipmentComponent {
         }
       }
     ];
+    this.localStorageService.userInfo$.subscribe(userInformation => {
+      this.userInfoSignal.set(userInformation);
+    });
   }
 
   searchUser(even: any) {
@@ -179,15 +188,24 @@ export class UserShipmentComponent {
     }
 
     if (this.upsertShipmentForm.valid) {
+      let tempRecipientPhone: string = this.upsertShipmentForm.get("recipientPhone")?.value;
+      let pickUpAdditionalAddressValue = this.upsertShipmentForm.get("pickUpAdditionalAddress")?.value?.trim() || '';
+      let pickUpAddressValue = this.pickUpCoordinatesWithAddressSignal()?.address || '';
+
+      let recipientAdditionalAddressValue = this.upsertShipmentForm.get("recipientAdditionalAddress")?.value?.trim() || '';
+      let recipientAddressValue = this.pickUpCoordinatesWithAddressSignal()?.address || '';
+
       const createShipmentBody: CreateShipmentRequest = {
         name: this.upsertShipmentForm.get("name")?.value,
-        pickUpAddress: this.upsertShipmentForm.get("pickUpAdditionalAddress")?.value.trim() + " " + this.pickUpCoordinatesWithAddressSignal()?.address || '',
+        pickUpAddress: pickUpAdditionalAddressValue + " " + pickUpAddressValue,
         pickUpLatitude: this.pickUpCoordinatesWithAddressSignal()?.lat || 0,
         pickUpLongitude: this.pickUpCoordinatesWithAddressSignal()?.lng || 0,
-        recipientAddress: this.upsertShipmentForm.get("recipientAdditionalAddress")?.value.trim() + " " + this.recipientCoordinatesWithAddressSignal()?.address || '',
+        recipientAddress: recipientAdditionalAddressValue + " " + recipientAddressValue,
         recipientLatitude: this.recipientCoordinatesWithAddressSignal()?.lat || 0,
         recipientLongitude: this.recipientCoordinatesWithAddressSignal()?.lng || 0,
-        recipientPhone: this.upsertShipmentForm.get("recipientPhone")?.value,
+        senderName: this.userInfoSignal()?.username || "",
+        senderPhone: this.userInfoSignal()?.phoneNumber || "",
+        recipientPhone: tempRecipientPhone,
         recipientName: this.upsertShipmentForm.get("recipientName")?.value,
         notes: this.upsertShipmentForm.get("notes")?.value,
       }
@@ -226,7 +244,7 @@ export class UserShipmentComponent {
 
   openUpdateShipmentModal() {
     if (this.selectedShipment?.status !== SHIPMENT_STATUS.ORDER_RECEIVED) {
-      this.toastWarning("This shipment cannot be updated anymore!")
+      this.toastWarning("Không thể cập nhật đơn hàng này được nữa!")
       return;
     }
     this.upsertShipmentForm.setValue({
@@ -259,12 +277,16 @@ export class UserShipmentComponent {
         notes: this.upsertShipmentForm.get("notes")?.value,
       }
       if (this.pickUpCoordinatesWithAddressSignal()) {
-        updateShipmentBody.pickUpAddress = this.pickUpCoordinatesWithAddressSignal()?.address,
+        let pickUpAdditionalAddressValue = this.upsertShipmentForm.get("pickUpAdditionalAddress")?.value?.trim() || '';
+        let pickUpAddressValue = this.pickUpCoordinatesWithAddressSignal()?.address || '';
+        updateShipmentBody.pickUpAddress = pickUpAdditionalAddressValue + " " + pickUpAddressValue,
           updateShipmentBody.pickUpLatitude = this.pickUpCoordinatesWithAddressSignal()?.lat,
           updateShipmentBody.pickUpLongitude = this.pickUpCoordinatesWithAddressSignal()?.lng
       }
       if (this.recipientCoordinatesWithAddressSignal()) {
-        updateShipmentBody.recipientAddress = this.recipientCoordinatesWithAddressSignal()?.address,
+        let recipientAdditionalAddressValue = this.upsertShipmentForm.get("recipientAdditionalAddress")?.value?.trim() || '';
+        let recipientAddressValue = this.recipientCoordinatesWithAddressSignal()?.address || '';
+        updateShipmentBody.recipientAddress = recipientAdditionalAddressValue + " " + recipientAddressValue,
           updateShipmentBody.recipientLatitude = this.recipientCoordinatesWithAddressSignal()?.lat,
           updateShipmentBody.recipientLongitude = this.recipientCoordinatesWithAddressSignal()?.lng
       }
